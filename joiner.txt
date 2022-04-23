@@ -1,0 +1,1 @@
+libFiles = { "opengl32.lib", "glfw3.lib" }
