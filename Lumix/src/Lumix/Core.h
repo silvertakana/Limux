@@ -9,3 +9,5 @@
 #else
 	#error Lumix only supports Windows!
 #endif // _WIN32
+
+#define BIT(x) (1<<x)
