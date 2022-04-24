@@ -1,5 +1,5 @@
 
-libFiles = { "opengl32.lib", "glfw3.lib" }
+libFiles = {  }
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 workspace "Lumix"
 	configurations { "Debug", "Release" ,"Dist"}
@@ -29,7 +29,8 @@ workspace "Lumix"
 		"%{prj.name}/src/**.h", 
 		"%{prj.name}/src/**.cpp", 
 		"%{prj.name}/src/**.c", 
-		"%{prj.name}/res/**.**"
+		"%{prj.name}/res/**.**",
+		"%{prj.name}/libraries/**.**",
 	}
 		
 	vpaths {
@@ -73,18 +74,32 @@ project "Lumix"
 	location "Lumix"
 	kind "SharedLib"
 
-	filter ("files:" .. "Lumix" .. "/libraries/**.**")
-    	flags {"NoPCH"}
-	postbuildcommands {
-		"{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox",
+	defines { "LMX_BUILD_DLL" }
+
+	pchheader "lmxpch.h"
+	pchsource "%{prj.name}/src/lmxpch.cpp"
+	includedirs{
+		"%{prj.name}/src"
 	}
+	links{
+		"opengl32.lib", "glfw3.lib"
+	}
+	postbuildcommands {
+		("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox"),
+	}
+	filter ("files:Lumix/libraries/**.**")
+		flags {"NoPCH"}
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 
 	links {"Lumix"}
+	
+	includedirs {
+		"Lumix/src"
+	}
 
-	filter ("files: Sandbox/libraries/**.**")
+	filter ("files:Sandbox/libraries/**.**")
     	flags {"NoPCH"}
 
