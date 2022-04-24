@@ -21,7 +21,7 @@ workspace "Lumix"
 		"libraries/lib",
 	}
 	links{
-		libFiles
+		libFiles,
 	}
 
 	files {
@@ -67,6 +67,8 @@ workspace "Lumix"
 	filter "system:windows"
 		postbuildcommands {
 			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/",
+			("{COPY} %{prj.name}/libraries/bin ../bin/" .. outputdir .. "/%{prj.name}"),
+			("{COPY} libraries/bin ../bin/" .. outputdir .. "/%{prj.name}"),
 		}
 
 
@@ -82,10 +84,12 @@ project "Lumix"
 		"%{prj.name}/src"
 	}
 	links{
-		"opengl32.lib", "glfw3.lib"
+		"opengl32.lib", 
+		"glfw3.lib", 
+		"assimp-vc143-mt",
 	}
 	postbuildcommands {
-		("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox"),
+		("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"),
 	}
 	filter ("files:Lumix/libraries/**.**")
 		flags {"NoPCH"}

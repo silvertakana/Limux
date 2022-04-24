@@ -50,6 +50,10 @@ namespace LMX {
 		{
 			return GetCategoryFlags() & category;
 		}
+		inline operator std::string() const
+		{
+			return ToString();
+		}
 	protected:
 		bool m_Handled = false;
 	};

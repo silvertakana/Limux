@@ -5,15 +5,18 @@
 #include "Shader.h"
 #include "Window.h"
 
-class Camera
+namespace LMX
 {
-	bool firstClick = false;
-public:
-	glm::vec3 position{0.f}, direction {0.f,0.f,-1.f}, up {0.f, 1.f, 0.f};
-	glm::mat4 camMatrix { 1.f };
-	float ratio = 1.f, fov = glm::radians(45.f);
-	Camera(const float& newRatio);
-	void UpdateMatrix();
-	void Control(const Window& window, float speed, float sensiv);
-	void Push(const Shader& shader, const char* name = "uCameraMatrix");
-};
+	class Camera
+	{
+		bool firstClick = false;
+	public:
+		glm::vec3 position { 0.f }, direction { 0.f,0.f,-1.f }, up { 0.f, 1.f, 0.f };
+		glm::mat4 camMatrix { 1.f };
+		float ratio = 1.f, fov = glm::radians(45.f);
+		Camera(const float& newRatio);
+		void UpdateMatrix();
+		void Control(const Window& window, float speed, float sensiv);
+		void Push(const Shader& shader, const char* name = "uCameraMatrix");
+	};
+}

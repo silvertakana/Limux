@@ -1,8 +1,8 @@
 #include "lmxpch.h"
 
 #include "Texture.h"
-#include <stb_image.h>
-#include "Log.h"
+#include <stb/stb_image.h>
+#include "Lumix/Log.h"
 #include <GLFW/glfw3.h>
 namespace LMX
 {

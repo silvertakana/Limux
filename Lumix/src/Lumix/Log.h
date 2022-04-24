@@ -20,5 +20,5 @@
 #ifdef LMX_NO_ASSERT
 #define LMX_ASSERT(condition, ...)  if(!condition) (__VA__ARGS__)
 #else
-#define LMX_ASSERT(condition, ...) if(condition) { CRITIC(__VA_ARGS__); printf("\a"); exit(EXIT_FAILURE);}
+#define LMX_ASSERT(condition, ...) if(condition) { LMX_CRITIC(__VA_ARGS__); printf("\a"); exit(EXIT_FAILURE);}
 #endif

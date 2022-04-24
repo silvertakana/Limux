@@ -1,38 +1,40 @@
-#include "pch.h"
+#include "lmxpch.h"
 
 #include "LoadFiles.h"
-#include "Log.h"
+#include "Lumix/Log.h"
 
-
-std::pair<std::string, std::string> loadShader(const char* path)
+namespace LMX
 {
-	std::ifstream file(path);
-	ASSERT(!file.is_open(), "Unable to open shader file: {0}", path);
-	std::string line, shader[2];
-	enum Mode
+	std::pair<std::string, std::string> loadShader(const char* path)
 	{
-		NONE = -1,
-		VERTEX, FRAGMENT
-	};
-	Mode mode = NONE;
-	while (std::getline(file, line))
-	{
-		if (line.contains("#shader"))
-			if (line.contains("vertex"))
-				mode = VERTEX;
-			else if (line.contains("fragment"))
-				mode = FRAGMENT;
-			else
-				mode = NONE;
-		else if (mode != NONE)
-			shader[mode] += line + '\n';
+		std::ifstream file(path);
+		LMX_ASSERT(!file.is_open(), "Unable to open shader file: {0}", path);
+		std::string line, shader[2];
+		enum Mode
+		{
+			NONE = -1,
+			VERTEX, FRAGMENT
+		};
+		Mode mode = NONE;
+		while (std::getline(file, line))
+		{
+			if (line.contains("#shader"))
+				if (line.contains("vertex"))
+					mode = VERTEX;
+				else if (line.contains("fragment"))
+					mode = FRAGMENT;
+				else
+					mode = NONE;
+			else if (mode != NONE)
+				shader[mode] += line + '\n';
+		}
+		return { shader[VERTEX], shader[FRAGMENT] };
 	}
-	return { shader[VERTEX], shader[FRAGMENT] };
-}
-std::string loadFile(const char* path)
-{
-	std::ifstream file(path);
-	ASSERT(!file.is_open(), "Unable to open file: {0}", path);
-	return { (std::istreambuf_iterator<char>(file)),
-		(std::istreambuf_iterator<char>()) };
+	std::string loadFile(const char* path)
+	{
+		std::ifstream file(path);
+		LMX_ASSERT(!file.is_open(), "Unable to open file: {0}", path);
+		return { (std::istreambuf_iterator<char>(file)),
+			(std::istreambuf_iterator<char>()) };
+	}
 }
