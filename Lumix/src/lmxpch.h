@@ -14,3 +14,4 @@
 #include <unordered_map>
 #include <thread>
 #include <Windows.h>
+#include "Lumix/Core/Log.h"

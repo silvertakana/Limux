@@ -1,10 +1,11 @@
 #pragma once
 
 // For use in Lumix application
-#include <cstdio>
-#include "Lumix/Application.h"
-#include "Lumix/Log.h"
+#include "Lumix/Core/Application.h"
+#include "Lumix/Core/Layer.h"
+#include "Lumix/Core/Log.h"
+#include "Lumix/ImGui/ImGuiLayer.h"
 
 // -----Entry Point-----
-#include"Lumix/EntryPoint.h"
+#include"Lumix/Core/EntryPoint.h"
 // -----Entry Point-----

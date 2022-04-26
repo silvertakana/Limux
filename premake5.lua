@@ -50,18 +50,21 @@ workspace "Lumix"
 		defines { "x64" }
 
 	filter "configurations:Debug"
-		defines { "_DEBUG" }
+		defines { "LMX_DEBUG" }
 		runtime "Debug"
+		buildoptions "/MDd"
 		symbols "On"
 		
 	filter "configurations:Release"
-		defines { "_NDEBUG" }
+		defines { "LMX_NDEBUG" }
 		runtime "Release"
+		buildoptions "/MD"
 		optimize "On"
 		
 	filter "configurations:Dist"
-		defines { "_NDEBUG","_DIST" }
+		defines { "LMX_NDEBUG","LMX_DIST" }
 		runtime "Release"
+		buildoptions "/MD"
 		optimize "On"
 	
 	filter "system:windows"
@@ -71,6 +74,7 @@ workspace "Lumix"
 			("{COPY} libraries/bin ../bin/" .. outputdir .. "/%{prj.name}"),
 		}
 
+startproject "Sandbox"
 
 project "Lumix"
 	location "Lumix"
@@ -84,9 +88,10 @@ project "Lumix"
 		"%{prj.name}/src"
 	}
 	links{
-		"opengl32.lib", 
-		"glfw3.lib", 
+		"opengl32", 
+		"glfw3", 
 		"assimp-vc143-mt",
+		"imgui",
 	}
 	postbuildcommands {
 		("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"),
