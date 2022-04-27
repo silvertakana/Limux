@@ -2,6 +2,9 @@
 
 #include "Application.h"
 #include <GLFW/glfw3.h>
+
+#include "Input.h"
+
 namespace LMX
 {
 	Application* Application::s_Instance = nullptr;

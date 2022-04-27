@@ -4,6 +4,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 workspace "Lumix"
 	configurations { "Debug", "Release" ,"Dist"}
 	platforms { "x86", "x64" }
+	startproject "Sandbox"
 
 	language "C++"
 	cppdialect "C++20"
@@ -74,7 +75,6 @@ workspace "Lumix"
 			("{COPY} libraries/bin ../bin/" .. outputdir .. "/%{prj.name}"),
 		}
 
-startproject "Sandbox"
 
 project "Lumix"
 	location "Lumix"

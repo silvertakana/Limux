@@ -1,5 +1,8 @@
 #pragma once
 
+#include <functional>
+#include <utility>
+#include <algorithm>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
