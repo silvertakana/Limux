@@ -4,9 +4,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "imgui/imgui.h"
 
-namespace LMX {
+namespace LMX
+{
 
 	class WindowsWindow : public Window
 	{
@@ -30,7 +30,6 @@ namespace LMX {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
-		ImGuiIO* m_IO;
 
 		struct WindowData
 		{

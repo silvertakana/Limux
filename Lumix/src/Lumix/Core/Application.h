@@ -3,6 +3,7 @@
 #include "Lumix/Events/ApplicationEvent.h"
 #include "Lumix/Core/LayerStack.h"
 #include "Window.h"
+#include "Lumix/ImGui/ImGuiLayer.h"
 
 namespace LMX
 {
@@ -12,16 +13,18 @@ namespace LMX
 		Application();
 		virtual ~Application();
 		void Run();
+		void OnEvent(Event& e);
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
-
+		
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
 		
-		void OnEvent(Event& e);
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:

@@ -1,8 +1,7 @@
 #pragma once
 // thanks these Cherno for this code
 #include "Lumix/Core/Core.h"
-
-#include <string>
+#include <sstream>
 #include <functional>
 
 namespace LMX {
@@ -39,9 +38,9 @@ namespace LMX {
 
 	class LMX_API Event
 	{
-		friend class EventDispatcher;
 	public:
 		bool Handled = false;
+
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;

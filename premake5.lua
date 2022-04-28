@@ -1,39 +1,14 @@
-
-libFiles = {  }
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 workspace "Lumix"
 	configurations { "Debug", "Release" ,"Dist"}
 	platforms { "x86", "x64" }
 	startproject "Sandbox"
 
-	language "C++"
-	cppdialect "C++20"
 	systemversion "latest"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	includedirs {
-		"libraries/include",
-		"%{prj.name}/libraries/include",
-	}
-	libdirs {
-		"%{prj.name}/libraries/lib",
-		"libraries/lib",
-	}
-	links{
-		libFiles,
-	}
-
-	files {
-		"%{prj.name}/src/**.hpp", 
-		"%{prj.name}/src/**.h", 
-		"%{prj.name}/src/**.cpp", 
-		"%{prj.name}/src/**.c", 
-		"%{prj.name}/res/**.**",
-		"%{prj.name}/libraries/**.**",
-	}
-		
 	vpaths {
 		["Headers"] = { "%{prj.name}/src/**.hpp","%{prj.name}/src/**.h" },
 		["Sources"] = { "%{prj.name}/src/**.cpp","%{prj.name}/src/**.c" },
@@ -68,34 +43,54 @@ workspace "Lumix"
 		buildoptions "/MD"
 		optimize "On"
 	
-	filter "system:windows"
-		postbuildcommands {
-			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/",
-			("{COPY} %{prj.name}/libraries/bin ../bin/" .. outputdir .. "/%{prj.name}"),
-			("{COPY} libraries/bin ../bin/" .. outputdir .. "/%{prj.name}"),
-		}
 
+-- Include directories relative to root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] =  "Lumix/vendor/GLFW/include"
+IncludeDir["Glad"] =  "Lumix/vendor/Glad/include"
+IncludeDir["ImGui"] = "Lumix/vendor/imgui"
+IncludeDir["glm"] =   "Lumix/vendor/glm"
+
+include "Lumix/vendor/GLFW"
+include "Lumix/vendor/Glad"
+include "Lumix/vendor/imgui"
 
 project "Lumix"
 	location "Lumix"
 	kind "SharedLib"
 
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "off"
+
 	defines { "LMX_BUILD_DLL" }
 
 	pchheader "lmxpch.h"
 	pchsource "%{prj.name}/src/lmxpch.cpp"
-	includedirs{
-		"%{prj.name}/src"
+
+	files {
+		"%{prj.name}/src/**.hpp", 
+		"%{prj.name}/src/**.h", 
+		"%{prj.name}/src/**.cpp", 
+		"%{prj.name}/src/**.c", 
+		"%{prj.name}/res/**.**",
+	}
+
+	includedirs {
+		"%{prj.name}/src",
+		IncludeDir,
 	}
 	links{
-		"opengl32", 
-		"glfw3", 
-		"assimp-vc143-mt",
-		"imgui",
+		"GLFW",
+		"Glad",
+		"ImGui",
+		"opengl32",
 	}
-	postbuildcommands {
-		("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"),
-	}
+	filter "system:windows"
+		postbuildcommands {
+			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
+			("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"), --copy the dll to sandbox
+		}
 	filter ("files:Lumix/libraries/**.**")
 		flags {"NoPCH"}
 
@@ -103,12 +98,30 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 
-	links {"Lumix"}
-	
-	includedirs {
-		"Lumix/src"
+	language "C++"
+	cppdialect "C++20"
+
+	files {
+		"%{prj.name}/src/**.hpp", 
+		"%{prj.name}/src/**.h", 
+		"%{prj.name}/src/**.cpp", 
+		"%{prj.name}/src/**.c", 
+		"%{prj.name}/res/**.**",
 	}
 
+	includedirs {
+		"Lumix/src",
+		"Lumix/vendor",
+		IncludeDir,
+	}
+	links {
+		"Lumix",
+		"ImGui",
+	}
+	filter "system:windows"
+		postbuildcommands {
+			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/",
+		}
 	filter ("files:Sandbox/libraries/**.**")
     	flags {"NoPCH"}
 

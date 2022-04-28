@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace LMX {
 
 	class LMX_API KeyEvent : public Event

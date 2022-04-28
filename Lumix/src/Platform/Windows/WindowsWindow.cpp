@@ -50,9 +50,6 @@ namespace LMX {
 	}
 	
 	static bool s_GLFWInitialized = false;
-	static bool s_IMGUIInitialized = false;
-	static bool s_GLADInitialized = false;
-
 	Window* Window::Create(const WindowProps& props)
 	{
 		return new WindowsWindow(props);
@@ -90,21 +87,8 @@ namespace LMX {
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
+		LMX_ASSERT(gladLoadGL(), "Failed to load glad\n");
 
-		if (!s_IMGUIInitialized)
-		{
-			IMGUI_CHECKVERSION();
-			ImGui::CreateContext();
-			s_IMGUIInitialized = true;
-		}
-		m_IO = &ImGui::GetIO(); (void)*m_IO;
-		ImGui::StyleColorsDark();
-		
-		if (!s_GLADInitialized)
-		{
-			LMX_ASSERT(gladLoadGL(), "Failed to load glad\n");
-			s_GLADInitialized = true;
-		}
 		int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 		if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
 		{
@@ -113,6 +97,7 @@ namespace LMX {
 			glDebugMessageCallback(glDebugOutput, nullptr);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 		}
+
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
@@ -158,6 +143,7 @@ namespace LMX {
 				}
 				}
 			});
+
 		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -165,6 +151,7 @@ namespace LMX {
 				KeyTypedEvent event(keycode);
 				data.EventCallback(event);
 			});
+
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);

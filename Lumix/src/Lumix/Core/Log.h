@@ -39,7 +39,7 @@
 #define LMX_CRITIC(...)	LMX_LOG("CRITIC", 1, LMX_LOG_white, LMX_LOG_red, __VA_ARGS__)
 
 #ifdef LMX_NO_ASSERT
-#define LMX_ASSERT(condition, ...)  if(!condition) (__VA_ARGS__)
+#define LMX_ASSERT(condition, ...)  if(!(condition)) (__VA_ARGS__)
 #else
-#define LMX_ASSERT(condition, ...) if(!condition) { LMX_CRITIC(__VA_ARGS__); __debugbreak();/*printf("\a"); exit(EXIT_FAILURE);*/}("remember to put semicolon")
+#define LMX_ASSERT(condition, ...) if(!(condition)) { LMX_CRITIC(__VA_ARGS__); __debugbreak();/*printf("\a"); exit(EXIT_FAILURE);*/}("remember to put semicolon")
 #endif
