@@ -1,11 +1,15 @@
 #pragma once
 
-#ifdef _WIN32
+#ifdef LMX_PLATFORM_WINDOWS
+#if LMX_DYNAMIC_LINK
 	#ifdef  LMX_BUILD_DLL
 		#define LMX_API __declspec(dllexport)
 	#else
 		#define LMX_API __declspec(dllimport)
 	#endif //  LMX_BUILD_DLL 
+#else
+	#define LMX_API
+#endif
 #else
 	#error Lumix only supports Windows!
 #endif // _WIN32

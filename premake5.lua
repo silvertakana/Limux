@@ -16,7 +16,7 @@ workspace "Lumix"
 		["shaders"] = {"**.shader","**.frag","**.vert","**.glsl","**.hlsl"},
 		["Docs"] = "**.md",
 	}
-		
+	
 	filter "platforms:x86"
 		architecture "x86"
 		defines { "x86" }
@@ -42,6 +42,10 @@ workspace "Lumix"
 		runtime "Release"
 		buildoptions "/MD"
 		optimize "On"
+	filter "system:windows"
+		defines{
+			"LMX_PLATFORM_WINDOWS"
+		}
 	
 
 -- Include directories relative to root folder (solution directory)
@@ -57,13 +61,13 @@ include "Lumix/vendor/imgui"
 
 project "Lumix"
 	location "Lumix"
-	kind "SharedLib"
+	kind "StaticLib"
 
 	language "C++"
 	cppdialect "C++20"
-	staticruntime "off"
+	staticruntime "on"
 
-	defines { "LMX_BUILD_DLL" }
+	defines { "LMX_BUILD_DLL", "_CRT_SECURE_NO_WARNINGS" }
 
 	pchheader "lmxpch.h"
 	pchsource "%{prj.name}/src/lmxpch.cpp"
@@ -87,10 +91,10 @@ project "Lumix"
 		"opengl32",
 	}
 	filter "system:windows"
-		postbuildcommands {
-			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
-			("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"), --copy the dll to sandbox
-		}
+		-- postbuildcommands {
+		-- 	"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
+		-- 	("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"), --copy the dll to sandbox
+		-- }
 	filter ("files:Lumix/libraries/**.**")
 		flags {"NoPCH"}
 
@@ -100,6 +104,7 @@ project "Sandbox"
 
 	language "C++"
 	cppdialect "C++20"
+	staticruntime "on"
 
 	files {
 		"%{prj.name}/src/**.hpp", 

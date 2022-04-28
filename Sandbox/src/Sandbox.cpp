@@ -9,18 +9,18 @@ public:
 		: Layer("Example")
 	{}
 
-	void OnUpdate() override
+	virtual void OnUpdate() override
 	{
 
 	}
-	void OnImGuiRender() override
+	virtual void OnImGuiRender() override
 	{
 		ImGui::Begin("Test");
 		ImGui::Text("Hello world!");
 		ImGui::End();
 	}
 
-	void OnEvent(LMX::Event& event) override
+	virtual void OnEvent(LMX::Event& event) override
 	{
 		
 	}
