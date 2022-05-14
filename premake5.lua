@@ -6,9 +6,6 @@ workspace "Lumix"
 
 	systemversion "latest"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
 	vpaths {
 		["Headers"] = { "%{prj.name}/src/**.hpp","%{prj.name}/src/**.h" },
 		["Sources"] = { "%{prj.name}/src/**.cpp","%{prj.name}/src/**.c" },
@@ -25,27 +22,7 @@ workspace "Lumix"
 		architecture "x86_64"
 		defines { "x64" }
 
-	filter "configurations:Debug"
-		defines { "LMX_DEBUG" }
-		runtime "Debug"
-		buildoptions "/MDd"
-		symbols "On"
-		
-	filter "configurations:Release"
-		defines { "LMX_NDEBUG" }
-		runtime "Release"
-		buildoptions "/MD"
-		optimize "On"
-		
-	filter "configurations:Dist"
-		defines { "LMX_NDEBUG","LMX_DIST" }
-		runtime "Release"
-		buildoptions "/MD"
-		optimize "On"
-	filter "system:windows"
-		defines{
-			"LMX_PLATFORM_WINDOWS"
-		}
+	
 	
 
 -- Include directories relative to root folder (solution directory)
@@ -54,10 +31,15 @@ IncludeDir["GLFW"] =  "Lumix/vendor/GLFW/include"
 IncludeDir["Glad"] =  "Lumix/vendor/Glad/include"
 IncludeDir["ImGui"] = "Lumix/vendor/imgui"
 IncludeDir["glm"] =   "Lumix/vendor/glm"
+IncludeDir["stb"] =   "Lumix/vendor/stb"
 
-include "Lumix/vendor/GLFW"
-include "Lumix/vendor/Glad"
-include "Lumix/vendor/imgui"
+group "Dependencies"
+	include "Lumix/vendor/GLFW"
+	include "Lumix/vendor/Glad"
+	include "Lumix/vendor/imgui"
+	include "Lumix/vendor/stb"
+
+group ""
 
 project "Lumix"
 	location "Lumix"
@@ -67,7 +49,14 @@ project "Lumix"
 	cppdialect "C++20"
 	staticruntime "on"
 
-	defines { "LMX_BUILD_DLL", "_CRT_SECURE_NO_WARNINGS" }
+	defines { 
+		"LMX_BUILD_DLL", 
+		"_CRT_SECURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE",
+	}
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "lmxpch.h"
 	pchsource "%{prj.name}/src/lmxpch.cpp"
@@ -89,14 +78,37 @@ project "Lumix"
 		"Glad",
 		"ImGui",
 		"opengl32",
+		"stb",
 	}
 	filter "system:windows"
-		-- postbuildcommands {
-		-- 	"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
-		-- 	("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"), --copy the dll to sandbox
-		-- }
+		postbuildcommands {
+			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
+			-- ("{COPY} ../bin/" .. outputdir .. "/%{prj.name}/**.dll ../bin/" .. outputdir .. "/Sandbox"), --copy the dll to sandbox
+		}
+		defines{
+			"LMX_PLATFORM_WINDOWS"
+		}
 	filter ("files:Lumix/libraries/**.**")
 		flags {"NoPCH"}
+
+	filter "configurations:Debug"
+		defines { "LMX_DEBUG" }
+		runtime "Debug"
+		buildoptions "/MDd"
+		symbols "On"
+		
+	filter "configurations:Release"
+		defines { "LMX_NDEBUG" }
+		runtime "Release"
+		buildoptions "/MD"
+		optimize "On"
+		
+	filter "configurations:Dist"
+		defines { "LMX_NDEBUG","LMX_DIST" }
+		runtime "Release"
+		buildoptions "/MD"
+		optimize "On"
+		
 
 project "Sandbox"
 	location "Sandbox"
@@ -106,6 +118,9 @@ project "Sandbox"
 	cppdialect "C++20"
 	staticruntime "on"
 
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	
 	files {
 		"%{prj.name}/src/**.hpp", 
 		"%{prj.name}/src/**.h", 
@@ -120,13 +135,32 @@ project "Sandbox"
 		IncludeDir,
 	}
 	links {
-		"Lumix",
-		"ImGui",
+		"Lumix"
 	}
 	filter "system:windows"
 		postbuildcommands {
 			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/",
 		}
+		defines{
+			"LMX_PLATFORM_WINDOWS"
+		}
 	filter ("files:Sandbox/libraries/**.**")
     	flags {"NoPCH"}
 
+	filter "configurations:Debug"
+		defines { "LMX_DEBUG" }
+		runtime "Debug"
+		buildoptions "/MDd"
+		symbols "On"
+		
+	filter "configurations:Release"
+		defines { "LMX_NDEBUG" }
+		runtime "Release"
+		buildoptions "/MD"
+		optimize "On"
+		
+	filter "configurations:Dist"
+		defines { "LMX_NDEBUG","LMX_DIST" }
+		runtime "Release"
+		buildoptions "/MD"
+		optimize "On"

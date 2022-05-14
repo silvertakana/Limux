@@ -4,19 +4,15 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_opengl3_loader.h>
-
-#include "Lumix/Core/Application.h"
 
 #include <GLFW/glfw3.h>
+
+#include "Lumix/Core/Application.h"
 
 namespace LMX
 {
 	ImGuiLayer::ImGuiLayer()
 		:Layer("ImGuiLayer")
-	{}
-
-	ImGuiLayer::~ImGuiLayer()
 	{}
 
 	void ImGuiLayer::OnAttach()
@@ -87,8 +83,6 @@ namespace LMX
 	
 	void ImGuiLayer::OnImGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
 	}
 	
 	void ImGuiLayer::SetDarkThemeColors()

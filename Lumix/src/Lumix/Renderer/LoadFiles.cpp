@@ -4,10 +4,10 @@
 
 namespace LMX
 {
-	std::pair<std::string, std::string> loadShader(const char* path)
+	std::pair<std::string, std::string> loadShader(const std::string& path)
 	{
 		std::ifstream file(path);
-		LMX_ASSERT(!file.is_open(), "Unable to open shader file: {0}", path);
+		LMX_ASSERT(file.is_open(), "Unable to open shader file: {0}", path);
 		std::string line, shader[2];
 		enum Mode
 		{
@@ -29,10 +29,10 @@ namespace LMX
 		}
 		return { shader[VERTEX], shader[FRAGMENT] };
 	}
-	std::string loadFile(const char* path)
+	std::string loadFile(const std::string& path)
 	{
 		std::ifstream file(path);
-		LMX_ASSERT(!file.is_open(), "Unable to open file: {0}", path);
+		LMX_ASSERT(file.is_open(), "Unable to open file: {0}", path);
 		return { (std::istreambuf_iterator<char>(file)),
 			(std::istreambuf_iterator<char>()) };
 	}

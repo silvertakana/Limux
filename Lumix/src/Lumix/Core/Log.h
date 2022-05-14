@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 #ifdef LMX_DIST
 #define LMX_NO_LOGGING
@@ -8,11 +9,29 @@
 #ifdef LMX_NO_LOGGING
 #define LMX_LOG(...) (__VA_ARGS__)
 #else
-#define LMX_LOG(type, textType, foreground, background, formater, ...) {\
-	std::printf(std::format("\x1B[{0};{1};{2}m[{3}|...{4}:{5}]: {6}\033[0m\n",\
-	textType, foreground, background+10,type,\
-	std::string(__FILE__).substr(strlen(__FILE__)-10,10), __LINE__, std::format(formater, __VA_ARGS__)).c_str());\
-}("remember to put semicolon")
+template<class... VARGS>
+inline static void lmx_log_impl(const std::string& type, int textType, int foreground, int background,const std::string& file, size_t line, const std::string& formater, VARGS... vags)
+{
+	static std::string prevLogMessage;
+	static size_t LogCount = 0;
+	unsigned short FileNameLength = (unsigned short)file.find_last_of("\\");
+	
+	std::string message = std::format("\x1B[{0};{1};{2}m[{3}|...{4}:{5}]: {6}\033[0m",
+		textType, foreground, background + 10, type,
+		file.substr(FileNameLength, file.size() - FileNameLength), line, std::format(formater, vags...));
+	
+	if (prevLogMessage == message)
+	{
+		std::cout << "\r(" << LogCount << ") " << message << std::flush;
+		LogCount++;
+	}
+	else
+	{
+		prevLogMessage = message;
+		std::cout << std::endl << message;
+	}
+}
+#define LMX_LOG(type, textType, foreground, background, formater, ...) lmx_log_impl(type, textType, foreground, background, __FILE__, __LINE__, formater, __VA_ARGS__);("remember to put semicolon")
 #endif
 #define LMX_LOG_black        30
 #define LMX_LOG_red          31

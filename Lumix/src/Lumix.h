@@ -10,6 +10,21 @@
 #include "Lumix/Core/KeyCodes.h"
 #include "Lumix/Core/MouseButtonCodes.h"
 
-// -----Entry Point-----
+#include "Lumix/Core/Timestep.h"
+
+// ---Renderer------------------------
+#include "Lumix/Renderer/Renderer.h"
+#include "Lumix/Renderer/RenderCommand.h"
+
+#include "Lumix/Renderer/Vertex.h"
+#include "Lumix/Renderer/Buffer.h"
+#include "Lumix/Renderer/Shader.h"
+#include "Lumix/Renderer/Texture.h"
+#include "Lumix/Renderer/VertexArray.h"
+#include "Lumix/Renderer/Camera.h"
+// -----------------------------------
+
+
+// -----Entry Point-------------------
 #include"Lumix/Core/EntryPoint.h"
-// -----Entry Point-----
+// -----Entry Point-------------------

@@ -3,6 +3,7 @@
 
 #include "Lumix/Core/Application.h"
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace LMX
 {
@@ -44,4 +45,46 @@ namespace LMX
 		return y;
 	}
 
+	std::pair<float, float> WindowsInput::SetMousePositionImpl(float x, float y)
+	{
+		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+		glfwSetCursorPos(window, x, y);
+		return {x,y};
+	}
+
+	float WindowsInput::SetMouseXImpl(float x)
+	{
+		auto [oldX, oldY] = GetMousePositionImpl();
+		return SetMousePositionImpl(x, oldY).first;
+	}
+
+	float WindowsInput::SetMouseYImpl(float y)
+	{
+		auto [oldX, oldY] = GetMousePositionImpl();
+		return SetMousePositionImpl(oldX, y).second;
+	}
+
+	void WindowsInput::SetInputModeImpl(InputType inptype, InputMode mode)
+	{
+		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+		int glfwmode = GLFW_CURSOR_NORMAL;
+		switch (mode)
+		{
+		case InputMode::CURSOR_NORMAL:
+			glfwmode = GLFW_CURSOR_NORMAL;
+			break;
+		case InputMode::CURSOR_HIDDEN:
+			glfwmode = GLFW_CURSOR_HIDDEN;
+			break;
+		case InputMode::CURSOR_DISABLED:
+			glfwmode = GLFW_CURSOR_DISABLED;
+			break;
+		}
+		switch (inptype)
+		{
+		case InputType::CURSOR:
+			glfwSetInputMode(window, GLFW_CURSOR, glfwmode);
+			break;
+		}
+	}
 }

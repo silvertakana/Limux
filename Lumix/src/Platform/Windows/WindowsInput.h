@@ -14,6 +14,10 @@ namespace LMX
 		virtual std::pair<float, float> GetMousePositionImpl() override;
 		virtual float GetMouseXImpl() override;
 		virtual float GetMouseYImpl() override;
+		virtual std::pair<float, float> SetMousePositionImpl(float x, float y) override;
+		virtual float SetMouseXImpl(float x) override;
+		virtual float SetMouseYImpl(float y) override;
+		virtual void SetInputModeImpl(InputType inptype, InputMode mode) override;
 	};
 
 }

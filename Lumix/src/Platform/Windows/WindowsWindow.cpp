@@ -4,6 +4,8 @@
 #include "Lumix/Events/MouseEvent.h"
 #include "Lumix/Events/KeyEvent.h"
 
+#include "Platform/OpenGL/OpenGLContext.h"
+
 namespace LMX {
 	void APIENTRY glDebugOutput(GLenum source,
 		GLenum type,
@@ -42,10 +44,10 @@ namespace LMX {
 
 		switch (severity)
 		{
-		case GL_DEBUG_SEVERITY_HIGH:         LMX_CRITIC("{0}", errorMessage); __debugbreak(); break;
-		case GL_DEBUG_SEVERITY_MEDIUM:       LMX_ERROR ("{0}", errorMessage); __debugbreak();  break;
-		case GL_DEBUG_SEVERITY_LOW:          LMX_WARN  ("{0}", errorMessage);   break;
-		case GL_DEBUG_SEVERITY_NOTIFICATION: LMX_INFO  ("{0}", errorMessage);   break;
+		case GL_DEBUG_SEVERITY_HIGH:         LMX_ASSERT(false, "{0}", errorMessage); break;
+		case GL_DEBUG_SEVERITY_MEDIUM:       LMX_ERROR ("{0}", errorMessage);		 break;
+		case GL_DEBUG_SEVERITY_LOW:          LMX_WARN  ("{0}", errorMessage);		 break;
+		case GL_DEBUG_SEVERITY_NOTIFICATION: LMX_INFO  ("{0}", errorMessage);		 break;
 		}
 	}
 	
@@ -78,16 +80,16 @@ namespace LMX {
 			LMX_ASSERT(glfwInit(), "Could not intialize GLFW!");
 			s_GLFWInitialized = true;
 		}
+		glfwSwapInterval(1);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		LMX_ASSERT(m_Window != NULL, "Failed to create GLFW window\n");
-		glfwMakeContextCurrent(m_Window);
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
-		LMX_ASSERT(gladLoadGL(), "Failed to load glad\n");
 
 		int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 		if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
@@ -198,7 +200,7 @@ namespace LMX {
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)

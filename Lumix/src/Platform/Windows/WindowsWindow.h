@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Lumix/Core/Window.h"
+#include "Lumix/Renderer/GraphicsContext.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -18,6 +19,7 @@ namespace LMX
 
 		inline unsigned int GetWidth() const override { return m_Data.Width; }
 		inline unsigned int GetHeight() const override { return m_Data.Height; }
+		inline std::string GetTitle() const override { return m_Data.Title; }
 
 		// Window attributes
 		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
@@ -30,6 +32,7 @@ namespace LMX
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{
