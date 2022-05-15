@@ -4,6 +4,9 @@ Author - [@Silvertakana](https://github.com/silvertakana) | [GitHub](https://git
 
 * Started on Apr 24, 2022
 
+
+<img src="res/LumixLogo.svg" alt="Lumix Logo" width="256"/>
+
 # Table of Contents
 
 * [Introduction](#introduction)
