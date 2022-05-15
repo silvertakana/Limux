@@ -5,7 +5,7 @@
 
 namespace LMX
 {
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	void CreateOGLShader(const std::string& vertexSrc, const std::string& fragmentSrc, uint32_t& ID)
 	{
 		uint32_t vertexShader, fragmentShader;
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -33,6 +33,40 @@ namespace LMX
 		glLinkProgram(ID);
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
+	}
+	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	{
+		CreateOGLShader(vertexSrc, fragmentSrc, ID);
+	}
+	std::pair<std::string, std::string> loadShader(const std::string& path)
+	{
+		std::ifstream file(path);
+		LMX_ASSERT(file.is_open(), "Unable to open shader file: {0}", path);
+		std::string line, shader[2];
+		enum Mode
+		{
+			NONE = -1,
+			VERTEX, FRAGMENT
+		};
+		Mode mode = NONE;
+		while (std::getline(file, line))
+		{
+			if (line.contains("#shader"))
+				if (line.contains("vertex"))
+					mode = VERTEX;
+				else if (line.contains("fragment"))
+					mode = FRAGMENT;
+				else
+					mode = NONE;
+			else if (mode != NONE)
+				shader[mode] += line + '\n';
+		}
+		return { shader[VERTEX], shader[FRAGMENT] };
+	}
+	OpenGLShader::OpenGLShader(const std::string& shaderPath)
+	{
+		auto [vertSource, fragSource] = loadShader(shaderPath);
+		CreateOGLShader(vertSource, fragSource, ID);
 	}
 	OpenGLShader::~OpenGLShader()
 	{

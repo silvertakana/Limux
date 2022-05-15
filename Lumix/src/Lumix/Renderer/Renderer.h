@@ -1,7 +1,7 @@
 #pragma once
 #include "RenderCommand.h"
 #include "Shader.h"
-#include "Camera.h"
+#include "Cameras/Camera.h"
 #include "glm/glm.hpp"
 namespace LMX
 {

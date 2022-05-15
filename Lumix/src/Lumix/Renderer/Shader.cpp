@@ -1,15 +1,20 @@
 #include "lmxpch.h"
 
 #include "Shader.h"
-#include "LoadFiles.h"
 #include "Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 namespace LMX
 {
 	Shader* Shader::Create(const std::string& filepath)
-	{
-		auto [ vertSource, fragSource ] = loadShader(filepath);
-		return Create(vertSource, fragSource);
+	{	
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:    LMX_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return new OpenGLShader(filepath);
+		}
+
+		LMX_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 	Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
@@ -22,6 +27,7 @@ namespace LMX
 		LMX_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
+	
 	#define UNIFORM(x, ...) switch (Renderer::GetAPI())\
 	{\
 		case RendererAPI::API::None:    LMX_ASSERT(false, "RendererAPI::None is currently not supported!"); return 0;\

@@ -9,27 +9,20 @@
 #ifdef LMX_NO_LOGGING
 #define LMX_LOG(...) (__VA_ARGS__)
 #else
+extern inline void lmx_log_MDL(const std::string& msg);
 template<class... VARGS>
 inline static void lmx_log_impl(const std::string& type, int textType, int foreground, int background,const std::string& file, size_t line, const std::string& formater, VARGS... vags)
 {
 	static std::string prevLogMessage;
-	static size_t LogCount = 0;
+	static size_t LogCount = 1;
 	unsigned short FileNameLength = (unsigned short)file.find_last_of("\\");
 	
 	std::string message = std::format("\x1B[{0};{1};{2}m[{3}|...{4}:{5}]: {6}\033[0m",
 		textType, foreground, background + 10, type,
 		file.substr(FileNameLength, file.size() - FileNameLength), line, std::format(formater, vags...));
 	
-	if (prevLogMessage == message)
-	{
-		std::cout << "\r(" << LogCount << ") " << message << std::flush;
-		LogCount++;
-	}
-	else
-	{
-		prevLogMessage = message;
-		std::cout << std::endl << message;
-	}
+	lmx_log_MDL(message);
+	//std::cout << message << std::endl; // old logging system
 }
 #define LMX_LOG(type, textType, foreground, background, formater, ...) lmx_log_impl(type, textType, foreground, background, __FILE__, __LINE__, formater, __VA_ARGS__);("remember to put semicolon")
 #endif

@@ -8,10 +8,11 @@ namespace LMX
 	public:
 		uint32_t ID;
 		OpenGLShader(const std::string & vertexSrc, const std::string & fragmentSrc);
+		OpenGLShader(const std::string & shaderPath);
 		virtual ~OpenGLShader();
 		
 		virtual void Bind() const;
-		virtual void Unbind() const;	
+		virtual void Unbind() const;
 
 		uint32_t GetUni(const std::string& name) const;
 

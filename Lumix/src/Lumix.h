@@ -21,7 +21,7 @@
 #include "Lumix/Renderer/Shader.h"
 #include "Lumix/Renderer/Texture.h"
 #include "Lumix/Renderer/VertexArray.h"
-#include "Lumix/Renderer/Camera.h"
+#include "Lumix/Renderer/Cameras/Camera.h"
 // -----------------------------------
 
 
