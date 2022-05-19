@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 #include <Limux.h>
 #include <glm/gtx/rotate_vector.hpp>
 #include <Limux/Addon/ControllerInput.h>
 #include <Platform/OpenGL/OpenGLShader.h>
 #include <Limux/Renderer/Cameras/PerspectiveCamera.h>
 #include <Limux/Renderer/Cameras/OrthographicCamera.h>
+=======
+#include <Lumix.h>
+#include <glm/gtx/rotate_vector.hpp>
+#include <Lumix/Addon/ControllerInput.h>
+#include <Platform/OpenGL/OpenGLShader.h>
+#include <Lumix/Renderer/Cameras/PerspectiveCamera.h>
+#include <Lumix/Renderer/Cameras/OrthographicCamera.h>
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
 
 #include <imgui.h>
 

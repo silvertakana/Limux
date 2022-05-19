@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 # Welcome to Limux Game Engine
+=======
+# Lumix Game Engine
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
 
 Author - [@Silvertakana](https://github.com/silvertakana) | [GitHub](https://github.com/silvertakana) | [Discord](https://discord.gg/Acj88TtQ)
 
 * Started on Apr 24, 2022
 
 
+<<<<<<< HEAD
 ![Limux Logo](res/LimuxLogo.png)
+=======
+<img src="res/LumixLogo.svg" alt="Lumix Logo" width="256"/>
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
 
 # Table of Contents
 
@@ -40,7 +48,11 @@ Author - [@Silvertakana](https://github.com/silvertakana) | [GitHub](https://git
 Introduction
 ============
 
+<<<<<<< HEAD
 Limux Engine is a game engine supports both 2D and 3D rendering. It is currently free to use and modify. it can be use in high production applications other than games. 
+=======
+Lumix Engine is a game engine supports both 2D and 3D rendering. It is currently free to use and modify. it can be use in high production applications other than games. 
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
 
 Installation
 ============
@@ -53,6 +65,7 @@ Installation
 	Note: At this point, MacOS and Linux are not supported.
 	* #### Windows 
 		* step 1: Run these command in your chosen command-line environment
+<<<<<<< HEAD
 			```batch
 			git clone --recursive https://github.com/silvertakana/Limux.git
 			cd Limux
@@ -60,15 +73,31 @@ Installation
 			```
 			you must provide an editor to `setup.bat` for it to correctly build the project. in this case, I used `vs2022` (visual studio 2022.)
 		* step 2: find the solution file and run it. e.g. `Limux.sln`
+=======
+			```
+			git clone --recursive https://github.com/silvertakana/Lumix.git
+			cd Lumix
+			setup.bat vs2022
+			```
+			you must provide an editor to `setup.bat` for it to correctly build the project. in this case, I used `vs2022` (visual studio 2022.)
+    	* step 2: find the solution file and run it. e.g. `Lumix.sln`
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
 
 Usage
 =====
 * ### Creating a new application
 
+<<<<<<< HEAD
 	Limux uses a layer base execution order system. So most of your codes will be in these layers. This is so that when you have unrelated things(e.g. UI, Physics, etc.) and want to separate them so that they can't affect each other, you can use these layers. The application will join these layer together and execute them in order.
 
 	```c++
 	#include <Limux.h>
+=======
+	Lumix uses a layer base execution order system. So most of your codes will be in these layers. This is so that when you have unrelated things(e.g. UI, Physics, etc.) and want to separate them so that they can't affect each other, you can use these layers. The application will join these layer together and execute them in order.
+
+	```c++
+	#include <Lumix.h>
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
 
 	class DemoLayer : public LMX::Layer
 	{
@@ -114,6 +143,7 @@ Usage
 	}
 	```
 	change `DemoApp` to your application name.
+<<<<<<< HEAD
 
 Libraries
 =========
@@ -165,3 +195,5 @@ Extra Stuff
 * ## Contact
 
 	  To be written.
+=======
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1

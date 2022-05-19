@@ -1,12 +1,12 @@
-[submodule "Lumix/vendor/imgui"]
-	path = Lumix/vendor/imgui
+[submodule "Limux/vendor/imgui"]
+	path = Limux/vendor/imgui
 	url = https://github.com/TheCherno/imgui.git
-[submodule "Lumix/vendor/GLFW"]
-	path = Lumix/vendor/GLFW
+[submodule "Limux/vendor/GLFW"]
+	path = Limux/vendor/GLFW
 	url = https://github.com/TheCherno/glfw.git
-[submodule "Lumix/vendor/glm"]
-	path = Lumix/vendor/glm
+[submodule "Limux/vendor/glm"]
+	path = Limux/vendor/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "Lumix/vendor/stb"]
-	path = Lumix/vendor/stb
+[submodule "Limux/vendor/stb"]
+	path = Limux/vendor/stb
 	url = https://github.com/nothings/stb
