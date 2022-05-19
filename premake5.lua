@@ -1,5 +1,9 @@
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+<<<<<<< HEAD
+workspace "Limux"
+=======
 workspace "Lumix"
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
 	configurations { "Debug", "Release" ,"Dist"}
 	platforms { "x86", "x64" }
 	startproject "Sandbox"
@@ -24,6 +28,28 @@ workspace "Lumix"
 
 	
 	
+<<<<<<< HEAD
+IncludeDir = {}
+IncludeDir["GLFW"] =  "%{wks.location}/Limux/vendor/GLFW/include"
+IncludeDir["Glad"] =  "%{wks.location}/Limux/vendor/Glad/include"
+IncludeDir["ImGui"] = "%{wks.location}/Limux/vendor/imgui"
+IncludeDir["glm"] =   "%{wks.location}/Limux/vendor/glm"
+IncludeDir["stb"] =   "%{wks.location}/Limux/vendor/stb"
+
+
+
+group "Dependencies"
+	include "Limux/vendor/GLFW"
+	include "Limux/vendor/Glad"
+	include "Limux/vendor/imgui"
+	include "Limux/vendor/stb"
+	
+group ""
+--group "Engine"
+	include "Limux"
+	include "sandbox"
+--group ""
+=======
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
@@ -164,3 +190,4 @@ project "Sandbox"
 		runtime "Release"
 		buildoptions "/MD"
 		optimize "On"
+>>>>>>> 5b95b19c54b3dbd73c4028756609e5ad568466b1
