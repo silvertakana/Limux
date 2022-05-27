@@ -6,8 +6,11 @@ namespace LMX
 	class Shader
 	{
 	public:
-		static Shader* Create(const std::string &filepath);
+		static Shader* Create(const std::string &fileSrc);
 		static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
+		
+		static Shader* Load(const std::string& filePath);
+		static Shader* Load(const std::string& vertexPath, const std::string& fragmentPath);
 		virtual ~Shader() = default;
 		
 		virtual void Bind() const = 0;

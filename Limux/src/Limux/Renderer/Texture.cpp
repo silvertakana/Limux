@@ -5,15 +5,11 @@
 
 namespace LMX
 {
-	Ref<Texture2D> Texture2D::Create(const std::string& path)
+	Texture2D* Texture2D::Load(const std::string& path, int setting)
 	{
-		switch (Renderer::GetAPI())
-		{
-		case RendererAPI::API::None:    LMX_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLTexture2D>(path);
-		}
-
-		LMX_ASSERT(false, "Unknown RendererAPI!");
+		SWITCHRENDERERAPI(
+			return new OpenGLTexture2D(path, (Settings)setting);
+		);
 		return nullptr;
 	}
 }

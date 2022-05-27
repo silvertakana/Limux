@@ -5,26 +5,32 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 namespace LMX
 {
-	Shader* Shader::Create(const std::string& filepath)
+	Shader* Shader::Create(const std::string& fileSrc)
 	{	
-		switch (Renderer::GetAPI())
-		{
-		case RendererAPI::API::None:    LMX_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return new OpenGLShader(filepath);
-		}
-
-		LMX_ASSERT(false, "Unknown RendererAPI!");
+		SWITCHRENDERERAPI(
+			return new OpenGLShader(fileSrc);
+		);
 		return nullptr;
 	}
-	Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	Shader* Shader::Create(const std::string& vertexPath, const std::string& fragmentPath)
 	{
-		switch (Renderer::GetAPI())
-		{
-		case RendererAPI::API::None:    LMX_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return new OpenGLShader(vertexSrc, fragmentSrc);
-		}
-
-		LMX_ASSERT(false, "Unknown RendererAPI!");
+		SWITCHRENDERERAPI(
+			return new OpenGLShader(vertexPath, fragmentPath);
+		);
+		return nullptr;
+	}
+	Shader* Shader::Load(const std::string& filePath)
+	{
+		SWITCHRENDERERAPI(
+			return OpenGLShader::Load(filePath);
+		);
+		return nullptr;
+	}
+	Shader* Shader::Load(const std::string& vertexPath, const std::string& fragmentPath)
+	{
+		SWITCHRENDERERAPI(
+			return OpenGLShader::Load(vertexPath, fragmentPath);
+		);
 		return nullptr;
 	}
 	

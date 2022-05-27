@@ -21,6 +21,7 @@ namespace LMX
 		OpenGLVertexBuffer(void* data, size_t size) : OpenGLBuffer(data, size) {}
 		virtual void Bind() const override { OpenGLBuffer::Bind(GL_VERTEX_ARRAY); };
 		virtual void UnBind() const override{ OpenGLBuffer::UnBind(GL_VERTEX_ARRAY); };
+		
 	};
 	
 	class OpenGLIndexBuffer : public OpenGLBuffer, public IndexBuffer

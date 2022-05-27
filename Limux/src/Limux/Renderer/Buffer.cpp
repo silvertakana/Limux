@@ -9,31 +9,19 @@ namespace LMX
 {
 	VertexBuffer* VertexBuffer::Create(void* data, uint32_t size)
 	{
-		VertexBuffer* buffer = nullptr;
-		switch (Renderer::GetAPI())
-		{
-		case RendererAPI::API::OpenGL:
+		LMX::VertexBuffer* buffer = nullptr;
+		SWITCHRENDERERAPI(
 			buffer = new OpenGLVertexBuffer(data, size);
-			break;
-		default:
-			LMX_ASSERT(false, "Unknown RendererAPI!");
-			break;
-		}
+		);
 		buffer->Size = size;
 		return buffer;
 	}
 	IndexBuffer* IndexBuffer::Create(void* data, uint32_t size)
 	{
-		IndexBuffer* buffer = nullptr;
-		switch (Renderer::GetAPI())
-		{
-		case RendererAPI::API::OpenGL:
+		LMX::IndexBuffer* buffer = nullptr;
+		SWITCHRENDERERAPI(
 			buffer = new OpenGLIndexBuffer(data, size);
-			break;
-		default:
-			LMX_ASSERT(false, "Unknown RendererAPI!");
-			break;
-		}
+		);
 		buffer->Size = size;
 		return buffer;
 	}

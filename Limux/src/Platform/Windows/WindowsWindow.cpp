@@ -80,7 +80,6 @@ namespace LMX {
 			LMX_ASSERT(glfwInit(), "Could not intialize GLFW!");
 			s_GLFWInitialized = true;
 		}
-		glfwSwapInterval(1);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

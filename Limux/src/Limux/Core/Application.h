@@ -22,6 +22,9 @@ namespace LMX
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 		
+		void PopLayer(Layer* layer);
+		void PopOverlay(Layer* layer);
+		
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
 		

@@ -16,6 +16,7 @@ namespace LMX
 	void OpenGLContext::Init()
 	{
 		glfwMakeContextCurrent(m_WindowHandle);
+		//glfwSwapInterval(1);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		LMX_ASSERT(status, "Failed to initialize Glad!");
 	}

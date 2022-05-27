@@ -21,6 +21,7 @@ namespace LMX
 		
 		m_Window = std::unique_ptr<Window>(Window::Create({ "Limux Engine" }));
 		m_Window->SetEventCallback(LMX_BIND_EVENT_FN(Application::OnEvent));
+		Renderer::Init();
 		PushOverlay(new ImGuiLayer());
 	}
 	void Application::PushLayer(Layer* layer)
@@ -31,6 +32,14 @@ namespace LMX
 	void Application::PushOverlay(Layer* layer)
 	{
 		m_LayerStack.PushOverlay(layer);
+	}
+	void Application::PopLayer(Layer* layer)
+	{
+		m_LayerStack.PopLayer(layer);
+	}
+	void Application::PopOverlay(Layer * layer)
+	{
+		m_LayerStack.PopOverlay(layer);
 	}
 	void Application::OnEvent(Event& e)
 	{

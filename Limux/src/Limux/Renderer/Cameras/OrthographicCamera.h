@@ -9,6 +9,5 @@ namespace LMX
 		virtual ~OrthographicCamera() override;
 		
 		virtual void SetProjectionMatrix(float left, float right, float bottom, float top, float zNear, float zFar);
-		virtual void DebugCameraUpdate(float Speed, Timestep ts);
 	};
 }

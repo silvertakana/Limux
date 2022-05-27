@@ -2,6 +2,7 @@
 #include "OpenGLShader.h"
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+#include "Limux/Core/AssetLoader.h"
 
 namespace LMX
 {
@@ -38,35 +39,41 @@ namespace LMX
 	{
 		CreateOGLShader(vertexSrc, fragmentSrc, ID);
 	}
-	std::pair<std::string, std::string> loadShader(const std::string& path)
+	OpenGLShader::OpenGLShader(const std::string& shaderSrc)
 	{
-		std::ifstream file(path);
-		LMX_ASSERT(file.is_open(), "Unable to open shader file: {0}", path);
-		std::string line, shader[2];
+		std::stringstream file;
+		file << shaderSrc;
+		std::string line, source[2];
 		enum Mode
 		{
 			NONE = -1,
 			VERTEX, FRAGMENT
 		};
 		Mode mode = NONE;
+		const char* typeToken = "#type";
 		while (std::getline(file, line))
 		{
 			if (line.contains("#shader"))
+			{
 				if (line.contains("vertex"))
 					mode = VERTEX;
 				else if (line.contains("fragment"))
 					mode = FRAGMENT;
 				else
 					mode = NONE;
+			}
 			else if (mode != NONE)
-				shader[mode] += line + '\n';
+				source[mode] += line + '\n';
 		}
-		return { shader[VERTEX], shader[FRAGMENT] };
+		CreateOGLShader(source[VERTEX], source[FRAGMENT], ID);
 	}
-	OpenGLShader::OpenGLShader(const std::string& shaderPath)
+	OpenGLShader* OpenGLShader::Load(const std::string& shaderPath)
 	{
-		auto [vertSource, fragSource] = loadShader(shaderPath);
-		CreateOGLShader(vertSource, fragSource, ID);
+		return new OpenGLShader(AssetLoader::LoadFile(shaderPath));
+	}
+	OpenGLShader* OpenGLShader::Load(const std::string& vertexPath, const std::string& fragmentPath)
+	{
+		return new OpenGLShader(AssetLoader::LoadFile(vertexPath), AssetLoader::LoadFile(fragmentPath));
 	}
 	OpenGLShader::~OpenGLShader()
 	{

@@ -7,8 +7,12 @@ namespace LMX
 {
 	class LMX_API Input
 	{
+	protected:
+		Input() = default;
 	public:
-		virtual ~Input() = default;
+		Input(const Input&) = delete;
+		Input& operator=(const Input&) = delete;
+		
 		inline static bool IsKeyPressed(int keycode) { return s_Instance->IsKeyPressedImpl(keycode); }
 
 		inline static bool IsMouseButtonPressed(int button) { return s_Instance->IsMouseButtonPressedImpl(button); }
@@ -18,11 +22,11 @@ namespace LMX
 		inline static std::pair<float, float> SetMousePosition(float x, float y) { return s_Instance->SetMousePositionImpl(x,y); }
 		inline static float SetMouseX(float x) { return s_Instance->SetMouseXImpl(x); }
 		inline static float SetMouseY(float y) { return s_Instance->SetMouseYImpl(y); }
-		static enum class InputType
+		enum class InputType
 		{
 			CURSOR,
 		};
-		static enum class InputMode
+		enum class InputMode
 		{
 			CURSOR_NORMAL,
 			CURSOR_HIDDEN,

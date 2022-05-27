@@ -5,6 +5,7 @@
 #include "Limux/Core/Layer.h"
 #include "Limux/Core/Log.h"
 #include "Limux/ImGui/ImGuiLayer.h"
+#include "imgui.h"
 
 #include "Limux/Core/Input.h"
 #include "Limux/Core/KeyCodes.h"

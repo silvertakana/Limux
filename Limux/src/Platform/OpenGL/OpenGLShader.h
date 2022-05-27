@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <Limux/Core/Core.h>
 #include "Limux/Renderer/Shader.h"
 namespace LMX
 {
@@ -8,7 +9,9 @@ namespace LMX
 	public:
 		uint32_t ID;
 		OpenGLShader(const std::string & vertexSrc, const std::string & fragmentSrc);
-		OpenGLShader(const std::string & shaderPath);
+		OpenGLShader(const std::string & shaderSrc);
+		static OpenGLShader* Load(const std::string& shaderPath);
+		static OpenGLShader* Load(const std::string& vertexPath, const std::string& fragmentPath);
 		virtual ~OpenGLShader();
 		
 		virtual void Bind() const;
