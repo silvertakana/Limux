@@ -1,10 +1,15 @@
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 workspace "Limux"
-	configurations { "Debug", "Release" ,"Dist"}
 	platforms { "x86", "x64" }
 	startproject "Sandbox"
+	configurations { "Debug", "Release" ,"Dist"}
 
 	systemversion "latest"
+	
+	flags
+	{
+		"MultiProcessorCompile"
+	}
 
 	vpaths {
 		["Headers"] = { "%{prj.name}/src/**.hpp","%{prj.name}/src/**.h" },

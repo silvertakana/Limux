@@ -6,3 +6,4 @@ bin-int/
 **.filters
 **.user
 upload.bat
+downloadUpdates.bat

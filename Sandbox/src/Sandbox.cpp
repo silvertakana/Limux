@@ -54,6 +54,7 @@ public:
 	}
 	virtual void OnUpdate(LMX::Timestep ts) override
 	{
+		
 		LMX::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		LMX::RenderCommand::Clear();
 		LMX::DebugPerspecCamUpdate(cam, 2.f, 2.f, ts);
