@@ -1,9 +1,16 @@
-.vs/
-bin/
+# Binaries
+**/bin/
+!vendor/bin/premake/
 bin-int/
+
+# Visual Studio files and folder
+.vs/
 **.sln
 **.vcxproj
-**.filters
-**.user
+**.vcxproj.filters
+**.vcxproj.user
+
+# developer files
 upload.bat
+clean.bat
 downloadUpdates.bat

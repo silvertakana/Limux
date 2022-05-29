@@ -2,6 +2,7 @@
 
 #include "Limux/Core/Window.h"
 #include "Limux/Renderer/GraphicsContext.h"
+#include "Limux/Core/Core.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -32,7 +33,7 @@ namespace LMX
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
-		GraphicsContext* m_Context;
+		Scope<GraphicsContext> m_Context;
 
 		struct WindowData
 		{

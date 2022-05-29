@@ -23,7 +23,7 @@ namespace LMX
 	{
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* data = stbi_load_from_memory(buffer, size, &width, &height, &channels, 0);
+		stbi_uc* data = stbi_load_from_memory(buffer, (int)size, &width, &height, &channels, 0);
 		Load(data, width, height, channels, setting);
 	}
 

@@ -2,6 +2,8 @@
 #include "Renderer.h"
 namespace LMX
 {
+	Scope<Renderer::SceneData> Renderer::s_SceneData = CreateScope<Renderer::SceneData>();
+	
 	void Renderer::BeginScene()
 	{}
 

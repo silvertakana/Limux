@@ -45,7 +45,7 @@ namespace LMX
 		virtual float SetMouseYImpl(float y) = 0;
 		virtual void SetInputModeImpl(InputType inptype, InputMode mode) = 0;
 	private:
-		static Input* s_Instance;
+		static Scope<Input> s_Instance;
 	};
 
 }

@@ -1,8 +1,8 @@
 #pragma once
-#include "Limux/Renderer/Cameras/Camera.h"
+#include "Limux/Renderer/Camera/Camera.h"
 
-#include "Limux/Renderer/Cameras/PerspectiveCamera.h"
-#include "Limux/Renderer/Cameras/OrthographicCamera.h"
+#include "Limux/Renderer/Camera/PerspectiveCamera.h"
+#include "Limux/Renderer/Camera/OrthographicCamera.h"
 
 #include <Limux/Addon/Camera/perspectiveController.h>
 #include <Limux/Addon/Camera/OrthographicController.h>

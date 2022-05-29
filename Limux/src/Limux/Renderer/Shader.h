@@ -1,16 +1,17 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "Limux/Core/Core.h"
 
 namespace LMX
 {
 	class Shader
 	{
 	public:
-		static Shader* Create(const std::string &fileSrc);
-		static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
+		static Ref<Shader> Create(const std::string &fileSrc);
+		static Ref<Shader> Create(const std::string& vertexSrc, const std::string& fragmentSrc);
 		
-		static Shader* Load(const std::string& filePath);
-		static Shader* Load(const std::string& vertexPath, const std::string& fragmentPath);
+		static Ref<Shader> Load(const std::string& filePath);
+		static Ref<Shader> Load(const std::string& vertexPath, const std::string& fragmentPath);
 		virtual ~Shader() = default;
 		
 		virtual void Bind() const = 0;

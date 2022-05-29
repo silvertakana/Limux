@@ -37,7 +37,7 @@ namespace LMX
 			return s_RendererAPI->GetTime();
 		}
 	private:
-		static RendererAPI* s_RendererAPI;
+		static Scope<RendererAPI> s_RendererAPI;
 	};
 
 }

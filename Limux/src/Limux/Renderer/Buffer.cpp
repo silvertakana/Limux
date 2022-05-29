@@ -7,20 +7,20 @@
 
 namespace LMX
 {
-	VertexBuffer* VertexBuffer::Create(void* data, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size)
 	{
-		LMX::VertexBuffer* buffer = nullptr;
+		Ref<VertexBuffer> buffer = nullptr;
 		SWITCHRENDERERAPI(
-			buffer = new OpenGLVertexBuffer(data, size);
+			buffer.reset((VertexBuffer*)new OpenGLVertexBuffer(data, size));
 		);
 		buffer->Size = size;
 		return buffer;
 	}
-	IndexBuffer* IndexBuffer::Create(void* data, uint32_t size)
+	Ref<IndexBuffer> IndexBuffer::Create(void* data, uint32_t size)
 	{
-		LMX::IndexBuffer* buffer = nullptr;
+		Ref<LMX::IndexBuffer> buffer = nullptr;
 		SWITCHRENDERERAPI(
-			buffer = new OpenGLIndexBuffer(data, size);
+			buffer.reset((IndexBuffer*)new OpenGLIndexBuffer(data, size));
 		);
 		buffer->Size = size;
 		return buffer;

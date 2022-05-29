@@ -10,8 +10,8 @@ namespace LMX
 		uint32_t ID;
 		OpenGLShader(const std::string & vertexSrc, const std::string & fragmentSrc);
 		OpenGLShader(const std::string & shaderSrc);
-		static OpenGLShader* Load(const std::string& shaderPath);
-		static OpenGLShader* Load(const std::string& vertexPath, const std::string& fragmentPath);
+		static Ref<OpenGLShader> Load(const std::string& shaderPath);
+		static Ref<OpenGLShader> Load(const std::string& vertexPath, const std::string& fragmentPath);
 		virtual ~OpenGLShader();
 		
 		virtual void Bind() const;

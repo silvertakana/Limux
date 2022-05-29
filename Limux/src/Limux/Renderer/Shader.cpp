@@ -3,30 +3,31 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Limux/Core/Core.h"
 namespace LMX
 {
-	Shader* Shader::Create(const std::string& fileSrc)
+	Ref<Shader> Shader::Create(const std::string& fileSrc)
 	{	
 		SWITCHRENDERERAPI(
-			return new OpenGLShader(fileSrc);
+			return CreateRef<OpenGLShader>(fileSrc);
 		);
 		return nullptr;
 	}
-	Shader* Shader::Create(const std::string& vertexPath, const std::string& fragmentPath)
+	Ref<Shader> Shader::Create(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		SWITCHRENDERERAPI(
-			return new OpenGLShader(vertexPath, fragmentPath);
+			return CreateRef<OpenGLShader>(vertexPath, fragmentPath);
 		);
 		return nullptr;
 	}
-	Shader* Shader::Load(const std::string& filePath)
+	Ref<Shader> Shader::Load(const std::string& filePath)
 	{
 		SWITCHRENDERERAPI(
 			return OpenGLShader::Load(filePath);
 		);
 		return nullptr;
 	}
-	Shader* Shader::Load(const std::string& vertexPath, const std::string& fragmentPath)
+	Ref<Shader> Shader::Load(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		SWITCHRENDERERAPI(
 			return OpenGLShader::Load(vertexPath, fragmentPath);

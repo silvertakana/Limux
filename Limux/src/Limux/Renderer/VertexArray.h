@@ -60,6 +60,6 @@ namespace LMX
 		virtual const LMX::Ref<VertexBuffer>& GetVBO() const = 0;
 		virtual const LMX::Ref<IndexBuffer>& GetEBO()  const = 0;
 		virtual void AddAttrib(ShaderDataType Type, bool normalized, uint32_t relativeoffset) = 0;
-		static VertexArray* Create(const LMX::Ref<VertexBuffer>& VBO, const LMX::Ref<IndexBuffer>& EBO, uint32_t offset, uint32_t stride);
+		static Ref<VertexArray> Create(const LMX::Ref<VertexBuffer>& VBO, const LMX::Ref<IndexBuffer>& EBO, uint32_t offset, uint32_t stride);
 	};
 }

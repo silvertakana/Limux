@@ -1,7 +1,7 @@
 #pragma once
 #include "RenderCommand.h"
 #include "Shader.h"
-#include "Cameras/Camera.h"
+#include "Camera/Camera.h"
 #include "glm/glm.hpp"
 namespace LMX
 {
@@ -19,6 +19,11 @@ namespace LMX
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	private:
+		struct SceneData
+		{
+		};
+
+		static Scope<SceneData> s_SceneData;
 	};
 
 

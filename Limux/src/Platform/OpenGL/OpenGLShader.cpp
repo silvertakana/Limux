@@ -32,6 +32,8 @@ namespace LMX
 		glAttachShader(ID, vertexShader);
 		glAttachShader(ID, fragmentShader);
 		glLinkProgram(ID);
+		glDetachShader(ID, vertexShader);
+		glDetachShader(ID, vertexShader);
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 	}
@@ -67,13 +69,13 @@ namespace LMX
 		}
 		CreateOGLShader(source[VERTEX], source[FRAGMENT], ID);
 	}
-	OpenGLShader* OpenGLShader::Load(const std::string& shaderPath)
+	Ref<OpenGLShader> OpenGLShader::Load(const std::string& shaderPath)
 	{
-		return new OpenGLShader(AssetLoader::LoadFile(shaderPath));
+		return CreateRef<OpenGLShader>(AssetLoader::LoadFile(shaderPath));
 	}
-	OpenGLShader* OpenGLShader::Load(const std::string& vertexPath, const std::string& fragmentPath)
+	Ref<OpenGLShader> OpenGLShader::Load(const std::string& vertexPath, const std::string& fragmentPath)
 	{
-		return new OpenGLShader(AssetLoader::LoadFile(vertexPath), AssetLoader::LoadFile(fragmentPath));
+		return CreateRef<OpenGLShader>(AssetLoader::LoadFile(vertexPath), AssetLoader::LoadFile(fragmentPath));
 	}
 	OpenGLShader::~OpenGLShader()
 	{

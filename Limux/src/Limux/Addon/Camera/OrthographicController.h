@@ -1,5 +1,5 @@
 #pragma once
-#include "Limux/Renderer/Cameras/OrthographicCamera.h"
+#include "Limux/Renderer/Camera/OrthographicCamera.h"
 #include "Limux/Core/Core.h"
 namespace LMX
 {

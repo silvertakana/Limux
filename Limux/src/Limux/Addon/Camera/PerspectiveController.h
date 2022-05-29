@@ -1,5 +1,5 @@
 #pragma once
-#include "Limux/Renderer/Cameras/PerspectiveCamera.h"
+#include "Limux/Renderer/Camera/PerspectiveCamera.h"
 #include "Limux/Core/Core.h"
 namespace LMX
 {

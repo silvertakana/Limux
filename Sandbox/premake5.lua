@@ -29,9 +29,6 @@ project "Sandbox"
 		postbuildcommands {
 			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/",
 		}
-		defines{
-			"LMX_PLATFORM_WINDOWS"
-		}
 	filter ("files:Sandbox/libraries/**.**")
     	flags {"NoPCH"}
 

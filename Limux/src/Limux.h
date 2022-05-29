@@ -22,10 +22,4 @@
 #include "Limux/Renderer/Shader.h"
 #include "Limux/Renderer/Texture.h"
 #include "Limux/Renderer/VertexArray.h"
-#include "Limux/Renderer/Cameras/Camera.h"
-// -----------------------------------
-
-
-// -----Entry Point-------------------
-#include"Limux/Core/EntryPoint.h"
-// -----Entry Point-------------------
+#include "Limux/Renderer/Camera/Camera.h"

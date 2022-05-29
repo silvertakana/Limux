@@ -5,10 +5,10 @@
 
 namespace LMX
 {
-	Texture2D* Texture2D::Load(const std::string& path, int setting)
+	Ref<Texture2D> Texture2D::Load(const std::string& path, int setting)
 	{
 		SWITCHRENDERERAPI(
-			return new OpenGLTexture2D(path, (Settings)setting);
+			return CreateRef<OpenGLTexture2D>(path, (Settings)setting);
 		);
 		return nullptr;
 	}

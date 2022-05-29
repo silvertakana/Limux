@@ -2,6 +2,7 @@
 #include <Limux/Packs/CameraPack.h>
 #include <glm/gtx/rotate_vector.hpp>
 #include <Platform/OpenGL/OpenGLShader.h>
+#include <Limux/Core/EntryPoint.h>
 
 class ExampleLayer : public LMX::Layer
 {
@@ -25,20 +26,20 @@ public:
 		std::vector<uint32_t> indices {0,2,1,1,2,3};
 
 		LMX::Ref<LMX::VertexBuffer> VBO;
-		VBO.reset(LMX::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(LMX::Vertex)));
+		VBO = LMX::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(LMX::Vertex));
 		LMX::Ref<LMX::IndexBuffer> EBO;
-		EBO.reset(LMX::IndexBuffer::Create(indices.data(), indices.size() * sizeof(uint32_t)));
+		EBO = LMX::IndexBuffer::Create(indices.data(), indices.size() * sizeof(uint32_t));
 		
-		VAO.reset(LMX::VertexArray::Create(VBO, EBO, 0, sizeof(LMX::Vertex)));
+		VAO = LMX::VertexArray::Create(VBO, EBO, 0, sizeof(LMX::Vertex));
 		VAO->AddAttrib(LMX::ShaderDataType::Float3, true, offsetof(LMX::Vertex, pos));
 		VAO->AddAttrib(LMX::ShaderDataType::Float4, true, offsetof(LMX::Vertex, color));
 		VAO->AddAttrib(LMX::ShaderDataType::Float2, true, offsetof(LMX::Vertex, texCoord));
 
 		m_Textures = {
-			LMX::Ref<LMX::Texture2D>(LMX::Texture2D::Load("res/textures/fence.png", LMX::Texture2D::Mipmap | LMX::Texture2D::MagLinear))
+			LMX::Texture2D::Load("res/textures/fence.png", LMX::Texture2D::Mipmap | LMX::Texture2D::MagLinear)
 		};
 
-		shader.reset(LMX::Shader::Load("res/shaders/flat.shader"));
+		shader = LMX::Shader::Load("res/shaders/flat.shader");
 		{
 			auto& window = LMX::Application::Get().GetWindow();
 			float aspect = (float)window.GetWidth() / (float)window.GetHeight();
