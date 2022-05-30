@@ -1,12 +1,6 @@
 #pragma once
 #include <iostream>
 
-#ifdef LMX_DIST
-#else
-	#define LMX_ENABLE_LOGGING
-	#define LMX_ENABLE_ASSERTS
-#endif
-
 #ifndef LMX_ENABLE_LOGGING
 	#define LMX_LOG(...) (__VA_ARGS__)
 #else

@@ -5,7 +5,5 @@
 
 namespace LMX
 {
-
 	Scope<RendererAPI> RenderCommand::s_RendererAPI = CreateScope<OpenGLRendererAPI>();
-
 }

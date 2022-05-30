@@ -13,6 +13,7 @@ namespace LMX
 	PerspectiveCamera::PerspectiveCamera(float fov, float width, float height, float zNear, float zFar)
 		:Width(width), Height(height)
 	{
+		LMX_PROFILE_FUNCTION();
 		SetProjectionMatrix(glm::perspective(fov, Width / Height, zNear, zFar));
 	}
 	PerspectiveCamera::~PerspectiveCamera()

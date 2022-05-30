@@ -6,8 +6,6 @@
 
 #include "Limux/Renderer/Renderer.h"
 
-
-
 #include "Input.h"
 
 namespace LMX
@@ -16,6 +14,7 @@ namespace LMX
 
 	Application::Application()
 	{
+		LMX_PROFILE_FUNCTION();
 		LMX_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		
@@ -26,43 +25,51 @@ namespace LMX
 	}
 	void Application::PushLayer(Layer* layer)
 	{
+		LMX_PROFILE_FUNCTION();
 		m_LayerStack.PushLayer(layer);
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
+		LMX_PROFILE_FUNCTION();
 		m_LayerStack.PushOverlay(layer);
 	}
 	void Application::PopLayer(Layer* layer)
 	{
+		LMX_PROFILE_FUNCTION();
 		m_LayerStack.PopLayer(layer);
 	}
 	void Application::PopOverlay(Layer * layer)
 	{
+		LMX_PROFILE_FUNCTION();
 		m_LayerStack.PopOverlay(layer);
 	}
 	void Application::OnEvent(Event& e)
 	{
+		LMX_PROFILE_FUNCTION();
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(LMX_BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(LMX_BIND_EVENT_FN(Application::OnWindowResize));
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			(*--it)->OnEvent(e);
+			(*it)->OnEvent(e);
 			if (e.Handled)
 				break;
 		}
 	}
 	void Application::Run()
 	{
+		LMX_PROFILE_FUNCTION();
 		while (m_Running)
 		{		
+			LMX_PROFILE_SCOPE("RunLoop");
 			float time = RenderCommand::GetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 			
 			if (!m_Minimized)
 			{
+				LMX_PROFILE_SCOPE("LayerStack OnUpdate");
 				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(timestep);
 			}
@@ -70,20 +77,22 @@ namespace LMX
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 			{
+				LMX_PROFILE_SCOPE("LayerStack OnImGUIRender");
 				layer->OnImGuiRender();
 			}
 			m_ImGuiLayer->End();
-			
 			m_Window->OnUpdate();
 		}
 	}
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
+		LMX_PROFILE_FUNCTION();
 		m_Running = false;
 		return true;
 	}	
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		LMX_PROFILE_FUNCTION();
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			m_Minimized = true;

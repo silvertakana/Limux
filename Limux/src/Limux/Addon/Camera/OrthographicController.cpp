@@ -8,6 +8,7 @@ namespace LMX
 {
 	void DebugOrthoCamUpdate(LMX::Ref<OrthographicCamera> cam, float Speed, float rotSpeed, Timestep ts)
 	{
+		LMX_PROFILE_FUNCTION();
 		static bool s_Setup = false;
 		if (!s_Setup)
 		{

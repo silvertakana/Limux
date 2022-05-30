@@ -4,79 +4,63 @@
 #include "Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "Limux/Core/Core.h"
+#include "Limux/Renderer/RendererAPI.h"
 namespace LMX
 {
 	Ref<Shader> Shader::Create(const std::string& fileSrc)
 	{	
-		SWITCHRENDERERAPI(
+		LMX_PROFILE_FUNCTION();
+		LMX_SWITCHRENDERERAPI(
 			return CreateRef<OpenGLShader>(fileSrc);
 		);
 		return nullptr;
 	}
 	Ref<Shader> Shader::Create(const std::string& vertexPath, const std::string& fragmentPath)
 	{
-		SWITCHRENDERERAPI(
+		LMX_PROFILE_FUNCTION();
+		LMX_SWITCHRENDERERAPI(
 			return CreateRef<OpenGLShader>(vertexPath, fragmentPath);
 		);
 		return nullptr;
 	}
 	Ref<Shader> Shader::Load(const std::string& filePath)
 	{
-		SWITCHRENDERERAPI(
+		LMX_PROFILE_FUNCTION();
+		LMX_SWITCHRENDERERAPI(
 			return OpenGLShader::Load(filePath);
 		);
 		return nullptr;
 	}
 	Ref<Shader> Shader::Load(const std::string& vertexPath, const std::string& fragmentPath)
 	{
-		SWITCHRENDERERAPI(
+		LMX_PROFILE_FUNCTION();
+		LMX_SWITCHRENDERERAPI(
 			return OpenGLShader::Load(vertexPath, fragmentPath);
 		);
 		return nullptr;
 	}
-	
-	#define UNIFORM(x, ...) switch (Renderer::GetAPI())\
+	UniformSetter Shader::operator[](const std::string& identifier)
+	{
+		LMX_PROFILE_FUNCTION();
+		return UniformSetter(*this, identifier);
+	}
+	#define LMX_UNIFORMSETTERFUNCTION(type) \
+	void UniformSetter::operator=(type data)\
 	{\
-		case RendererAPI::API::None:    LMX_ASSERT(false, "RendererAPI::None is currently not supported!"); return 0;\
-		case RendererAPI::API::OpenGL:  return ((OpenGLShader*)this)->##x(__VA_ARGS__);\
-	}\
-	LMX_ASSERT(false, "Unknown RendererAPI!");\
-	return 0;
+		LMX_PROFILE_FUNCTION();\
+		LMX_SWITCHRENDERERAPI(\
+			((OpenGLShader&)m_Shader).setUniform(m_Identifier, data);\
+		);\
+	}
+
+	LMX_UNIFORMSETTERFUNCTION(const bool	 &	)
+	LMX_UNIFORMSETTERFUNCTION(const int		 &	)
+	LMX_UNIFORMSETTERFUNCTION(const float	 &	)
+	LMX_UNIFORMSETTERFUNCTION(const glm::vec2&	)
+	LMX_UNIFORMSETTERFUNCTION(const glm::vec3&	)
+	LMX_UNIFORMSETTERFUNCTION(const glm::vec4&	)
+	LMX_UNIFORMSETTERFUNCTION(const glm::mat2&	)
+	LMX_UNIFORMSETTERFUNCTION(const glm::mat3&	)
+	LMX_UNIFORMSETTERFUNCTION(const glm::mat4&	)
 	
-	uint32_t Shader::setBool(const std::string& name, bool value) const
-	{
-		UNIFORM(setBool, name, value);
-	}
-	uint32_t Shader::setInt(const std::string& name, int value) const
-	{
-		UNIFORM(setInt, name, value);
-	}
-	uint32_t Shader::setFloat(const std::string& name, float value) const
-	{
-		UNIFORM(setFloat, name, value);
-	}
-	uint32_t Shader::setVec2(const std::string& name, glm::vec2 vec) const
-	{
-		UNIFORM(setVec2, name, vec);
-	}
-	uint32_t Shader::setVec3(const std::string& name, glm::vec3 vec) const
-	{
-		UNIFORM(setVec3, name, vec);
-	}
-	uint32_t Shader::setVec4(const std::string& name, glm::vec4 vec) const
-	{
-		UNIFORM(setVec4, name, vec);
-	}
-	uint32_t Shader::setMat2(const std::string& name, glm::mat2 mat) const
-	{
-		UNIFORM(setMat2, name, mat);
-	}
-	uint32_t Shader::setMat3(const std::string& name, glm::mat3 mat) const
-	{
-		UNIFORM(setMat3, name, mat);
-	}
-	uint32_t Shader::setMat4(const std::string& name, glm::mat4 mat) const
-	{
-		UNIFORM(setMat4, name, mat);
-	}
 }

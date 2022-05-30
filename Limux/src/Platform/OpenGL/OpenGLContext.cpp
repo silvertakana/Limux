@@ -10,11 +10,13 @@ namespace LMX
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		: m_WindowHandle(windowHandle)
 	{
+		LMX_PROFILE_FUNCTION();
 		LMX_ASSERT(windowHandle, "Window handle is null!");
 	}
 
 	void OpenGLContext::Init()
 	{
+		LMX_PROFILE_FUNCTION();
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		LMX_ASSERT(status, "Failed to initialize Glad!");
@@ -31,6 +33,7 @@ namespace LMX
 
 	void OpenGLContext::SwapBuffers()
 	{
+		LMX_PROFILE_FUNCTION();
 		glfwSwapBuffers(m_WindowHandle);
 	}
 

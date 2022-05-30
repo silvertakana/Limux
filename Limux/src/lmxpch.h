@@ -1,5 +1,7 @@
 #pragma once
 
+
+// stl
 #include <cinttypes>
 #include <functional>
 #include <utility>
@@ -19,4 +21,10 @@
 #include <unordered_map>
 #include <thread>
 #include <Windows.h>
+
+// configuration
+#include "Limux/Core/DefConfig.h"
+// logging
 #include "Limux/Core/Log.h"
+// debug
+#include "Limux/Debug/Instrumentor.h"

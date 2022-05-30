@@ -4,6 +4,7 @@
 
 namespace LMX
 {
+	class UniformSetter;
 	class Shader
 	{
 	public:
@@ -12,19 +13,36 @@ namespace LMX
 		
 		static Ref<Shader> Load(const std::string& filePath);
 		static Ref<Shader> Load(const std::string& vertexPath, const std::string& fragmentPath);
+		template<class T>
+		UniformSetter SetUniform(const std::string& identifier, const T& data)
+		{
+			LMX_PROFILE_FUNCTION();
+			return operator[](identifier) = data;
+		}
+		UniformSetter operator[](const std::string& identifier);
 		virtual ~Shader() = default;
 		
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
+	};
+	
+	class UniformSetter
+	{
+		Shader& m_Shader;
+		std::string m_Identifier;
+	public:
+		UniformSetter(Shader& shader, const std::string& identifier)
+			:m_Shader(shader), m_Identifier(identifier)
+		{}
+		void operator=(const bool& data);
+		void operator=(const int& data);
+		void operator=(const float& data);
+		void operator=(const glm::vec2& data);
+		void operator=(const glm::vec3& data);
+		void operator=(const glm::vec4& data);
+		void operator=(const glm::mat2& data);
+		void operator=(const glm::mat3& data);
+		void operator=(const glm::mat4& data);
 
-		uint32_t setBool (const std::string& name, bool    value) const;
-		uint32_t setInt  (const std::string& name, int     value) const;
-		uint32_t setFloat(const std::string& name, float   value) const;
-		uint32_t setVec2 (const std::string& name, glm::vec2 vec) const;
-		uint32_t setVec3 (const std::string& name, glm::vec3 vec) const;
-		uint32_t setVec4 (const std::string& name, glm::vec4 vec) const;
-		uint32_t setMat2 (const std::string& name, glm::mat2 mat) const;
-		uint32_t setMat3 (const std::string& name, glm::mat3 mat) const;
-		uint32_t setMat4 (const std::string& name, glm::mat4 mat) const;
 	};
 }

@@ -17,6 +17,7 @@ namespace LMX
 
 	void ImGuiLayer::OnAttach()
 	{
+		LMX_PROFILE_FUNCTION();
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -50,6 +51,7 @@ namespace LMX
 
 	void ImGuiLayer::OnDetach()
 	{
+		LMX_PROFILE_FUNCTION();
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -57,6 +59,7 @@ namespace LMX
 
 	void ImGuiLayer::Begin()
 	{
+		LMX_PROFILE_FUNCTION();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -64,6 +67,7 @@ namespace LMX
 
 	void ImGuiLayer::End()
 	{
+		LMX_PROFILE_FUNCTION();
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
@@ -83,10 +87,12 @@ namespace LMX
 	
 	void ImGuiLayer::OnImGuiRender()
 	{
+		LMX_PROFILE_FUNCTION();
 	}
 	
 	void ImGuiLayer::SetDarkThemeColors()
 	{
+		LMX_PROFILE_FUNCTION();
 		auto& colors = ImGui::GetStyle().Colors;
 		colors[ImGuiCol_WindowBg] = ImVec4 { 0.1f, 0.105f, 0.11f, 1.0f };
 

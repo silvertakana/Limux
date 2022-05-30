@@ -12,6 +12,7 @@ namespace LMX
 
 	bool WindowsInput::IsKeyPressedImpl(int keycode)
 	{
+		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
@@ -19,6 +20,7 @@ namespace LMX
 
 	bool WindowsInput::IsMouseButtonPressedImpl(int button)
 	{
+		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS;
@@ -26,6 +28,7 @@ namespace LMX
 
 	std::pair<float, float> WindowsInput::GetMousePositionImpl()
 	{
+		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
@@ -35,18 +38,21 @@ namespace LMX
 
 	float WindowsInput::GetMouseXImpl()
 	{
+		LMX_PROFILE_FUNCTION();
 		auto [x, y] = GetMousePositionImpl();
 		return x;
 	}
 
 	float WindowsInput::GetMouseYImpl()
 	{
+		LMX_PROFILE_FUNCTION();
 		auto [x, y] = GetMousePositionImpl();
 		return y;
 	}
 
 	std::pair<float, float> WindowsInput::SetMousePositionImpl(float x, float y)
 	{
+		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		glfwSetCursorPos(window, x, y);
 		return {x,y};
@@ -54,18 +60,21 @@ namespace LMX
 
 	float WindowsInput::SetMouseXImpl(float x)
 	{
+		LMX_PROFILE_FUNCTION();
 		auto [oldX, oldY] = GetMousePositionImpl();
 		return SetMousePositionImpl(x, oldY).first;
 	}
 
 	float WindowsInput::SetMouseYImpl(float y)
 	{
+		LMX_PROFILE_FUNCTION();
 		auto [oldX, oldY] = GetMousePositionImpl();
 		return SetMousePositionImpl(oldX, y).second;
 	}
 
 	void WindowsInput::SetInputModeImpl(InputType inptype, InputMode mode)
 	{
+		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		int glfwmode = GLFW_CURSOR_NORMAL;
 		switch (mode)

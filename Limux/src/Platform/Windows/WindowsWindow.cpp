@@ -3,72 +3,35 @@
 #include "Limux/Events/ApplicationEvent.h"
 #include "Limux/Events/MouseEvent.h"
 #include "Limux/Events/KeyEvent.h"
+#include "Limux/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
 namespace LMX {
-	void APIENTRY glDebugOutput(GLenum source,
-		GLenum type,
-		unsigned int id,
-		GLenum severity,
-		GLsizei length,
-		const char* message,
-		const void* userParam)
-	{
-		// ignore non-significant error/warning codes
-		if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
-		std::string errorMessage = std::format("[{0}]: {1}\n", id, message);
-		switch (source)
-		{
-		case GL_DEBUG_SOURCE_API:             errorMessage += "Source: API"; break;
-		case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   errorMessage += "Source: Window System"; break;
-		case GL_DEBUG_SOURCE_SHADER_COMPILER: errorMessage += "Source: Shader Compiler"; break;
-		case GL_DEBUG_SOURCE_THIRD_PARTY:     errorMessage += "Source: Third Party"; break;
-		case GL_DEBUG_SOURCE_APPLICATION:     errorMessage += "Source: Application"; break;
-		case GL_DEBUG_SOURCE_OTHER:           errorMessage += "Source: Other"; break;
-		}
-		errorMessage += "\n";
-
-		switch (type)
-		{
-		case GL_DEBUG_TYPE_ERROR:               errorMessage += "Type: Error"; break;
-		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: errorMessage += "Type: Deprecated Behaviour"; break;
-		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  errorMessage += "Type: Undefined Behaviour"; break;
-		case GL_DEBUG_TYPE_PORTABILITY:         errorMessage += "Type: Portability"; break;
-		case GL_DEBUG_TYPE_PERFORMANCE:         errorMessage += "Type: Performance"; break;
-		case GL_DEBUG_TYPE_MARKER:              errorMessage += "Type: Marker"; break;
-		case GL_DEBUG_TYPE_PUSH_GROUP:          errorMessage += "Type: Push Group"; break;
-		case GL_DEBUG_TYPE_POP_GROUP:           errorMessage += "Type: Pop Group"; break;
-		case GL_DEBUG_TYPE_OTHER:               errorMessage += "Type: Other"; break;
-		}
-
-		switch (severity)
-		{
-		case GL_DEBUG_SEVERITY_HIGH:         LMX_ASSERT(false, "{0}", errorMessage); break;
-		case GL_DEBUG_SEVERITY_MEDIUM:       LMX_ERROR ("{0}", errorMessage);		 break;
-		case GL_DEBUG_SEVERITY_LOW:          LMX_WARN  ("{0}", errorMessage);		 break;
-		case GL_DEBUG_SEVERITY_NOTIFICATION: LMX_INFO  ("{0}", errorMessage);		 break;
-		}
-	}
+	
 	
 	static uint8_t s_GLFWWindowCount = 0;
 	Window* Window::Create(const WindowProps& props)
 	{
+		LMX_PROFILE_FUNCTION();
 		return new WindowsWindow(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		LMX_PROFILE_FUNCTION();
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		LMX_PROFILE_FUNCTION();
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		LMX_PROFILE_FUNCTION();
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -82,24 +45,20 @@ namespace LMX {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		++s_GLFWWindowCount;
+		{
+			LMX_PROFILE_SCOPE("glfwCreateWindow");
+			#ifdef LMX_DEBUG
+			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+			#endif
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
 		
 		m_Context = CreateScope<OpenGLContext>(m_Window);
 		m_Context->Init();
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
-
-		int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-		if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
-		{
-			glEnable(GL_DEBUG_OUTPUT);
-			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-			glDebugMessageCallback(glDebugOutput, nullptr);
-			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-		}
-
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
@@ -194,21 +153,31 @@ namespace LMX {
 
 	void WindowsWindow::Shutdown()
 	{
-		glfwDestroyWindow(m_Window);
+		LMX_PROFILE_FUNCTION();
+		{
+			LMX_PROFILE_SCOPE("Destroy Window");
+			glfwDestroyWindow(m_Window);
+		}
 		if (--s_GLFWWindowCount == 0)
 		{
+			LMX_PROFILE_SCOPE("Terminate GLFW");
 			glfwTerminate();
 		}
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
-		glfwPollEvents();
+		LMX_PROFILE_FUNCTION();
+		{
+			LMX_PROFILE_SCOPE("Poll Event");
+			glfwPollEvents();
+		}
 		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
 	{
+		LMX_PROFILE_FUNCTION();
 		if (enabled)
 			glfwSwapInterval(1);
 		else
@@ -219,6 +188,7 @@ namespace LMX {
 
 	bool WindowsWindow::IsVSync() const
 	{
+		LMX_PROFILE_FUNCTION();
 		return m_Data.VSync;
 	}
 

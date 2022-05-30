@@ -5,12 +5,23 @@ extern LMX::Application* LMX::CreateApplication();
 int main()
 {
 	#ifdef  LMX_DIST
-	ShowWindow(GetConsoleWindow(), SW_HIDE);
+	if (::IsWindowVisible(::GetConsoleWindow()) != FALSE)
+		::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 	#else
-	ShowWindow(GetConsoleWindow(), SW_SHOW);
+	if(::IsWindowVisible(::GetConsoleWindow()) == FALSE)
+		::ShowWindow(::GetConsoleWindow(), SW_SHOW);
 	#endif // LMX_DIST
-
+	
+	LMX_PROFILE_BEGIN_SESSION("Startup", "LimuxProfile-Startup.json");
 	auto app = LMX::CreateApplication();
+	LMX_PROFILE_END_SESSION();
+	
+	LMX_PROFILE_BEGIN_SESSION("Runtime", "LimuxProfile-Runtime.json");
 	app->Run();
+	LMX_PROFILE_END_SESSION();
+
+	LMX_PROFILE_BEGIN_SESSION("Shutdown", "LimuxProfile-Shutdown.json");
 	delete app;
+	LMX_PROFILE_END_SESSION();
+	
 }

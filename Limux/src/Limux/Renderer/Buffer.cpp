@@ -9,8 +9,9 @@ namespace LMX
 {
 	Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size)
 	{
+		LMX_PROFILE_FUNCTION();
 		Ref<VertexBuffer> buffer = nullptr;
-		SWITCHRENDERERAPI(
+		LMX_SWITCHRENDERERAPI(
 			buffer.reset((VertexBuffer*)new OpenGLVertexBuffer(data, size));
 		);
 		buffer->Size = size;
@@ -18,8 +19,9 @@ namespace LMX
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(void* data, uint32_t size)
 	{
+		LMX_PROFILE_FUNCTION();
 		Ref<LMX::IndexBuffer> buffer = nullptr;
-		SWITCHRENDERERAPI(
+		LMX_SWITCHRENDERERAPI(
 			buffer.reset((IndexBuffer*)new OpenGLIndexBuffer(data, size));
 		);
 		buffer->Size = size;

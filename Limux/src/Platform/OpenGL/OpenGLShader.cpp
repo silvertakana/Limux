@@ -8,6 +8,7 @@ namespace LMX
 {
 	void CreateOGLShader(const std::string& vertexSrc, const std::string& fragmentSrc, uint32_t& ID)
 	{
+		LMX_PROFILE_FUNCTION();
 		uint32_t vertexShader, fragmentShader;
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -39,10 +40,12 @@ namespace LMX
 	}
 	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
+		LMX_PROFILE_FUNCTION();
 		CreateOGLShader(vertexSrc, fragmentSrc, ID);
 	}
 	OpenGLShader::OpenGLShader(const std::string& shaderSrc)
 	{
+		LMX_PROFILE_FUNCTION();
 		std::stringstream file;
 		file << shaderSrc;
 		std::string line, source[2];
@@ -71,120 +74,102 @@ namespace LMX
 	}
 	Ref<OpenGLShader> OpenGLShader::Load(const std::string& shaderPath)
 	{
+		LMX_PROFILE_FUNCTION();
 		return CreateRef<OpenGLShader>(AssetLoader::LoadFile(shaderPath));
 	}
 	Ref<OpenGLShader> OpenGLShader::Load(const std::string& vertexPath, const std::string& fragmentPath)
 	{
+		LMX_PROFILE_FUNCTION();
 		return CreateRef<OpenGLShader>(AssetLoader::LoadFile(vertexPath), AssetLoader::LoadFile(fragmentPath));
 	}
 	OpenGLShader::~OpenGLShader()
 	{
+		LMX_PROFILE_FUNCTION();
 		glDeleteProgram(ID);
 	}
 	void OpenGLShader::Bind() const
 	{
+		LMX_PROFILE_FUNCTION();
 		glUseProgram(ID);
 	}
 	void OpenGLShader::Unbind() const
 	{
+		LMX_PROFILE_FUNCTION();
 		glUseProgram(0);
 	}
 	uint32_t OpenGLShader::GetUni(const std::string & name) const
 	{
+		LMX_PROFILE_FUNCTION();
 		return glGetUniformLocation(ID, name.c_str());
 	}
-	uint32_t OpenGLShader::setBool(const std::string& name, bool value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, bool value) const
 	{
-		return setBool(GetUni(name.c_str()), value);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniform1i(location, (int)value);
+		return location;
 	}
-	uint32_t OpenGLShader::setInt(const std::string& name, int value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, int value) const
 	{
-		return setInt(GetUni(name.c_str()), value);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniform1i(location, value);
+		return location;
 	}
-	uint32_t OpenGLShader::setFloat(const std::string& name, float value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, float value) const
 	{
-		return setFloat(GetUni(name.c_str()), value);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniform1f(location, value);
+		return location;
 	}
-	uint32_t OpenGLShader::setVec2(const std::string& name, glm::vec2 vec) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec2& value) const
 	{
-		return setVec2(GetUni(name.c_str()), vec);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniform2f(location, value.x, value.y);
+		return location;
 	}
-	uint32_t OpenGLShader::setVec3(const std::string& name, glm::vec3 vec) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec3& value) const
 	{
-		return setVec3(GetUni(name.c_str()), vec);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniform3f(location, value.x, value.y, value.z);
+		return location;
 	}
-	uint32_t OpenGLShader::setVec4(const std::string& name, glm::vec4 vec) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec4& value) const
 	{
-		return setVec4(GetUni(name.c_str()), vec);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniform4f(location, value.x, value.y, value.z, value.w);
+		return location;
 	}
-
-	uint32_t OpenGLShader::setMat2(const std::string& name, glm::mat2 mat) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat2& value) const
 	{
-		return setMat2(GetUni(name.c_str()), mat);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(value));
+		return location;
 	}
-
-	uint32_t OpenGLShader::setMat3(const std::string& name, glm::mat3 mat) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat3& value) const
 	{
-		return setMat3(GetUni(name.c_str()), mat);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
+		return location;
 	}
-
-	uint32_t OpenGLShader::setMat4(const std::string& name, glm::mat4 mat) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat4& value) const
 	{
-		return setMat4(GetUni(name.c_str()), mat);
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+		return location;
 	}
-
-	uint32_t OpenGLShader::setBool(uint32_t loc, bool value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const Ref<Texture2D>& value) const
 	{
-		Bind();
-		glUniform1i(loc, (int)value);
-		return loc;
-	}
-	uint32_t OpenGLShader::setInt(uint32_t loc, int value) const
-	{
-		Bind();
-		glUniform1i(loc, value);
-		return loc;
-	}
-	uint32_t OpenGLShader::setFloat(uint32_t loc, float value) const
-	{
-		Bind();
-		glUniform1f(loc, value);
-		return loc;
-	}
-	uint32_t OpenGLShader::setVec2(uint32_t loc, glm::vec2 vec) const
-	{
-		Bind();
-		glUniform2f(loc, vec.x, vec.y);
-		return loc;
-	}
-	uint32_t OpenGLShader::setVec3(uint32_t loc, glm::vec3 vec) const
-	{
-		Bind();
-		glUniform3f(loc, vec.x, vec.y, vec.z);
-		return loc;
-	}
-	uint32_t OpenGLShader::setVec4(uint32_t loc, glm::vec4 vec) const
-	{
-		Bind();
-		glUniform4f(loc, vec.x, vec.y, vec.z, vec.w);
-		return loc;
-	}
-	uint32_t OpenGLShader::setMat2(uint32_t loc, glm::mat2 mat) const
-	{
-		Bind();
-		glUniformMatrix2fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
-		return loc;
-	}
-	uint32_t OpenGLShader::setMat3(uint32_t loc, glm::mat3 mat) const
-	{
-		Bind();
-		glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
-		return loc;
-	}
-	uint32_t OpenGLShader::setMat4(uint32_t loc, glm::mat4 mat) const
-	{
-		Bind();
-		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
-		return loc;
+		LMX_PROFILE_FUNCTION();
+		uint32_t location = GetUni(name);
+		glUniform1i(location, std::static_pointer_cast<OpenGLTexture2D>(value)->ID);
+		return location;
 	}
 }

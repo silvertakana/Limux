@@ -10,7 +10,7 @@ void main()
 {
 	v_Color = a_Color;
 	v_TexCoord = a_TexCoord;
-	gl_Position = u_CamMatrix * u_Transform * vec4(a_Position, 1.0);
+	gl_Position = u_CamMatrix * u_Transform * vec4(a_Position, 1.0)
 }
 #shader fragment
 layout(location = 0) out vec4 color;

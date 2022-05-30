@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "VertexArray.h"
-#define SWITCHRENDERERAPI(opengl)\
+#define LMX_SWITCHRENDERERAPI(opengl)\
 	switch (Renderer::GetAPI())\
 	{\
 		case RendererAPI::API::None:    LMX_ASSERT(false, "RendererAPI::None is currently not supported!"); break;\

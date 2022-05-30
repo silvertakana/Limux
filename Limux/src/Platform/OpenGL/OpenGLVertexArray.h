@@ -4,24 +4,24 @@
 #include "OpenGLBuffer.h"
 namespace LMX
 {
-	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
+	static GLenum ShaderDataTypeToOpenGLBaseType(DataType type)
 	{
 		switch (type)
 		{
-		case LMX::ShaderDataType::Float:    return GL_FLOAT;
-		case LMX::ShaderDataType::Float2:   return GL_FLOAT;
-		case LMX::ShaderDataType::Float3:   return GL_FLOAT;
-		case LMX::ShaderDataType::Float4:   return GL_FLOAT;
-		case LMX::ShaderDataType::Mat3:     return GL_FLOAT;
-		case LMX::ShaderDataType::Mat4:     return GL_FLOAT;
-		case LMX::ShaderDataType::Int:      return GL_INT;
-		case LMX::ShaderDataType::Int2:     return GL_INT;
-		case LMX::ShaderDataType::Int3:     return GL_INT;
-		case LMX::ShaderDataType::Int4:     return GL_INT;
-		case LMX::ShaderDataType::Bool:     return GL_BOOL;
+		case LMX::DataType::Float:    return GL_FLOAT;
+		case LMX::DataType::Float2:   return GL_FLOAT;
+		case LMX::DataType::Float3:   return GL_FLOAT;
+		case LMX::DataType::Float4:   return GL_FLOAT;
+		case LMX::DataType::Mat3:     return GL_FLOAT;
+		case LMX::DataType::Mat4:     return GL_FLOAT;
+		case LMX::DataType::Int:      return GL_INT;
+		case LMX::DataType::Int2:     return GL_INT;
+		case LMX::DataType::Int3:     return GL_INT;
+		case LMX::DataType::Int4:     return GL_INT;
+		case LMX::DataType::Bool:     return GL_BOOL;
 		}
 
-		LMX_ASSERT(false, "Unknown ShaderDataType!");
+		LMX_ASSERT(false, "Unknown DataType!");
 		return 0;
 	}
 	class OpenGLVertexArray : public VertexArray
@@ -38,7 +38,7 @@ namespace LMX
 		virtual const LMX::Ref<VertexBuffer>& GetVBO() const override { return m_VBO; };
 		virtual const LMX::Ref<IndexBuffer>&  GetEBO() const override { return m_EBO; };
 		
-		virtual void AddAttrib(ShaderDataType Type, bool normalized, uint32_t relativeoffset) override;
+		virtual void AddAttrib(DataType Type, bool normalized, uint32_t relativeoffset) override;
 		operator GLuint() { return ID; }
 		virtual ~OpenGLVertexArray() override;
 	};

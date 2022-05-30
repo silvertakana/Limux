@@ -6,7 +6,8 @@ namespace LMX
 {
 	Ref<VertexArray> LMX::VertexArray::Create(const LMX::Ref<VertexBuffer>& VBO, const LMX::Ref<IndexBuffer>& EBO, uint32_t offset, uint32_t stride)
 	{
-		SWITCHRENDERERAPI(
+		LMX_PROFILE_FUNCTION();
+		LMX_SWITCHRENDERERAPI(
 			return CreateRef<OpenGLVertexArray>(VBO, EBO, offset, stride);
 		);
 		return nullptr;

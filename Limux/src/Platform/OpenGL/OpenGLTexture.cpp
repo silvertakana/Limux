@@ -12,6 +12,7 @@ namespace LMX
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path, Settings setting)
 		: m_Path(path)
 	{
+		LMX_PROFILE_FUNCTION();
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
@@ -21,6 +22,7 @@ namespace LMX
 
 	OpenGLTexture2D::OpenGLTexture2D(const uint8_t* buffer, size_t size, Settings setting)
 	{
+		LMX_PROFILE_FUNCTION();
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = stbi_load_from_memory(buffer, (int)size, &width, &height, &channels, 0);
@@ -29,16 +31,19 @@ namespace LMX
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		LMX_PROFILE_FUNCTION();
 		glDeleteTextures(1, &ID);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
+		LMX_PROFILE_FUNCTION();
 		glBindTextureUnit(slot, ID);
 	}
 	void OpenGLTexture2D::Load(uint8_t* data, int width, int height, int channels, Settings setting)
 	{
 		
+		LMX_PROFILE_FUNCTION();
 		LMX_ASSERT(data, "Failed to load image!");
 		m_Width = width;
 		m_Height = height;

@@ -1,6 +1,9 @@
 #pragma once
 
 // For use in Limux application
+// ---Debug---------------------------
+#include "Limux/Debug/Instrumentor.h"
+
 #include "Limux/Core/Application.h"
 #include "Limux/Core/Layer.h"
 #include "Limux/Core/Log.h"
