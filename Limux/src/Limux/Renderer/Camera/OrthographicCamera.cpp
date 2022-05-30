@@ -2,7 +2,7 @@
 #include "OrthographicCamera.h"
 
 #include "Limux/Addon/ControllerInput.h"
-#include "Limux/Core/MouseButtonCodes.h"
+#include "Limux/Core/MouseCodes.h"
 namespace LMX
 {
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float zNear, float zFar)

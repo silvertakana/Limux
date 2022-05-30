@@ -5,10 +5,10 @@ extern LMX::Application* LMX::CreateApplication();
 int main()
 {
 	#ifdef  LMX_DIST
-	if (::IsWindowVisible(::GetConsoleWindow()) != FALSE)
+	if (::IsWindowVisible(::GetConsoleWindow()) == FALSE)
 		::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 	#else
-	if(::IsWindowVisible(::GetConsoleWindow()) == FALSE)
+	if(::IsWindowVisible(::GetConsoleWindow()) != FALSE)
 		::ShowWindow(::GetConsoleWindow(), SW_SHOW);
 	#endif // LMX_DIST
 	

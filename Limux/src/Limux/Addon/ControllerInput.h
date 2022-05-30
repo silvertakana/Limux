@@ -5,7 +5,7 @@
 
 namespace LMX::CtrlInp
 {
-		static std::map<std::string, std::vector<std::vector<int>>> KeyMap {
+		static std::map<std::string, std::vector<std::vector<KeyCode>>> KeyMap {
 			{ "Left",	{{LMX_KEY_A, LMX_KEY_LEFT	}}},
 			{ "Right",	{{LMX_KEY_D, LMX_KEY_RIGHT	}}},
 			{ "Up",		{{LMX_KEY_W, LMX_KEY_UP		}}},

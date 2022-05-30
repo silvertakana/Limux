@@ -12,7 +12,7 @@
 
 #include "Limux/Core/Input.h"
 #include "Limux/Core/KeyCodes.h"
-#include "Limux/Core/MouseButtonCodes.h"
+#include "Limux/Core/MouseCodes.h"
 
 #include "Limux/Core/Timestep.h"
 

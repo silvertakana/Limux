@@ -6,7 +6,7 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #include "Limux/Addon/ControllerInput.h"
-#include "Limux/Core/MouseButtonCodes.h"
+#include "Limux/Core/MouseCodes.h"
 
 namespace LMX
 {

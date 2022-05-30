@@ -33,8 +33,6 @@ namespace LMX
 		glAttachShader(ID, vertexShader);
 		glAttachShader(ID, fragmentShader);
 		glLinkProgram(ID);
-		glDetachShader(ID, vertexShader);
-		glDetachShader(ID, vertexShader);
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 	}

@@ -44,7 +44,7 @@ namespace LMX
 
 		switch (severity)
 		{
-		case GL_DEBUG_SEVERITY_HIGH:         LMX_ASSERT(false, "{0}", errorMessage); break;
+		case GL_DEBUG_SEVERITY_HIGH:         LMX_ASSERT(false, "{0}", errorMessage); break; // check console for error messages
 		case GL_DEBUG_SEVERITY_MEDIUM:       LMX_ERROR ("{0}", errorMessage);		 break;
 		case GL_DEBUG_SEVERITY_LOW:          LMX_WARN  ("{0}", errorMessage);		 break;
 		case GL_DEBUG_SEVERITY_NOTIFICATION: LMX_INFO  ("{0}", errorMessage);		 break;
@@ -88,7 +88,7 @@ namespace LMX
 	float OpenGLRendererAPI::GetTime()
 	{
 		LMX_PROFILE_FUNCTION();
-		return glfwGetTime();
+		return (float)glfwGetTime();
 	}
 
 	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
