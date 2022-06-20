@@ -2,6 +2,8 @@
 
 Author - [@Silvertakana](https://github.com/silvertakana) | [GitHub](https://github.com/silvertakana) | [Discord](https://discord.gg/Acj88TtQ)
 
+Inspired by - [Hazel2D](https://github.com/TheCherno/Hazel) | [The Cherno](https://github.com/TheCherno)
+
 * Started on Apr 24, 2022
 
 ![Limux Logo](res/LimuxLogo.png)
