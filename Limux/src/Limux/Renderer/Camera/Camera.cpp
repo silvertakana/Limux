@@ -15,7 +15,8 @@ LMX::Camera::~Camera()
 void LMX::Camera::UpdateViewMatrix()
 {
 	LMX_PROFILE_FUNCTION();
-	m_ViewMatrix = glm::lookAt(Position, Position + Front, Up); UpdateViewProjectionMatrix();
+	m_ViewMatrix = glm::lookAt(Position, Position + Front, Up);
+	UpdateViewProjectionMatrix();
 }
 
 void LMX::Camera::SetProjectionMatrix(const glm::mat4 & newProjMat)

@@ -4,7 +4,6 @@ Author - [@Silvertakana](https://github.com/silvertakana) | [GitHub](https://git
 
 * Started on Apr 24, 2022
 
-
 ![Limux Logo](res/LimuxLogo.png)
 
 # Table of Contents

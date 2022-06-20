@@ -20,11 +20,12 @@
 #include <map>
 #include <unordered_map>
 #include <thread>
+#include <future>
+#include <mutex>
+#include <atomic>
 #include <Windows.h>
 
-// configuration
 #include "Limux/Core/DefConfig.h"
-// logging
 #include "Limux/Core/Log.h"
-// debug
 #include "Limux/Debug/Instrumentor.h"
+#include "Limux/Core/MouseCodes.h"

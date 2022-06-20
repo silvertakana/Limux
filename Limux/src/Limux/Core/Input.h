@@ -24,6 +24,8 @@ namespace LMX
 		inline static std::pair<float, float> SetMousePosition(float x, float y) { return s_Instance->SetMousePositionImpl(x,y); }
 		inline static float SetMouseX(float x) { return s_Instance->SetMouseXImpl(x); }
 		inline static float SetMouseY(float y) { return s_Instance->SetMouseYImpl(y); }
+
+		static Scope<Input> Create();
 		enum class InputType
 		{
 			CURSOR,

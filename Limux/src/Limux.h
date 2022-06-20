@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Limux/Core/DefConfig.h"
 // For use in Limux application
 // ---Debug---------------------------
 #include "Limux/Debug/Instrumentor.h"
@@ -25,4 +26,7 @@
 #include "Limux/Renderer/Shader.h"
 #include "Limux/Renderer/Texture.h"
 #include "Limux/Renderer/VertexArray.h"
+#include "Limux/Renderer/Mesh.h"
+#include "Limux/Renderer/SceneNode.h"
+
 #include "Limux/Renderer/Camera/Camera.h"

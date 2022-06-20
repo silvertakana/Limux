@@ -2,7 +2,7 @@
 
 extern LMX::Application* LMX::CreateApplication();
 
-int main()
+int main(int argc, char** argv)
 {
 	#ifdef  LMX_DIST
 	if (::IsWindowVisible(::GetConsoleWindow()) == FALSE)

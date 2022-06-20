@@ -28,7 +28,7 @@ namespace LMX
 	{
 		LMX_PROFILE_FUNCTION();
 		shader->Bind();
-		(*shader)["u_Transform"] = transform;
+		shader->SetUniform("u_Transform", transform);
 		
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

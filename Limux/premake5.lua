@@ -37,6 +37,7 @@ project "Limux"
 		"ImGui",
 		"opengl32",
 		"stb",
+		"assimp"
 	}
 	filter "system:windows"
 		postbuildcommands {

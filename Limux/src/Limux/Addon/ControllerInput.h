@@ -39,8 +39,4 @@ namespace LMX::CtrlInp
 				return false;
 			}
 		}
-		static inline bool CheckEvent(Event& e, std::string input)
-		{
-			return false;
-		}
 }

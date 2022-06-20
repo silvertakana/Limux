@@ -8,7 +8,7 @@ namespace LMX
 		:m_VBO(VBO), m_EBO(EBO)
 	{
 		LMX_PROFILE_FUNCTION();
-		if (ID == 0)glCreateVertexArrays(1, &ID);
+		if (ID == 0) glCreateVertexArrays(1, &ID);
 		glVertexArrayVertexBuffer(ID, 0, (OpenGLVertexBuffer&)*m_VBO, offset, stride);
 		glVertexArrayElementBuffer(ID, (OpenGLIndexBuffer&)*m_EBO);
 	}

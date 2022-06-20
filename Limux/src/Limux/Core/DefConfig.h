@@ -4,5 +4,5 @@
 #else
 	#define LMX_ENABLE_LOGGING
 	#define LMX_ENABLE_ASSERTS
-	#define LMX_PROFILE 1
+	#define LMX_PROFILE 0
 #endif

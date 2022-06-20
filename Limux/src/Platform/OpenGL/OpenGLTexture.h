@@ -7,17 +7,18 @@ namespace LMX
 	public:
 		uint32_t ID = 0;
 		OpenGLTexture2D(const std::string& path, Settings setting);
-		OpenGLTexture2D(const uint8_t* buffer, size_t size, Settings setting);
 		virtual ~OpenGLTexture2D();
 
-		virtual uint32_t GetWidth() const override { return m_Width; }
+		virtual uint32_t GetWidth() const override  { return m_Width ; }
 		virtual uint32_t GetHeight() const override { return m_Height; }
 
 		virtual void Bind(uint32_t slot = 0) const override;
 	private:
-		std::string m_Path;
-		uint32_t m_Width, m_Height;
+		int m_Width, m_Height;
+		Settings m_Setting;
+		int m_InternalFormat;
 	private:
-		virtual void Load(uint8_t* data, int width, int height, int channels, Settings setting);
+		virtual void Init() override;
+		virtual void Create(std::string filePath, Settings setting);
 	};
 }

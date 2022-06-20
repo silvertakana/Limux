@@ -24,16 +24,15 @@ namespace LMX
 
 		uint32_t GetUni(const std::string& name) const;
 
-		uint32_t setUniform(const std::string& name, bool    value) const;
-		uint32_t setUniform(const std::string& name, int     value) const;
-		uint32_t setUniform(const std::string& name, float   value) const;
-		uint32_t setUniform(const std::string& name, const glm::vec2& vec) const;
-		uint32_t setUniform(const std::string& name, const glm::vec3& vec) const;
-		uint32_t setUniform(const std::string& name, const glm::vec4& vec) const;
-		uint32_t setUniform(const std::string& name, const glm::mat2& mat) const;
-		uint32_t setUniform(const std::string& name, const glm::mat3& mat) const;
-		uint32_t setUniform(const std::string& name, const glm::mat4& mat) const;
-		uint32_t setUniform(const std::string& name, const Ref<Texture2D>& value) const;
+		uint32_t setUniform(const std::string& name, const bool     & data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const int      & data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const float    & data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const glm::vec2& data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const glm::vec3& data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const glm::vec4& data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const glm::mat2& data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const glm::mat3& data, bool senderror) const;
+		uint32_t setUniform(const std::string& name, const glm::mat4& data, bool senderror) const;
 	};
 }
 

@@ -14,11 +14,7 @@ namespace LMX
 		static Ref<Shader> Load(const std::string& filePath);
 		static Ref<Shader> Load(const std::string& vertexPath, const std::string& fragmentPath);
 		template<class T>
-		UniformSetter SetUniform(const std::string& identifier, const T& data)
-		{
-			LMX_PROFILE_FUNCTION();
-			return operator[](identifier) = data;
-		}
+		void SetUniform(const std::string& identifier, const T& data, bool senderror = true);
 		UniformSetter operator[](const std::string& identifier);
 		virtual ~Shader() = default;
 		
@@ -31,6 +27,7 @@ namespace LMX
 		Shader& m_Shader;
 		std::string m_Identifier;
 	public:
+		bool SendError = true;
 		UniformSetter(Shader& shader, const std::string& identifier)
 			:m_Shader(shader), m_Identifier(identifier)
 		{}
@@ -43,6 +40,14 @@ namespace LMX
 		void operator=(const glm::mat2& data);
 		void operator=(const glm::mat3& data);
 		void operator=(const glm::mat4& data);
-
 	};
+	template<class T>
+	inline void Shader::SetUniform(const std::string& identifier, const T& data, bool senderror)
+	{
+		LMX_PROFILE_FUNCTION();
+		auto setter = operator[](identifier);
+		setter.SendError = senderror;
+		return setter = data;
+	}
 }
+

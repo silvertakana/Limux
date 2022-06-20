@@ -53,10 +53,10 @@ namespace LMX
 			VERTEX, FRAGMENT
 		};
 		Mode mode = NONE;
-		const char* typeToken = "#type";
+		const char* typeToken = "#shader";
 		while (std::getline(file, line))
 		{
-			if (line.contains("#shader"))
+			if (line.contains(typeToken))
 			{
 				if (line.contains("vertex"))
 					mode = VERTEX;
@@ -100,74 +100,53 @@ namespace LMX
 		LMX_PROFILE_FUNCTION();
 		return glGetUniformLocation(ID, name.c_str());
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, bool value) const
-	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniform1i(location, (int)value);
+	#define LMX_UNIFORMFUNCTION(func, name, ...) \
+		LMX_PROFILE_FUNCTION();\
+		uint32_t location = GetUni(name);\
+		if(location == -1){\
+			if(senderror){\
+				LMX_ERROR("Unable to locate uniform: {0}", name);\
+			}\
+		}\
+		else{\
+			func(location, __VA_ARGS__);\
+			}\
 		return location;
+	
+	uint32_t OpenGLShader::setUniform(const std::string& name, const bool& value, bool senderror) const
+	{
+		LMX_UNIFORMFUNCTION(glUniform1i, name, (int)value);
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, int value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const int& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniform1i(location, value);
-		return location;
+		LMX_UNIFORMFUNCTION(glUniform1i, name, value);
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, float value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const float& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniform1f(location, value);
-		return location;
+		LMX_UNIFORMFUNCTION(glUniform1f, name, value);
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec2& value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec2& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniform2f(location, value.x, value.y);
-		return location;
+		LMX_UNIFORMFUNCTION(glUniform2f, name, value.x, value.y);
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec3& value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec3& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniform3f(location, value.x, value.y, value.z);
-		return location;
+		LMX_UNIFORMFUNCTION(glUniform3f, name, value.x, value.y, value.z);
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec4& value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::vec4& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniform4f(location, value.x, value.y, value.z, value.w);
-		return location;
+		LMX_UNIFORMFUNCTION(glUniform4f, name, value.x, value.y, value.z, value.w);
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat2& value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat2& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(value));
-		return location;
+		LMX_UNIFORMFUNCTION(glUniformMatrix3fv, name, 1, GL_FALSE, glm::value_ptr(value));
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat3& value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat3& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
-		return location;
+		LMX_UNIFORMFUNCTION(glUniformMatrix3fv, name, 1, GL_FALSE, glm::value_ptr(value));
 	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat4& value) const
+	uint32_t OpenGLShader::setUniform(const std::string& name, const glm::mat4& value, bool senderror) const
 	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
-		return location;
-	}
-	uint32_t OpenGLShader::setUniform(const std::string& name, const Ref<Texture2D>& value) const
-	{
-		LMX_PROFILE_FUNCTION();
-		uint32_t location = GetUni(name);
-		glUniform1i(location, std::static_pointer_cast<OpenGLTexture2D>(value)->ID);
-		return location;
+		LMX_UNIFORMFUNCTION(glUniformMatrix4fv, name, 1, GL_FALSE, glm::value_ptr(value));
 	}
 }

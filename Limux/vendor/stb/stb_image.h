@@ -5206,7 +5206,7 @@ static void *stbi__do_png(stbi__png *p, int *x, int *y, int *n, int req_comp, st
       else if (p->depth == 16)
          ri->bits_per_channel = 16;
       else
-         return stbi__errpuc("bad bits_per_channel", "PNG not supported: unsupported color depth");
+         return stbi__errpuc("bad bits_per_channel", "PNG not supported: unsupported Color depth");
       result = p->out;
       p->out = NULL;
       if (req_comp && req_comp != p->s->img_out_n) {
@@ -6094,7 +6094,7 @@ static void *stbi__psd_load(stbi__context *s, int *x, int *y, int *comp, int req
    //   8: Duotone
    //   9: Lab color
    if (stbi__get16be(s) != 3)
-      return stbi__errpuc("wrong color format", "PSD is not in RGB color format");
+      return stbi__errpuc("wrong Color format", "PSD is not in RGB Color format");
 
    // Skip the Mode Data.  (It's the palette for indexed color; other info for other modes.)
    stbi__skip(s,stbi__get32be(s) );
@@ -6807,7 +6807,7 @@ static stbi_uc *stbi__gif_load_next(stbi__context *s, stbi__gif *g, int *comp, i
             } else if (g->flags & 0x80) {
                g->color_table = (stbi_uc *) g->pal;
             } else
-               return stbi__errpuc("missing color table", "Corrupt GIF");
+               return stbi__errpuc("missing Color table", "Corrupt GIF");
 
             o = stbi__process_gif_raster(s, g);
             if (!o) return NULL;

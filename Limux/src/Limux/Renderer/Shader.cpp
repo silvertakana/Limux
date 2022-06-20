@@ -49,7 +49,7 @@ namespace LMX
 	{\
 		LMX_PROFILE_FUNCTION();\
 		LMX_SWITCHRENDERERAPI(\
-			((OpenGLShader&)m_Shader).setUniform(m_Identifier, data);\
+			((OpenGLShader&)m_Shader).setUniform(m_Identifier, data, SendError);\
 		);\
 	}
 

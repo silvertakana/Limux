@@ -315,7 +315,7 @@ GLFWAPI int glfwGetOSMesaColorBuffer(GLFWwindow* handle, int* width,
                               &mesaFormat, &mesaBuffer))
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "OSMesa: Failed to retrieve color buffer");
+                        "OSMesa: Failed to retrieve Color buffer");
         return GLFW_FALSE;
     }
 

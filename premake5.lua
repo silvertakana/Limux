@@ -5,7 +5,7 @@ workspace "Limux"
 	configurations { "Debug", "Release" ,"Dist"}
 
 	systemversion "latest"
-	
+
 	flags
 	{
 		"MultiProcessorCompile"
@@ -30,11 +30,12 @@ workspace "Limux"
 	
 	
 IncludeDir = {}
-IncludeDir["GLFW"] =  "%{wks.location}/Limux/vendor/GLFW/include"
-IncludeDir["Glad"] =  "%{wks.location}/Limux/vendor/Glad/include"
-IncludeDir["ImGui"] = "%{wks.location}/Limux/vendor/imgui"
-IncludeDir["glm"] =   "%{wks.location}/Limux/vendor/glm"
-IncludeDir["stb"] =   "%{wks.location}/Limux/vendor/stb"
+IncludeDir["GLFW"]   = "%{wks.location}/Limux/vendor/GLFW/include"
+IncludeDir["Glad"]   = "%{wks.location}/Limux/vendor/Glad/include"
+IncludeDir["ImGui"]  = "%{wks.location}/Limux/vendor/imgui"
+IncludeDir["glm"]    = "%{wks.location}/Limux/vendor/glm"
+IncludeDir["stb"]    = "%{wks.location}/Limux/vendor/stb"
+IncludeDir["assimp"] = "%{wks.location}/Limux/vendor/assimp/include"
 
 
 
@@ -43,6 +44,7 @@ group "Dependencies"
 	include "Limux/vendor/Glad"
 	include "Limux/vendor/imgui"
 	include "Limux/vendor/stb"
+	include "Limux/vendor/assimp"
 	
 group ""
 --group "Engine"

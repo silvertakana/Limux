@@ -15245,7 +15245,7 @@ static void ImGui::DockNodeRemoveWindow(ImGuiDockNode* node, ImGuiWindow* window
         if (node->HostWindow->ViewportOwned && node->IsRootNode())
         {
             // Transfer viewport back to the remaining loose window
-            IMGUI_DEBUG_LOG_VIEWPORT("Node %08X transfer Viewport %08X=>%08X for Window '%s'\n", node->ID, node->HostWindow->Viewport->ID, remaining_window->ID, remaining_window->Name);
+            IMGUI_DEBUG_LOG_VIEWPORT("SceneNode %08X transfer Viewport %08X=>%08X for Window '%s'\n", node->ID, node->HostWindow->Viewport->ID, remaining_window->ID, remaining_window->Name);
             IM_ASSERT(node->HostWindow->Viewport->Window == node->HostWindow);
             node->HostWindow->Viewport->Window = remaining_window;
             node->HostWindow->Viewport->ID = remaining_window->ID;
@@ -18617,7 +18617,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         for (int n = 0; n < dc->Nodes.Data.Size; n++)
             if (ImGuiDockNode* node = (ImGuiDockNode*)dc->Nodes.Data[n].val_p)
                 if (!root_nodes_only || node->IsRootNode())
-                    DebugNodeDockNode(node, "Node");
+                    DebugNodeDockNode(node, "SceneNode");
         TreePop();
     }
 #endif // #ifdef IMGUI_HAS_DOCK
@@ -18679,7 +18679,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
                     else if (ImGuiWindowSettings* window_settings = FindWindowSettings(settings->SelectedTabId))
                         selected_tab_name = window_settings->GetName();
                 }
-                BulletText("Node %08X, Parent %08X, SelectedTab %08X ('%s')", settings->ID, settings->ParentNodeId, settings->SelectedTabId, selected_tab_name ? selected_tab_name : settings->SelectedTabId ? "N/A" : "");
+                BulletText("SceneNode %08X, Parent %08X, SelectedTab %08X ('%s')", settings->ID, settings->ParentNodeId, settings->SelectedTabId, selected_tab_name ? selected_tab_name : settings->SelectedTabId ? "N/A" : "");
             }
             TreePop();
         }
@@ -19000,7 +19000,7 @@ void ImGui::DebugNodeDrawList(ImGuiWindow* window, ImGuiViewportP* viewport, con
                 {
                     const ImDrawVert& v = vtx_buffer[idx_buffer ? idx_buffer[idx_i] : idx_i];
                     triangle[n] = v.pos;
-                    buf_p += ImFormatString(buf_p, buf_end - buf_p, "%s %04d: pos (%8.2f,%8.2f), uv (%.6f,%.6f), col %08X\n",
+                    buf_p += ImFormatString(buf_p, buf_end - buf_p, "%s %04d: Position (%8.2f,%8.2f), uv (%.6f,%.6f), col %08X\n",
                         (n == 0) ? "Vert:" : "     ", idx_i, v.pos.x, v.pos.y, v.uv.x, v.uv.y, v.col);
                 }
 

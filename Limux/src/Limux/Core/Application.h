@@ -10,6 +10,8 @@
 
 #include "Timestep.h"
 
+int main(int argc, char** argv);
+
 namespace LMX
 {
 	class LMX_API Application
@@ -17,7 +19,6 @@ namespace LMX
 	public:
 		Application();
 		virtual ~Application() = default;
-		void Run();
 		void OnEvent(Event& e);
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
@@ -29,6 +30,7 @@ namespace LMX
 		inline static Application& Get() { return *s_Instance; }
 		
 	private:
+		void Run();
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
@@ -40,6 +42,7 @@ namespace LMX
 		float m_LastFrameTime = 0.0f;
 	private:
 		static Application* s_Instance;
+		friend int ::main(int argc, char** argv);
 	};
 	
 	Application* CreateApplication();

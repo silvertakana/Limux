@@ -7,6 +7,16 @@
 
 namespace LMX
 {
+	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
+	{
+		LMX_PROFILE_FUNCTION();
+		Ref<VertexBuffer> buffer = nullptr;
+		LMX_SWITCHRENDERERAPI(
+			buffer.reset((VertexBuffer*)new OpenGLVertexBuffer(size));
+		);
+		buffer->Size = size;
+		return buffer;
+	}
 	Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size)
 	{
 		LMX_PROFILE_FUNCTION();

@@ -797,14 +797,14 @@ static void ShowDemoWindowWidgets()
             IMGUI_DEMO_MARKER("Widgets/Basic/ColorEdit3, ColorEdit4");
             static float col1[3] = { 1.0f, 0.0f, 0.2f };
             static float col2[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
-            ImGui::ColorEdit3("color 1", col1);
+            ImGui::ColorEdit3("Color 1", col1);
             ImGui::SameLine(); HelpMarker(
-                "Click on the color square to open a color picker.\n"
+                "Click on the Color square to open a Color picker.\n"
                 "Click and hold to use drag and drop.\n"
-                "Right-click on the color square to show options.\n"
+                "Right-click on the Color square to show options.\n"
                 "CTRL+click on individual component to input value.\n");
 
-            ImGui::ColorEdit4("color 2", col2);
+            ImGui::ColorEdit4("Color 2", col2);
         }
 
         {
@@ -887,7 +887,7 @@ static void ShowDemoWindowWidgets()
                 if (i < 3)
                 {
                     // Items 0..2 are Tree Node
-                    bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Node %d", i);
+                    bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable SceneNode %d", i);
                     if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
                         node_clicked = i;
                     if (test_drag_and_drop && ImGui::BeginDragDropSource())
@@ -984,7 +984,7 @@ static void ShowDemoWindowWidgets()
             ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Pink");
             ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yellow");
             ImGui::TextDisabled("Disabled");
-            ImGui::SameLine(); HelpMarker("The TextDisabled color is stored in ImGuiStyle.");
+            ImGui::SameLine(); HelpMarker("The TextDisabled Color is stored in ImGuiStyle.");
             ImGui::TreePop();
         }
 
@@ -1787,14 +1787,14 @@ static void ShowDemoWindowWidgets()
         ImGui::Checkbox("With Alpha Preview", &alpha_preview);
         ImGui::Checkbox("With Half Alpha Preview", &alpha_half_preview);
         ImGui::Checkbox("With Drag and Drop", &drag_and_drop);
-        ImGui::Checkbox("With Options Menu", &options_menu); ImGui::SameLine(); HelpMarker("Right-click on the individual color widget to show options.");
+        ImGui::Checkbox("With Options Menu", &options_menu); ImGui::SameLine(); HelpMarker("Right-click on the individual Color widget to show options.");
         ImGui::Checkbox("With HDR", &hdr); ImGui::SameLine(); HelpMarker("Currently all this does is to lift the 0..1 limits on dragging widgets.");
         ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 
         IMGUI_DEMO_MARKER("Widgets/Color/ColorEdit");
         ImGui::Text("Color widget:");
         ImGui::SameLine(); HelpMarker(
-            "Click on the color square to open a color picker.\n"
+            "Click on the Color square to open a Color picker.\n"
             "CTRL+click on individual component to input value.\n");
         ImGui::ColorEdit3("MyColor##1", (float*)&color, misc_flags);
 
@@ -2230,11 +2230,11 @@ static void ShowDemoWindowWidgets()
             // They are using standardized payload strings IMGUI_PAYLOAD_TYPE_COLOR_3F and IMGUI_PAYLOAD_TYPE_COLOR_4F
             // to allow your own widgets to use colors in their drag and drop interaction.
             // Also see 'Demo->Widgets->Color/Picker Widgets->Palette' demo.
-            HelpMarker("You can drag from the color squares.");
+            HelpMarker("You can drag from the Color squares.");
             static float col1[3] = { 1.0f, 0.0f, 0.2f };
             static float col2[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
-            ImGui::ColorEdit3("color 1", col1);
-            ImGui::ColorEdit4("color 2", col2);
+            ImGui::ColorEdit3("Color 1", col1);
+            ImGui::ColorEdit4("Color 2", col2);
             ImGui::TreePop();
         }
 
@@ -2934,7 +2934,7 @@ static void ShowDemoWindowLayout()
             const float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
             ImGui::Button("Button##1");
             ImGui::SameLine(0.0f, spacing);
-            if (ImGui::TreeNode("Node##1"))
+            if (ImGui::TreeNode("SceneNode##1"))
             {
                 // Placeholder tree data
                 for (int i = 0; i < 6; i++)
@@ -2948,7 +2948,7 @@ static void ShowDemoWindowLayout()
 
             // Common mistake to avoid: if we want to SameLine after TreeNode we need to do it before we add
             // other contents below the node.
-            bool node_open = ImGui::TreeNode("Node##2");
+            bool node_open = ImGui::TreeNode("SceneNode##2");
             ImGui::SameLine(0.0f, spacing); ImGui::Button("Button##2");
             if (node_open)
             {
@@ -2964,7 +2964,7 @@ static void ShowDemoWindowLayout()
             ImGui::BulletText("Bullet text");
 
             ImGui::AlignTextToFramePadding();
-            ImGui::BulletText("Node");
+            ImGui::BulletText("SceneNode");
             ImGui::SameLine(0.0f, spacing); ImGui::Button("Button##4");
             ImGui::Unindent();
         }
@@ -2995,7 +2995,7 @@ static void ShowDemoWindowLayout()
         ImGui::SameLine(140); scroll_to_off |= ImGui::DragFloat("##off", &scroll_to_off_px, 1.00f, 0, FLT_MAX, "+%.0f px");
 
         bool scroll_to_pos = ImGui::Button("Scroll To Pos");
-        ImGui::SameLine(140); scroll_to_pos |= ImGui::DragFloat("##pos", &scroll_to_pos_px, 1.00f, -10, FLT_MAX, "X/Y = %.0f px");
+        ImGui::SameLine(140); scroll_to_pos |= ImGui::DragFloat("##Position", &scroll_to_pos_px, 1.00f, -10, FLT_MAX, "X/Y = %.0f px");
         ImGui::PopItemWidth();
 
         if (scroll_to_off || scroll_to_pos)
@@ -3712,7 +3712,7 @@ static void ShowDemoWindowPopups()
             static int item = 1;
             static float color[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
             ImGui::Combo("Combo", &item, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
-            ImGui::ColorEdit4("color", color);
+            ImGui::ColorEdit4("Color", color);
 
             if (ImGui::Button("Add another modal.."))
                 ImGui::OpenPopup("Stacked 2");
@@ -4870,8 +4870,8 @@ static void ShowDemoWindowTables()
 
     if (open_action != -1)
         ImGui::SetNextItemOpen(open_action != 0);
-    IMGUI_DEMO_MARKER("Tables/Background color");
-    if (ImGui::TreeNode("Background color"))
+    IMGUI_DEMO_MARKER("Tables/Background Color");
+    if (ImGui::TreeNode("Background Color"))
     {
         static ImGuiTableFlags flags = ImGuiTableFlags_RowBg;
         static int row_bg_type = 1;
@@ -5810,17 +5810,17 @@ static void ShowDemoWindowColumns()
         ImGui::Columns(2, "tree", true);
         for (int x = 0; x < 3; x++)
         {
-            bool open1 = ImGui::TreeNode((void*)(intptr_t)x, "Node%d", x);
+            bool open1 = ImGui::TreeNode((void*)(intptr_t)x, "SceneNode%d", x);
             ImGui::NextColumn();
-            ImGui::Text("Node contents");
+            ImGui::Text("SceneNode contents");
             ImGui::NextColumn();
             if (open1)
             {
                 for (int y = 0; y < 3; y++)
                 {
-                    bool open2 = ImGui::TreeNode((void*)(intptr_t)y, "Node%d.%d", x, y);
+                    bool open2 = ImGui::TreeNode((void*)(intptr_t)y, "SceneNode%d.%d", x, y);
                     ImGui::NextColumn();
-                    ImGui::Text("Node contents");
+                    ImGui::Text("SceneNode contents");
                     if (open2)
                     {
                         ImGui::Text("Even more contents");
@@ -5884,9 +5884,9 @@ static void ShowDemoWindowMisc()
         if (ImGui::TreeNode("Mouse State"))
         {
             if (ImGui::IsMousePosValid())
-                ImGui::Text("Mouse pos: (%g, %g)", io.MousePos.x, io.MousePos.y);
+                ImGui::Text("Mouse Position: (%g, %g)", io.MousePos.x, io.MousePos.y);
             else
-                ImGui::Text("Mouse pos: <INVALID>");
+                ImGui::Text("Mouse Position: <INVALID>");
             ImGui::Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
 
             int count = IM_ARRAYSIZE(io.MouseDown);
@@ -6434,8 +6434,8 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
             if (ImGui::RadioButton("Alpha",  alpha_flags == ImGuiColorEditFlags_AlphaPreview))     { alpha_flags = ImGuiColorEditFlags_AlphaPreview; } ImGui::SameLine();
             if (ImGui::RadioButton("Both",   alpha_flags == ImGuiColorEditFlags_AlphaPreviewHalf)) { alpha_flags = ImGuiColorEditFlags_AlphaPreviewHalf; } ImGui::SameLine();
             HelpMarker(
-                "In the color list:\n"
-                "Left-click on color square to open color picker,\n"
+                "In the Color list:\n"
+                "Left-click on Color square to open Color picker,\n"
                 "Right-click to open edit options menu.");
 
             ImGui::BeginChild("##colors", ImVec2(0, 0), true, ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NavFlattened);
@@ -6446,7 +6446,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 if (!filter.PassFilter(name))
                     continue;
                 ImGui::PushID(i);
-                ImGui::ColorEdit4("##color", (float*)&style.Colors[i], ImGuiColorEditFlags_AlphaBar | alpha_flags);
+                ImGui::ColorEdit4("##Color", (float*)&style.Colors[i], ImGuiColorEditFlags_AlphaBar | alpha_flags);
                 if (memcmp(&style.Colors[i], &ref->Colors[i], sizeof(ImVec4)) != 0)
                 {
                     // Tips: in a real user application, you may want to merge and use an icon font into the main font,
@@ -8018,7 +8018,7 @@ struct MyDocument
         ImGui::SameLine();
         if (ImGui::Button("Save", ImVec2(100, 0)))
             doc->DoSave();
-        ImGui::ColorEdit3("color", &doc->Color.x);  // Useful to test drag and drop and hold-dragged-to-open-tab behavior.
+        ImGui::ColorEdit3("Color", &doc->Color.x);  // Useful to test drag and drop and hold-dragged-to-open-tab behavior.
         ImGui::PopID();
     }
 

@@ -59,7 +59,6 @@ namespace LMX
 			cam->Position += -Right * Speed;
 		if (CtrlInp::IsPressed("Right"))
 			cam->Position += Right * Speed;
-		glm::vec3 Head = glm::normalize(glm::cross(Right, cam->Front));
 		if (CtrlInp::IsPressed("FlyUp"))
 			cam->Position += cam->Up * Speed;
 		if (CtrlInp::IsPressed("FlyDown"))
@@ -69,8 +68,7 @@ namespace LMX
 		if (Input::IsMouseButtonPressed(LMX_MOUSE_BUTTON_LEFT))
 		{
 			// Hides mouse cursor
-			//Input::SetInputMode(Input::InputType::CURSOR, Input::InputMode::CURSOR_HIDDEN);
-			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			Input::SetInputMode(Input::InputType::CURSOR, Input::InputMode::CURSOR_HIDDEN);
 
 			// Prevents camera from jumping on the first click
 			if (firstClick)

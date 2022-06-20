@@ -16,7 +16,7 @@ namespace LMX
 		const void* userParam)
 	{
 		// ignore non-significant error/warning codes
-		if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+		//if (id == 131169 || id == 131185 || id == 131218 || id == 131204 || id == 1282) return;
 		std::string errorMessage = std::format("[{0}]: {1}\n", id, message);
 		switch (source)
 		{
@@ -63,9 +63,9 @@ namespace LMX
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 		#endif
 		
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
+		//glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 		glEnable(GL_DEPTH_TEST);
 	}
 	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)

@@ -4593,7 +4593,8 @@ GLFWAPI void glfwPostEmptyEvent(void);
  *
  *  @thread_safety This function must only be called from the main thread.
  *
- *  @sa @ref glfwSetInputMode
+ *  @sa @ref glfwSet
+ * 
  *
  *  @since Added in version 3.0.
  *

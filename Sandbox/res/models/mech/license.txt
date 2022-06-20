@@ -1,0 +1,11 @@
+Model Information:
+* title:	mech M-6k
+* source:	https://sketchfab.com/3d-models/mech-m-6k-6eba9b1addb7411a85b0c86e41a39a2e
+* author:	Comrade1280 (https://sketchfab.com/comrade1280)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "mech M-6k" (https://sketchfab.com/3d-models/mech-m-6k-6eba9b1addb7411a85b0c86e41a39a2e) by Comrade1280 (https://sketchfab.com/comrade1280) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
