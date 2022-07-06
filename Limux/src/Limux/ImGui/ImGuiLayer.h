@@ -15,7 +15,8 @@ namespace LMX
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnImGuiRender() override;
+		virtual void OnEvent(Event& e, Timestep ts) override;
+		virtual void OnImGuiRender(Timestep ts) override;
 
 		void Begin();
 		void End();
@@ -24,8 +25,8 @@ namespace LMX
 
 		void SetDarkThemeColors();
 	private: 
-		float m_Time = 0.0f;
 		bool m_BlockEvents = true;
+		float m_Time = 0.0f;
 	};
 }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 namespace LMX
 {
 	class Texture
@@ -12,6 +12,7 @@ namespace LMX
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
+		virtual uint32_t GetRendererID() const = 0;
 
 		virtual void Init() = 0;
 		virtual void Bind(uint32_t slot = 0) const = 0;
@@ -44,7 +45,7 @@ namespace LMX
 		};
 		static std::string TextureTypeToString(TextureType type);
 		TextureType type;
-		static Ref<Texture2D> Create(const std::string& path, TextureType type = Auto, int setting = LMX::Texture2D::Mipmap | LMX::Texture2D::MagLinear);
+		static Ref<Texture2D> Load(const std::string& path, TextureType type = Auto, int setting = LMX::Texture2D::Mipmap | LMX::Texture2D::MagLinear);
 		static void SetDefaultTexture(const std::string& path, TextureType type = Auto, int setting = LMX::Texture2D::Mipmap | LMX::Texture2D::MagLinear);
 	};
 }

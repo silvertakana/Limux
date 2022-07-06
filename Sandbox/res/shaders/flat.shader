@@ -18,10 +18,10 @@ void main()
 layout(location = 0) out vec4 color;
 in vec4 v_Color;
 in vec2 v_TexCoord;
-uniform sampler2D u_Texture_Diffuse1;
+uniform sampler2D u_Texture_Diffuse0;
 void main()
 {
-	color = texture(u_Texture_Diffuse1, v_TexCoord);
+	color = texture(u_Texture_Diffuse0, v_TexCoord);
 	//if(color.a < 0.5f)
 	//	discard;
 }

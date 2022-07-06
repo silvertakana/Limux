@@ -52,6 +52,81 @@ namespace LMX
 
 		return TransformMatrix;
 	}
+	void SceneNode::AddModel(const std::string& path)
+	{
+		LMX_PROFILE_FUNCTION();
+		auto node = LMX::CreateRef<LMX::SceneNode>(path);
+		AddChild(node);
+	}
+	void SceneNode::AddChild(Ref<SceneNode> child)
+	{
+		LMX_PROFILE_FUNCTION();
+		std::lock_guard<std::mutex> lock(m_AddChildMutex);
+		Children.push_back(child);
+	}
+	
+	//Remover
+	#define __LMX_FUNCTION_DUPLICATOR(func)\
+		LMX_PROFILE_FUNCTION();\
+		std::lock_guard<std::mutex> lock(m_RemoveChildMutex);\
+		auto it = (func);\
+		if (it != Children.end())\
+		{\
+			Children.erase(it);\
+		}
+	void SceneNode::RemoveChild(Ref<SceneNode> child)
+	{
+		__LMX_FUNCTION_DUPLICATOR(FindChild(child));
+	}
+	void SceneNode::RemoveChild(const std::string & name)
+	{
+		__LMX_FUNCTION_DUPLICATOR(FindChild(name));
+	}
+	void SceneNode::RemoveChild(size_t index)
+	{
+		__LMX_FUNCTION_DUPLICATOR(Children.begin() + index);
+	}
+	void SceneNode::RemoveNode(const std::string & name)
+	{
+		__LMX_FUNCTION_DUPLICATOR(FindNode(name));
+	}
+	void SceneNode::RemoveNode(Ref<SceneNode> node)
+	{
+		__LMX_FUNCTION_DUPLICATOR(FindNode(node));
+	}
+	// Finder
+	#define __LMX_FUNCTION_DUPLICATOR(name)\
+		LMX_PROFILE_FUNCTION();\
+		auto it = FindChild(name);\
+		if (it != Children.end())\
+			{return it;}\
+		else\
+		{\
+			for (auto& i : Children)\
+			{\
+				it = i->FindNode(name);\
+				if (it != Children.end())\
+					{return it;}\
+			}\
+		}
+	std::vector<Ref<SceneNode>>::iterator SceneNode::FindNode(const std::string & name)
+	{
+		__LMX_FUNCTION_DUPLICATOR(name);
+	}
+	std::vector<Ref<SceneNode>>::iterator SceneNode::FindNode(Ref<SceneNode> node)
+	{
+		__LMX_FUNCTION_DUPLICATOR(node);
+	}
+	std::vector<Ref<SceneNode>>::iterator SceneNode::FindChild(const std::string & name)
+	{
+		LMX_PROFILE_FUNCTION();
+		return std::find_if(Children.begin(), Children.end(), [&name](const Ref<SceneNode>& node) { return node->Name == name; });
+	}
+	std::vector<Ref<SceneNode>>::iterator SceneNode::FindChild(Ref<SceneNode> child)
+	{
+		LMX_PROFILE_FUNCTION();
+		return std::find(Children.begin(), Children.end(), child);
+	}
 	static std::string directory;
 	void SceneNode::loadModel(const std::string& path)
 	{
@@ -75,7 +150,7 @@ namespace LMX
 	void SceneNode::processNode(aiNode * node, const aiScene * scene)
 	{
 		LMX_PROFILE_FUNCTION();
-		m_Name = node->mName.C_Str();
+		Name = node->mName.C_Str();
 		auto& transformation = node->mTransformation;
 		{
 			aiVector3D scal, rot, pos;
@@ -85,33 +160,37 @@ namespace LMX
 			Translation	= glm::vec3(pos .x, pos .y, pos .z);
 		}
 		// process all the node's meshes (if any)
-		auto AddMesh = [&](std::vector<Ref<Mesh>>* meshes, aiMesh* mesh, const aiScene* scene)
+		std::mutex addMeshaiMutex, addChildaiMutex;
+		auto AddMeshai = [&](std::vector<Ref<Mesh>>* meshes, aiMesh* mesh, const aiScene* scene)
 		{
 			LMX_PROFILE_FUNCTION();
+			std::lock_guard<std::mutex> lock(addMeshaiMutex);
 			meshes->push_back(processMesh(mesh, scene));
 		};
 		std::vector<std::future<void>> futures;
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			//futures.push_back(std::async(AddMesh, &Meshes, mesh, scene));
-			Meshes.push_back(processMesh(mesh, scene));
+			futures.push_back(std::async(AddMeshai, &Meshes, mesh, scene));
+			//Meshes.push_back(processMesh(mesh, scene));
 		}
 		// then do the same for each of its children
-		auto AddChild = [](std::vector<Ref<SceneNode>>* children, aiNode* aiChild, const aiScene* scene)
+		auto AddChildai = [&](std::vector<Ref<SceneNode>>* children, aiNode* aiChild, const aiScene* scene)
 		{
 			LMX_PROFILE_FUNCTION();
 			auto child = CreateRef<SceneNode>();
-			children->push_back(child);
 			child->processNode(aiChild, scene);
+			std::lock_guard<std::mutex> lock(addChildaiMutex);
+			children->push_back(child);
 		};
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
 			auto aiChild = node->mChildren[i];
-			//futures.push_back(std::async(AddChild, &Children, aiChild, scene));
-			auto child = CreateRef<SceneNode>();
-			Children.push_back(child);
-			child->processNode(aiChild, scene);
+			futures.push_back(std::async(AddChildai, &Children, aiChild, scene));
+		}
+		for (size_t i = 0; i < futures.size(); i++)
+		{
+			futures[i].wait();
 		}
 	}
 	std::vector<Ref<Texture2D>> loadMaterialTextures(aiMaterial* mat, aiTextureType assimpType, Texture2D::TextureType type)
@@ -124,7 +203,7 @@ namespace LMX
 			LMX_PROFILE_SCOPE("load texture");
 			aiString str;
 			mat->GetTexture(assimpType, i, &str);
-			Ref<Texture2D> texture = Texture2D::Create(directory + "/" + str.C_Str(), type);
+			Ref<Texture2D> texture = Texture2D::Load(directory + "/" + str.C_Str(), type);
 			textures.push_back(texture);
 		}
 		return textures;

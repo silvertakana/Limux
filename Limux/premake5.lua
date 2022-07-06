@@ -44,7 +44,7 @@ project "Limux"
 			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
 			-- ("{COPY} ../bin/" .. outputdir .. "/**.dll ../bin/" .. outputdir .. "/Sandbox"), --copy the dll to sandbox
 		}
-	filter ("files:Limux/libraries/**.**")
+	filter ("files:Limux/vendor/**.**")
 		flags {"NoPCH"}
 
 	filter "configurations:Debug"

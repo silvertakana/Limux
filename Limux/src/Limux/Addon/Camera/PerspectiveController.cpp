@@ -64,51 +64,51 @@ namespace LMX
 		if (CtrlInp::IsPressed("FlyDown"))
 			cam->Position += -cam->Up * Speed;
 
-		// Handles mouse inputs
-		if (Input::IsMouseButtonPressed(LMX_MOUSE_BUTTON_LEFT))
-		{
-			// Hides mouse cursor
-			Input::SetInputMode(Input::InputType::CURSOR, Input::InputMode::CURSOR_HIDDEN);
+	//	// Handles mouse inputs
+	//	if (Input::IsMouseButtonPressed(LMX_MOUSE_BUTTON_LEFT))
+	//	{
+	//		// Hides mouse cursor
+	//		Input::SetInputMode(Input::InputType::CURSOR, Input::InputMode::CURSOR_HIDDEN);
 
-			// Prevents camera from jumping on the first click
-			if (firstClick)
-			{
-				Input::SetMousePosition((cam->Width / 2), (cam->Height / 2));
-				firstClick = false;
-			}
+	//		// Prevents camera from jumping on the first click
+	//		if (firstClick)
+	//		{
+	//			Input::SetMousePosition((cam->Width / 2), (cam->Height / 2));
+	//			firstClick = false;
+	//		}
 
-			// Stores the coordinates of the cursor
-			// Fetches the coordinates of the cursor
-			double mouseX = Input::GetMouseX();
-			double mouseY = Input::GetMouseY();
+	//		// Stores the coordinates of the cursor
+	//		// Fetches the coordinates of the cursor
+	//		double mouseX = Input::GetMouseX();
+	//		double mouseY = Input::GetMouseY();
 
-			// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-			// and then "transforms" them into degrees 
-			float rotX = rotSpeed * ts * 3000.f * (float)(mouseY - (cam->Height / 2)) / cam->Height;
-			float rotY = rotSpeed * ts * 3000.f * (float)(mouseX - (cam->Width / 2)) / cam->Width;
+	//		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+	//		// and then "transforms" them into degrees 
+	//		float rotX = rotSpeed * ts * 3000.f * (float)(mouseY - (cam->Height / 2)) / cam->Height;
+	//		float rotY = rotSpeed * ts * 3000.f * (float)(mouseX - (cam->Width / 2)) / cam->Width;
 
-			// Calculates Upcoming vertical change in the cam->Front
-			newOrientation = glm::rotate(cam->Front, glm::radians(-rotX), glm::normalize(glm::cross(cam->Front, cam->Up)));
+	//		// Calculates Upcoming vertical change in the cam->Front
+	//		newOrientation = glm::rotate(cam->Front, glm::radians(-rotX), glm::normalize(glm::cross(cam->Front, cam->Up)));
 
-			// Rotates the cam->Front left and right
-			newOrientation = glm::rotate(newOrientation, glm::radians(-rotY), cam->Up);
+	//		// Rotates the cam->Front left and right
+	//		newOrientation = glm::rotate(newOrientation, glm::radians(-rotY), cam->Up);
 
-			// Sets mouse cursor to the middle of the screen so that it doesn't end cam->Up roaming around
-			Input::SetMousePosition((cam->Width / 2), (cam->Height / 2));
-		}
+	//		// Sets mouse cursor to the middle of the screen so that it doesn't end cam->Up roaming around
+	//		Input::SetMousePosition((cam->Width / 2), (cam->Height / 2));
+	//	}
+	//	
+	//	else if (!Input::IsMouseButtonPressed(LMX_MOUSE_BUTTON_LEFT))
+	//	{
+	//		// Unhides cursor since camera is not looking around anymore
+	//		Input::SetInputMode(Input::InputType::CURSOR, Input::InputMode::CURSOR_NORMAL);
+	//		// Makes sure the next time the camera looks around it doesn't jump
+	//		firstClick = true;
+	//	}
 		
 		// Decides whether or not the next vertical cam->Front is legal or not
 		if (abs(glm::angle(newOrientation, cam->Up) - glm::radians(90.0f)) <= glm::radians(80.0f))
 		{
 			cam->Front = newOrientation;
-		}
-		
-		else if (!Input::IsMouseButtonPressed(LMX_MOUSE_BUTTON_LEFT))
-		{
-			// Unhides cursor since camera is not looking around anymore
-			Input::SetInputMode(Input::InputType::CURSOR, Input::InputMode::CURSOR_NORMAL);
-			// Makes sure the next time the camera looks around it doesn't jump
-			firstClick = true;
 		}
 	}
 }

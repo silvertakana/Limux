@@ -27,14 +27,14 @@ namespace LMX
 		buffer->Size = size;
 		return buffer;
 	}
-	Ref<IndexBuffer> IndexBuffer::Create(void* data, uint32_t size)
+	Ref<IndexBuffer> IndexBuffer::Create(void* data, uint32_t count)
 	{
 		LMX_PROFILE_FUNCTION();
 		Ref<LMX::IndexBuffer> buffer = nullptr;
 		LMX_SWITCHRENDERERAPI(
-			buffer.reset((IndexBuffer*)new OpenGLIndexBuffer(data, size));
+			buffer.reset((IndexBuffer*)new OpenGLIndexBuffer(data, count));
 		);
-		buffer->Size = size;
+		buffer->Size = count;
 		return buffer;
 	}
 }

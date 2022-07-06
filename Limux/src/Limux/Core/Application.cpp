@@ -1,27 +1,24 @@
 #include "lmxpch.h"
 
 #include "Application.h"
-
 #include <imgui.h>
-
 #include "Limux/Renderer/Renderer.h"
-
 #include "Input.h"
 
 namespace LMX
 {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
 		LMX_PROFILE_FUNCTION();
 		LMX_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		
-		m_Window = std::unique_ptr<Window>(Window::Create({ "Limux Engine" }));
+		m_Window = Window::Create({ name });
 		m_Window->SetEventCallback(LMX_BIND_EVENT_FN(Application::OnEvent));
 		Renderer::Init();
-		PushOverlay(new ImGuiLayer());
+		PushOverlay(m_ImGuiLayer = new ImGuiLayer());
 	}
 	void Application::PushLayer(Layer* layer)
 	{
@@ -52,9 +49,9 @@ namespace LMX
 		dispatcher.Dispatch<WindowResizeEvent>(LMX_BIND_EVENT_FN(Application::OnWindowResize));
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			(*it)->OnEvent(e);
 			if (e.Handled)
 				break;
+			(*it)->OnEvent(e, m_Timestep);
 		}
 	}
 	void Application::Run()
@@ -64,25 +61,32 @@ namespace LMX
 		{		
 			LMX_PROFILE_SCOPE("RunLoop");
 			float time = RenderCommand::GetTime();
-			Timestep timestep = time - m_LastFrameTime;
+			m_Timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
+			
 			
 			if (!m_Minimized)
 			{
 				LMX_PROFILE_SCOPE("LayerStack OnUpdate");
 				for (Layer* layer : m_LayerStack)
-					layer->OnUpdate(timestep);
+					layer->OnUpdate(m_Timestep);
 			}
 			
 			m_ImGuiLayer->Begin();
+			
 			for (Layer* layer : m_LayerStack)
 			{
 				LMX_PROFILE_SCOPE("LayerStack OnImGUIRender");
-				layer->OnImGuiRender();
+				layer->OnImGuiRender(m_Timestep);
 			}
+			
 			m_ImGuiLayer->End();
 			m_Window->OnUpdate();
 		}
+	}
+	void Application::Close()
+	{
+		m_Running = false;
 	}
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{

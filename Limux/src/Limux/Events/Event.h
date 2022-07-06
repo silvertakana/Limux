@@ -1,6 +1,6 @@
 #pragma once
 // thanks these Cherno for this code
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 #include <sstream>
 #include <functional>
 
@@ -39,6 +39,8 @@ namespace LMX {
 	class LMX_API Event
 	{
 	public:
+		virtual ~Event() = default;
+
 		bool Handled = false;
 
 		virtual EventType GetEventType() const = 0;

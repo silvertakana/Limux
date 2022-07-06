@@ -1,5 +1,5 @@
 #pragma once
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 
 namespace LMX
 {

@@ -59,7 +59,7 @@ namespace LMX
 		}
 	}
 	std::map<std::string, Ref<Texture>> Texture::loadedTextures = {};
-	Ref<Texture2D> Texture2D::Create(const std::string& path, TextureType type, int setting)
+	Ref<Texture2D> Texture2D::Load(const std::string& path, TextureType type, int setting)
 	{
 		LMX_PROFILE_FUNCTION();
 		Ref<Texture2D> texture = nullptr;
@@ -84,7 +84,7 @@ namespace LMX
 	void Texture2D::SetDefaultTexture(const std::string& path, TextureType type, int setting)
 	{
 		LMX_PROFILE_FUNCTION();
-		Ref<Texture2D> texture = Create(path, type, setting);
+		Ref<Texture2D> texture = Load(path, type, setting);
 		texture->Init();
 		texture->Bind();
 	}

@@ -1,5 +1,5 @@
 #pragma once
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 namespace LMX
 {
 	class Buffer
@@ -14,6 +14,7 @@ namespace LMX
 		
 		
 		virtual constexpr uint32_t GetSize() const { return Size; };
+		virtual uint32_t GetRendererID() const = 0;
 	};
 
 	class VertexBuffer : public Buffer
@@ -27,7 +28,7 @@ namespace LMX
 	class IndexBuffer : public Buffer
 	{
 	public:
-		static Ref<IndexBuffer> Create(void* data, uint32_t size);
+		static Ref<IndexBuffer> Create(void* data, uint32_t count);
 	};
 }
 

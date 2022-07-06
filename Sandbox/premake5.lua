@@ -29,7 +29,7 @@ project "Sandbox"
 		postbuildcommands {
 			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/",
 		}
-	filter ("files:Sandbox/libraries/**.**")
+	filter ("files:Sandbox/vendor/**.**")
     	flags {"NoPCH"}
 
 	filter "configurations:Debug"

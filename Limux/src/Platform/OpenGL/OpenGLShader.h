@@ -1,14 +1,15 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <Limux/Core/Core.h>
+#include <Limux/Core/Base.h>
 #include "Limux/Renderer/Shader.h"
 #include "OpenGLTexture.h"
 namespace LMX
 {
 	class OpenGLShader : public Shader
 	{
+	protected:
+		uint32_t m_RendererID;
 	public:
-		uint32_t ID;
 		OpenGLShader(const std::string & vertexSrc, const std::string & fragmentSrc);
 		OpenGLShader(const std::string & shaderSrc);
 		static Ref<OpenGLShader> Load(const std::string& shaderPath);
@@ -22,6 +23,7 @@ namespace LMX
 			
 		}
 
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 		uint32_t GetUni(const std::string& name) const;
 
 		uint32_t setUniform(const std::string& name, const bool     & data, bool senderror) const;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 #include "Limux/Events/Event.h"
 #include "Timestep.h"
 namespace LMX
@@ -13,8 +13,8 @@ namespace LMX
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpdate(Timestep ts) {}
-		virtual void OnImGuiRender() {}
-		virtual void OnEvent(Event& event) {}
+		virtual void OnImGuiRender(Timestep ts) {}
+		virtual void OnEvent(Event& event, Timestep ts) {}
 
 		inline const std::string& GetName() const { return m_DebugName; }
 	protected:

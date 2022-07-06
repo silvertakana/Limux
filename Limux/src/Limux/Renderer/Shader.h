@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 
 namespace LMX
 {
@@ -17,6 +17,8 @@ namespace LMX
 		void SetUniform(const std::string& identifier, const T& data, bool senderror = true);
 		UniformSetter operator[](const std::string& identifier);
 		virtual ~Shader() = default;
+		
+		virtual uint32_t GetRendererID() const = 0;
 		
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;

@@ -1,5 +1,5 @@
 #include "lmxpch.h"
-#include "WindowsInput.h"
+#include "Limux/Core/Input.h"
 
 #include "Limux/Core/Application.h"
 #include <GLFW/glfw3.h>
@@ -7,7 +7,7 @@
 
 namespace LMX
 {
-	bool WindowsInput::IsKeyPressedImpl(KeyCode key)
+	bool Input::IsKeyPressed(KeyCode key)
 	{
 		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -15,7 +15,7 @@ namespace LMX
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(MouseCode button)
+	bool Input::IsMouseButtonPressed(MouseCode button)
 	{
 		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -23,7 +23,7 @@ namespace LMX
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePositionImpl()
+	std::pair<float, float> Input::GetMousePosition()
 	{
 		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -33,21 +33,21 @@ namespace LMX
 		return { (float)xpos, (float)ypos };
 	}
 
-	float WindowsInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
 		LMX_PROFILE_FUNCTION();
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
 		LMX_PROFILE_FUNCTION();
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return y;
 	}
 
-	std::pair<float, float> WindowsInput::SetMousePositionImpl(float x, float y)
+	std::pair<float, float> Input::SetMousePosition(float x, float y)
 	{
 		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -55,21 +55,21 @@ namespace LMX
 		return {x,y};
 	}
 
-	float WindowsInput::SetMouseXImpl(float x)
+	float Input::SetMouseX(float x)
 	{
 		LMX_PROFILE_FUNCTION();
-		auto [oldX, oldY] = GetMousePositionImpl();
-		return SetMousePositionImpl(x, oldY).first;
+		auto [oldX, oldY] = GetMousePosition();
+		return SetMousePosition(x, oldY).first;
 	}
 
-	float WindowsInput::SetMouseYImpl(float y)
+	float Input::SetMouseY(float y)
 	{
 		LMX_PROFILE_FUNCTION();
-		auto [oldX, oldY] = GetMousePositionImpl();
-		return SetMousePositionImpl(oldX, y).second;
+		auto [oldX, oldY] = GetMousePosition();
+		return SetMousePosition(oldX, y).second;
 	}
 
-	void WindowsInput::SetInputModeImpl(InputType inptype, InputMode mode)
+	void Input::SetInputMode(InputType inptype, InputMode mode)
 	{
 		LMX_PROFILE_FUNCTION();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());

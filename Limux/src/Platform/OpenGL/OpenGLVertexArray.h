@@ -26,20 +26,22 @@ namespace LMX
 	}
 	class OpenGLVertexArray : public VertexArray
 	{
+	protected:
 		LMX::Ref<VertexBuffer> m_VBO;
 		LMX::Ref<IndexBuffer> m_EBO;
 		uint32_t attribute_count = 0;
+		GLuint m_RendererID = 0;
 	public:
-		GLuint ID = 0;
 		OpenGLVertexArray(const LMX::Ref<VertexBuffer>& VBO, const LMX::Ref<IndexBuffer>& EBO, uint32_t offset, uint32_t stride);
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
 		
 		virtual const LMX::Ref<VertexBuffer>& GetVBO() const override { return m_VBO; };
 		virtual const LMX::Ref<IndexBuffer>&  GetEBO() const override { return m_EBO; };
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 		
 		virtual void AddAttrib(DataType Type, bool normalized, uint32_t relativeoffset) override;
-		operator GLuint() { return ID; }
+		operator GLuint() { return m_RendererID; }
 		virtual ~OpenGLVertexArray() override;
 	};
 }

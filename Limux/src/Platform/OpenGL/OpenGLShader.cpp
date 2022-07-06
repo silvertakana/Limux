@@ -39,7 +39,7 @@ namespace LMX
 	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
 		LMX_PROFILE_FUNCTION();
-		CreateOGLShader(vertexSrc, fragmentSrc, ID);
+		CreateOGLShader(vertexSrc, fragmentSrc, m_RendererID);
 	}
 	OpenGLShader::OpenGLShader(const std::string& shaderSrc)
 	{
@@ -68,7 +68,7 @@ namespace LMX
 			else if (mode != NONE)
 				source[mode] += line + '\n';
 		}
-		CreateOGLShader(source[VERTEX], source[FRAGMENT], ID);
+		CreateOGLShader(source[VERTEX], source[FRAGMENT], m_RendererID);
 	}
 	Ref<OpenGLShader> OpenGLShader::Load(const std::string& shaderPath)
 	{
@@ -83,12 +83,12 @@ namespace LMX
 	OpenGLShader::~OpenGLShader()
 	{
 		LMX_PROFILE_FUNCTION();
-		glDeleteProgram(ID);
+		glDeleteProgram(m_RendererID);
 	}
 	void OpenGLShader::Bind() const
 	{
 		LMX_PROFILE_FUNCTION();
-		glUseProgram(ID);
+		glUseProgram(m_RendererID);
 	}
 	void OpenGLShader::Unbind() const
 	{
@@ -98,7 +98,7 @@ namespace LMX
 	uint32_t OpenGLShader::GetUni(const std::string & name) const
 	{
 		LMX_PROFILE_FUNCTION();
-		return glGetUniformLocation(ID, name.c_str());
+		return glGetUniformLocation(m_RendererID, name.c_str());
 	}
 	#define LMX_UNIFORMFUNCTION(func, name, ...) \
 		LMX_PROFILE_FUNCTION();\

@@ -2,7 +2,7 @@
 
 #include "Limux/Core/Window.h"
 #include "Limux/Renderer/GraphicsContext.h"
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

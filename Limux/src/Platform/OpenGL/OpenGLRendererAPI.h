@@ -14,6 +14,6 @@ namespace LMX
 		virtual void Clear() override;
 		virtual float GetTime() override;
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t indexCount) override;
 	};
 }

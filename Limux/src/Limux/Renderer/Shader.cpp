@@ -3,7 +3,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
-#include "Limux/Core/Core.h"
+#include "Limux/Core/Base.h"
 #include "Limux/Renderer/RendererAPI.h"
 namespace LMX
 {

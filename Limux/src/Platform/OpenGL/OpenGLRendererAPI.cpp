@@ -91,11 +91,12 @@ namespace LMX
 		return (float)glfwGetTime();
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t indexCount)
 	{
 		LMX_PROFILE_FUNCTION();
+		uint32_t count = indexCount ? indexCount : vertexArray->GetEBO()->GetSize() / sizeof(uint32_t);
 		vertexArray->Bind();
-		glDrawElements(GL_TRIANGLES, vertexArray->GetEBO()->GetSize() / sizeof(uint32_t), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 		vertexArray->UnBind();
 	}
 

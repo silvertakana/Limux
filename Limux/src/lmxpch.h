@@ -29,3 +29,5 @@
 #include "Limux/Core/Log.h"
 #include "Limux/Debug/Instrumentor.h"
 #include "Limux/Core/MouseCodes.h"
+
+#include "Limux/Core/UUID.h"

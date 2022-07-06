@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <format>
+#include "Base.h"
 
 #ifndef LMX_ENABLE_LOGGING
 	#define LMX_LOG(...) (__VA_ARGS__)
@@ -46,7 +47,16 @@
 #define LMX_CRITIC(...)	LMX_LOG("CRITIC", 1, LMX_LOG_white, LMX_LOG_red, __VA_ARGS__)
 
 #ifdef LMX_ENABLE_ASSERTS
-#define LMX_ASSERT(condition, ...) {if(!(condition)) { LMX_CRITIC(__VA_ARGS__); __debugbreak();/*printf("\a"); exit(EXIT_FAILURE);*/}}
+	
+	#if defined(LMX_PLATFORM_WINDOWS)
+		#define LMX_DEBUGBREAK() __debugbreak()
+	#elif defined(LMX_PLATFORM_LINUX)
+		#include <signal.h>
+		#define LMX_DEBUGBREAK() raise(SIGTRAP)
+	#else 
+		#error "Platform doesn't support debugbreak yet!"
+	#endif
+#define LMX_ASSERT(condition, ...) {if(!(condition)) { LMX_CRITIC(__VA_ARGS__); LMX_DEBUGBREAK();/*printf("\a"); exit(EXIT_FAILURE);*/}}
 #else
 #define LMX_ASSERT(condition, ...)  {if(!(condition)) (__VA_ARGS__)}
 #endif

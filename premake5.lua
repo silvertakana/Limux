@@ -1,7 +1,7 @@
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 workspace "Limux"
 	platforms { "x86", "x64" }
-	startproject "Sandbox"
+	startproject "LimuxEditor"
 	configurations { "Debug", "Release" ,"Dist"}
 
 	systemversion "latest"
@@ -36,6 +36,7 @@ IncludeDir["ImGui"]  = "%{wks.location}/Limux/vendor/imgui"
 IncludeDir["glm"]    = "%{wks.location}/Limux/vendor/glm"
 IncludeDir["stb"]    = "%{wks.location}/Limux/vendor/stb"
 IncludeDir["assimp"] = "%{wks.location}/Limux/vendor/assimp/include"
+IncludeDir["entt"] = "%{wks.location}/Limux/vendor/entt/include"
 
 
 
@@ -50,4 +51,5 @@ group ""
 --group "Engine"
 	include "Limux"
 	include "sandbox"
+	include "LimuxEditor"
 --group ""

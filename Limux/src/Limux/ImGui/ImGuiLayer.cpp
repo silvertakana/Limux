@@ -56,7 +56,17 @@ namespace LMX
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
-
+	
+	void ImGuiLayer::OnEvent(Event& e, Timestep ts)
+	{
+		if (m_BlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
+	}
+	
 	void ImGuiLayer::Begin()
 	{
 		LMX_PROFILE_FUNCTION();
@@ -85,7 +95,7 @@ namespace LMX
 		}
 	}
 	
-	void ImGuiLayer::OnImGuiRender()
+	void ImGuiLayer::OnImGuiRender(Timestep ts)
 	{
 		LMX_PROFILE_FUNCTION();
 	}

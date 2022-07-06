@@ -38,7 +38,7 @@ namespace LMX {
 
 		if (s_GLFWWindowCount == 0)
 		{
-			LMX_ASSERT(glfwInit(), "Could not intialize GLFW!");
+			LMX_ASSERT(glfwInit(), "Could not initialize GLFW!");
 		}
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);

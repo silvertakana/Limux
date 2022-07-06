@@ -4,13 +4,15 @@ namespace LMX
 {
 	class OpenGLTexture2D : public Texture2D
 	{
+	protected:
+		uint32_t m_RendererID = 0; 
 	public:
-		uint32_t ID = 0;
 		OpenGLTexture2D(const std::string& path, Settings setting);
 		virtual ~OpenGLTexture2D();
 
 		virtual uint32_t GetWidth() const override  { return m_Width ; }
 		virtual uint32_t GetHeight() const override { return m_Height; }
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
 		virtual void Bind(uint32_t slot = 0) const override;
 	private:
@@ -19,6 +21,6 @@ namespace LMX
 		int m_InternalFormat;
 	private:
 		virtual void Init() override;
-		virtual void Create(std::string filePath, Settings setting);
+		virtual void Load(std::string filePath, Settings setting);
 	};
 }

@@ -23,10 +23,15 @@
 
 #include "Limux/Renderer/Vertex.h"
 #include "Limux/Renderer/Buffer.h"
+#include "Limux/Renderer/Framebuffer.h"
 #include "Limux/Renderer/Shader.h"
 #include "Limux/Renderer/Texture.h"
 #include "Limux/Renderer/VertexArray.h"
 #include "Limux/Renderer/Mesh.h"
 #include "Limux/Renderer/SceneNode.h"
+
+#include "Limux/Scene/Entity.h"
+#include "Limux/Scene/Scene.h"
+#include "Limux/Scene/Components/Components.h"
 
 #include "Limux/Renderer/Camera/Camera.h"

@@ -1,13 +1,9 @@
 #include <Limux.h>
+#include <Limux/Core/Input.h>
 #include <Limux/Packs/CameraPack.h>
-#include <glm/gtx/rotate_vector.hpp>
-#include <Platform/OpenGL/OpenGLShader.h>
 #include <Limux/Core/EntryPoint.h>
 #include <Glad/glad.h>
 #include "GLFW/glfw3.h"
-#include <future>
-#include <mutex>
-
 
 class ExampleLayer : public LMX::Layer
 {
@@ -23,21 +19,20 @@ public:
 	{
 		LMX_PROFILE_FUNCTION();
 		std::mutex mesh_mutex;
-		auto LoadFunction = [&](std::vector<LMX::Ref<LMX::SceneNode>>* meshes, std::string path)
+		static auto LoadFunction = [&](LMX::SceneNode* scene, std::string path)
 		{
 			LMX_PROFILE_SCOPE("LoadFunction");
-			auto mesh = LMX::CreateRef<LMX::SceneNode>(path);
-			
+			//scene->AddModel(path);
+			auto node = LMX::CreateRef<LMX::SceneNode>(path);
 			std::lock_guard<std::mutex> lock(mesh_mutex);
-			meshes->push_back(mesh);
+			scene->Children.push_back(node);
 		};
 		std::vector<std::future<void>> futures;
-		for (size_t i = 0; i < 1; i++)
+		for (size_t i = 0; i < 50; i++)
 		{
-			futures.push_back(std::async(std::launch::async, LoadFunction, &models, "res/models/backpack/scene.gltf"));
-			//futures[i].wait();
+			futures.push_back(std::async(std::launch::async, LoadFunction, &scene, "res/models/crow/scene.gltf"));
+			futures[i].wait();
 		}
-		//model = LMX::CreateRef<LMX::SceneNode>("res/models/crow/scene.gltf");
 		
 		LMX::Texture2D::SetDefaultTexture("res/textures/missing_texture.png");
 
@@ -46,26 +41,28 @@ public:
 		{
 			auto& window = LMX::Application::Get().GetWindow();
 			float aspect = (float)window.GetWidth() / (float)window.GetHeight();
-			//cam.reset(new LMX::OrthographicCamera(-aspect, aspect, -1, 1, 0.01f, 100.f));
 			cam.reset(new LMX::PerspectiveCamera(glm::radians(60.f), (float)window.GetWidth(), (float)window.GetHeight(), 0.01f, 100.f));
 		}
+		
 		shader->Bind();
 		(*shader)["tiling"] = glm::vec2(1);
 		cam->Position = { 0, 0, -1 };
 		//cam->Front = -cam->Position;
 		cam->Front = { 0, 0, 1 };
+		
 		for (size_t i = 0; i < futures.size(); i++)
 		{
 			LMX_PROFILE_SCOPE("setup model");
 			futures[i].wait();
-			models[i]->Init();
+			scene[i]->Init();
+			scene[i]->Scale = glm::vec3(0.1f);
+			scene[i]->Rotation.y = glm::radians(180.f);
+			scene[i]->Translation = { i%3, 0.f, i/3 };
 		}
-		models[0]->Scale = glm::vec3(0.01f);
 	}
 	virtual void OnUpdate(LMX::Timestep ts) override
 	{
 		LMX_PROFILE_FUNCTION();
-		glfwSetWindowTitle((GLFWwindow*)LMX::Application::Get().GetWindow().GetNativeWindow(), std::format("Test - {0}", 1/ts).c_str());
 		{
 			LMX_PROFILE_SCOPE("Camera Controlling");
 			LMX::DebugPerspecCamUpdate(cam, 2.f, 2.f, ts);
@@ -73,41 +70,38 @@ public:
 		}
 		
 		{
-			LMX_PROFILE_SCOPE("Renderer Prep");
+			LMX_PROFILE_SCOPE("Renderer Prep"); 
 			LMX::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			LMX::RenderCommand::Clear();
 		}
 		
 		{
+			LMX::Renderer::BeginScene();
 			LMX_PROFILE_SCOPE("Renderering");
 			shader->Bind();
 			shader->SetUniform("u_CamMatrix", cam->GetViewProjMatrix());
-			for (size_t i = 0; i < models.size(); i++)
+			for (size_t i = 0; i < scene.size(); i++)
 			{
-				models[i]->Translation = glm::vec3 { i, 0.f, 0.f };
-				models[i]->UpdateTransform();
-				models[i]->Draw(shader);
+				scene[i]->UpdateTransform();
+				scene[i]->Draw(shader);
 			}
+			statistics = LMX::Renderer::EndScene();
 		}
 	}
-	virtual void OnImGuiRender() override
+	virtual void OnImGuiRender(LMX::Timestep ts) override
 	{
+		LMX_PROFILE_FUNCTION();
 	}
 
-	virtual void OnEvent(LMX::Event& event) override
+	virtual void OnEvent(LMX::Event& event, LMX::Timestep ts) override
 	{
-		if (event.GetEventType() == LMX::EventType::KeyPressed)
-		{
-			LMX::KeyPressedEvent& e = (LMX::KeyPressedEvent&)event;
-			if (e.GetKeyCode() == LMX_KEY_TAB)
-				LMX_INFO("Hello World");
-		}
 	}
 private:
-	std::vector<LMX::Ref<LMX::SceneNode>> models;
+	LMX::SceneNode scene;
 	LMX::Ref<LMX::Shader> shader;
 	std::vector<LMX::Ref<LMX::Texture>> m_Textures;
 	LMX::Ref<LMX::PerspectiveCamera> cam;
+	LMX::Ref<LMX::Renderer::Statistics> statistics;
 };
 static LMX::Layer* layer;
 class Sandbox : public LMX::Application
@@ -122,7 +116,8 @@ public:
 	{
 	}
 };
+
 LMX::Application* LMX::CreateApplication()
 {
-	return new Sandbox(); // telling the engine what Application to use
+	return new Sandbox();
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Core.h"
+#include "Base.h"
 
 #include "Limux/Events/ApplicationEvent.h"
 #include "Limux/Core/LayerStack.h"
@@ -17,7 +17,7 @@ namespace LMX
 	class LMX_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Limux");
 		virtual ~Application() = default;
 		void OnEvent(Event& e);
 		void PushLayer(Layer* layer);
@@ -27,8 +27,11 @@ namespace LMX
 		void PopOverlay(Layer* layer);
 		
 		inline Window& GetWindow() { return *m_Window; }
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 		inline static Application& Get() { return *s_Instance; }
 		
+		void Close();
+		bool m_DockingEnable = true;
 	private:
 		void Run();
 		bool OnWindowClose(WindowCloseEvent& e);
@@ -40,6 +43,7 @@ namespace LMX
 		bool m_Minimized = false;
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
+		Timestep m_Timestep;
 	private:
 		static Application* s_Instance;
 		friend int ::main(int argc, char** argv);

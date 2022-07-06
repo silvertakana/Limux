@@ -43,11 +43,11 @@ namespace LMX
 		}
 		LMX::Renderer::Submit(shader, m_vertexArray, offset);
 
-		//for (auto& i : textureNames)
-		//{
-		//	LMX_PROFILE_SCOPE("Unbinding Textures");
-		//	shader->SetUniform(i, 0);
-		//}
+		for (auto& i : textureNames)
+		{
+			LMX_PROFILE_SCOPE("Unbinding Textures");
+			shader->SetUniform(i, 0, false);
+		}
 		shader->Unbind();
 	}
 	
