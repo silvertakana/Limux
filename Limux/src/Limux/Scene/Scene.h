@@ -5,6 +5,7 @@
 namespace LMX
 {
 	class Entity;
+	class EditorLayer;
 	
 	class Scene
 	{
@@ -22,10 +23,14 @@ namespace LMX
 
 		void OnUpdate(Timestep ts);
 		void OnRender(Ref<Shader> shader);
-	private:
+		void OnViewportResize(uint32_t width, uint32_t height);
+	protected:
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 		
+		Entity* m_ActiveCamera = nullptr;
+		
 		entt::registry m_Registry;
+		friend EditorLayer;
 	};
 }
 

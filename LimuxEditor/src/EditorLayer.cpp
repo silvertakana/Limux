@@ -10,9 +10,11 @@ namespace LMX
 	{
 		LMX_PROFILE_FUNCTION();
 		
-		m_EditorCamera = CreateRef<PerspectiveCamera>(glm::radians(60.0), 997, 701, 0.1f, 100.0f);
-		
 		m_Scene = CreateRef<Scene>();
+		m_Camera = m_Scene->CreateEntity();
+		m_Camera.AddComponent<CameraComponent>();
+		m_Scene->m_ActiveCamera = &m_Camera;
+		
 		m_Model = m_Scene->CreateEntity();
 		m_Model.AddComponent<NodeComponent>().AddModel("../Sandbox/res/models/crow/scene.gltf", m_Scene->GetReg());
 
@@ -38,18 +40,18 @@ namespace LMX
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_Scene->m_ActiveCamera->GetComponent<CameraComponent>().SetupPerspective(glm::radians(80.f), m_ViewportSize.x, m_ViewportSize.y, 0.1f, 1000.0f);
+
 		}
 		
 		{
 			LMX_PROFILE_SCOPE("Camera Controlling");
-			DebugPerspecCamUpdate(m_EditorCamera, 2.f, 2.f, ts);
-			m_EditorCamera->UpdateViewMatrix();
 		}
 		
 		{
 			LMX_PROFILE_SCOPE("Renderer Prep");
 			m_Framebuffer->Bind();
-			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::SetClearColor({ 0.3f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 		}
 		
@@ -57,7 +59,13 @@ namespace LMX
 			LMX_PROFILE_SCOPE("Renderer Draw");
 			Renderer::BeginScene();
 			m_Shader->Bind();
-			m_Shader->SetUniform("u_CamMatrix", m_EditorCamera->GetViewProjMatrix());
+			CameraComponent& cameraCom = m_Scene->m_ActiveCamera->GetComponent<CameraComponent>();
+			TransformComponent cameraTrans = m_Scene->m_ActiveCamera->GetComponent<TransformComponent>();
+			glm::vec3 up = glm::vec3(0, 1, 0);
+			
+			cameraTrans.LookAtEuler(m_Model.GetComponent<TransformComponent>().Translation + glm::vec3(0, 10.f, 0.f));
+			
+			m_Shader->SetUniform("u_CamMatrix", cameraCom.GenCamMatrix(cameraTrans, up));
 			
 			m_Scene->OnRender(m_Shader);
 			Renderer::EndScene();
@@ -134,20 +142,25 @@ namespace LMX
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
-
+		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize))
-		{
-			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-			m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-			m_EditorCamera->Resize(m_ViewportSize.x, m_ViewportSize.y);
-		}
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2 { m_ViewportSize.x, m_ViewportSize.y }, ImVec2 { 0, 1 }, ImVec2 { 1, 0 });
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+
+		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2 { m_ViewportSize.x, m_ViewportSize.y }, ImVec2 { 0, 1 }, ImVec2 { 1, 0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 
 		ImGui::End();
+		
+		ImGui::Begin("Property");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", ts * 1000.f, 1.f/ts);
+		auto& transform = m_Camera.GetComponent<TransformComponent>();
+		ImGui::SliderFloat3("Translation", &(transform.Translation[0]), -10, 20 );
+		ImGui::InputFloat3 ("Rotation"   , &(transform.Rotation   [0]));
+		ImGui::SliderFloat3("Scale"      , &(transform.Scale      [0]), -10, 10 );
+		ImGui::End();
+
 	}
 
 	void EditorLayer::OnEvent(Event & e, Timestep ts)

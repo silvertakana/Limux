@@ -196,6 +196,26 @@ namespace LMX
 		glm::decompose(transform, this->Scale, rotationQuat, this->Translation, skew, perspective);
 		this->Rotation = glm::eulerAngles(rotationQuat) * glm::pi<float>() / 180.f;
 	}
+	glm::mat4 TransformComponent::GetTranslationMatrix() const
+	{
+		return glm::translate(glm::mat4(1.0f), Translation);
+	}
+	glm::mat4 TransformComponent::GetRotationMatrix() const
+	{
+		return glm::toMat4(glm::quat(Rotation));
+	}
+	glm::mat4 TransformComponent::GetScaleMatrix() const
+	{
+		return glm::scale(glm::mat4(1.0f), Scale);
+	}
+	void TransformComponent::LookAtEuler(const glm::vec3& dest, const glm::vec3& up)
+	{
+		Rotation = LookAtEuler(dest, Translation, up);
+	}
+	glm::vec3 TransformComponent::LookAtEuler(const glm::vec3 & dest, const glm::vec3 & origin, const glm::vec3 & up)
+	{
+		return glm::eulerAngles(glm::quat(glm::lookAt(dest, origin, up)));
+	}
 	void MeshesComponent::Draw(Ref<Shader> shader, const glm::mat4& offset) const
 	{
 		LMX_PROFILE_FUNCTION();

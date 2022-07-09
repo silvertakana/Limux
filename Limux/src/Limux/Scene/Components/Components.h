@@ -11,6 +11,8 @@
 #include "Limux/Core/UUID.h"
 #include "Limux/Scene/Entity.h"
 
+#include "Camera/CameraComponent.h"
+
 namespace LMX
 {
 	struct IDComponent
@@ -34,12 +36,17 @@ namespace LMX
 
 		glm::mat4 GetTransform() const
 		{
-			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
 
-			return glm::translate(glm::mat4(1.0f), Translation)
-				* rotation
-				* glm::scale(glm::mat4(1.0f), Scale);
+			return GetTranslationMatrix()
+				* GetRotationMatrix()
+				* GetScaleMatrix();
 		}
+		glm::mat4 GetTranslationMatrix() const;
+		glm::mat4 GetRotationMatrix() const;
+		glm::mat4 GetScaleMatrix() const;
+		
+		void LookAtEuler(const glm::vec3& dest, const glm::vec3& up = { 0.0f, 1.0f, 0.0f });
+		static glm::vec3 LookAtEuler(const glm::vec3& dest, const glm::vec3& origin, const glm::vec3& up = { 0.0f, 1.0f, 0.0f });
 	};
 
 	struct TagComponent

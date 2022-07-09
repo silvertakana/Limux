@@ -33,5 +33,3 @@
 #include "Limux/Scene/Entity.h"
 #include "Limux/Scene/Scene.h"
 #include "Limux/Scene/Components/Components.h"
-
-#include "Limux/Renderer/Camera/Camera.h"

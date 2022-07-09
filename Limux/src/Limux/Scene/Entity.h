@@ -20,6 +20,7 @@ namespace LMX
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
+			LMX_ASSERT(m_Registry, "Entity is not yet initilized");
 			LMX_ASSERT(!HasComponent<T>(), "Entity already has component!");
 			T& component = m_Registry->emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
 			return component;
