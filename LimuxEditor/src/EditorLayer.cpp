@@ -106,12 +106,6 @@ namespace LMX
 		{
 			LMX_PROFILE_SCOPE("Renderer Draw");
 			Renderer::BeginScene();
-			m_Shader->Bind();
-			CameraComponent& cameraCom = m_Scene->m_ActiveCamera->GetComponent<CameraComponent>();
-			TransformComponent& cameraTrans = m_Scene->m_ActiveCamera->GetComponent<TransformComponent>();
-			glm::vec3 up = glm::vec3(0, 1, 0);
-			
-			m_Shader->SetUniform("u_CamMatrix", cameraCom.GenCamMatrix(cameraTrans));
 			
 			m_Scene->OnRender(m_Shader);
 			Renderer::EndScene();

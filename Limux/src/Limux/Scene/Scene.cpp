@@ -101,26 +101,31 @@ namespace LMX
 		{
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 				{
+					// TODO: Move to Scene::OnScenePlay
 					if (!nsc.Instance)
 					{
-						nsc.InstantiateFunction();
-						nsc.Instance->m_Entity = Entity { entity, this->m_Registry };
+						nsc.Instance = nsc.InstantiateScript();
+						nsc.Instance->m_Entity = Entity { entity, m_Registry };
 
-						if (nsc.OnCreateFunction)
-							nsc.OnCreateFunction(nsc.Instance);
+						nsc.Instance->OnCreate();
 					}
-
-					if (nsc.OnUpdateFunction)
-						nsc.OnUpdateFunction(nsc.Instance, ts);
+					nsc.Instance->OnUpdate(ts);
 				});
 		}
 	}
 	void Scene::OnRender(Ref<Shader> shader)
 	{
+
+		shader->Bind();
+		CameraComponent& cameraCom = m_ActiveCamera->GetComponent<CameraComponent>();
+		TransformComponent& cameraTrans = m_ActiveCamera->GetComponent<TransformComponent>();
+
+		shader->SetUniform("u_CamMatrix", cameraCom.GenCamMatrix(cameraTrans));
+		
 		auto group = m_Registry.group<TransformComponent>(entt::get<MeshesComponent>);
 		for (auto& entity : group)
 		{
-			auto [transform, meshes] = group.get<TransformComponent, MeshesComponent>(entity);
+			const auto& [transform, meshes] = group.get<TransformComponent, MeshesComponent>(entity);
 			meshes.Draw(shader, transform.Transform);
 		}
 	}
