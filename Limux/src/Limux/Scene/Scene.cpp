@@ -97,7 +97,23 @@ namespace LMX
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		
+		// Update scripts
+		{
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+				{
+					if (!nsc.Instance)
+					{
+						nsc.InstantiateFunction();
+						nsc.Instance->m_Entity = Entity { entity, this->m_Registry };
+
+						if (nsc.OnCreateFunction)
+							nsc.OnCreateFunction(nsc.Instance);
+					}
+
+					if (nsc.OnUpdateFunction)
+						nsc.OnUpdateFunction(nsc.Instance, ts);
+				});
+		}
 	}
 	void Scene::OnRender(Ref<Shader> shader)
 	{
@@ -105,7 +121,7 @@ namespace LMX
 		for (auto& entity : group)
 		{
 			auto [transform, meshes] = group.get<TransformComponent, MeshesComponent>(entity);
-			meshes.Draw(shader, transform.GetTransform());
+			meshes.Draw(shader, transform.Transform);
 		}
 	}
 

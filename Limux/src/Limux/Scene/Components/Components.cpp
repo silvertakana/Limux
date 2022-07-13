@@ -60,11 +60,7 @@ namespace LMX
 		{
 			auto& transform = entity->AddOrReplaceComponent<TransformComponent>();
 			
-			aiVector3D scal, rot, pos;
-			transformation.Decompose(scal, rot, pos);
-			transform.Scale = glm::vec3(scal.x, scal.y, scal.z);
-			transform.Rotation = glm::vec3(rot.x, rot.y, rot.z);
-			transform.Translation = glm::vec3(pos.x, pos.y, pos.z);
+			*(aiMatrix4x4*)(&transform.Transform) = transformation;
 		}
 		
 		entity->AddOrReplaceComponent<MeshesComponent>();
@@ -190,31 +186,105 @@ namespace LMX
 	}
 	TransformComponent::TransformComponent(const glm::mat4& transform)
 	{
-		glm::quat rotationQuat;
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(transform, this->Scale, rotationQuat, this->Translation, skew, perspective);
-		this->Rotation = glm::eulerAngles(rotationQuat) * glm::pi<float>() / 180.f;
+		Transform = transform;
+		//glm::quat rotationQuat;
+		//glm::vec3 skew;
+		//glm::vec4 perspective;
+		//glm::decompose(transform, this->Scale, rotationQuat, this->Translation, skew, perspective);
+		//this->Rotation = glm::eulerAngles(rotationQuat) * glm::pi<float>() / 180.f;
+	}
+	TransformComponent::TransformComposeMatrix TransformComponent::DecomposeTransformMatrix() const
+	{
+		return TransformComposeMatrix(
+			GetTranslationMatrix(),
+			GetRotationMatrix(),
+			GetScaleMatrix()
+			);
 	}
 	glm::mat4 TransformComponent::GetTranslationMatrix() const
 	{
-		return glm::translate(glm::mat4(1.0f), Translation);
+		return glm::translate(glm::mat4(1.0f), GetTranslation());
 	}
 	glm::mat4 TransformComponent::GetRotationMatrix() const
 	{
-		return glm::toMat4(glm::quat(Rotation));
+		return glm::toMat4(GetRotation());
 	}
 	glm::mat4 TransformComponent::GetScaleMatrix() const
 	{
-		return glm::scale(glm::mat4(1.0f), Scale);
+		return glm::scale(glm::mat4(1.0f), GetScale());
 	}
-	void TransformComponent::LookAtEuler(const glm::vec3& dest, const glm::vec3& up)
+	TransformComponent::TransformCompose TransformComponent::DecomposeTransform() const
 	{
-		Rotation = LookAtEuler(dest, Translation, up);
+		TransformCompose transform;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(Transform, transform.Scale, transform.RotationQuat, transform.Translation, skew, perspective);
+		transform.RotationEuler = glm::eulerAngles(transform.RotationQuat);
+		return transform;
 	}
-	glm::vec3 TransformComponent::LookAtEuler(const glm::vec3 & dest, const glm::vec3 & origin, const glm::vec3 & up)
+	glm::vec3 TransformComponent::GetTranslation() const
 	{
-		return glm::eulerAngles(glm::quat(glm::lookAt(dest, origin, up)));
+		return DecomposeTransform().Translation;
+	}
+	glm::quat TransformComponent::GetRotation() const
+	{
+		return DecomposeTransform().RotationQuat;
+	}
+	glm::vec3 TransformComponent::GetScale() const
+	{
+		return DecomposeTransform().Scale;
+	}
+	void TransformComponent::SetTranslation(const glm::vec3& translation)
+	{
+		Transform = 
+			glm::translate(glm::mat4(1.f), translation) *
+			GetRotationMatrix() *
+			GetScaleMatrix();
+	}
+	void TransformComponent::SetRotation(const glm::quat & rotation)
+	{
+		Transform =
+			GetTranslationMatrix() *
+			glm::toMat4(rotation) *
+			GetScaleMatrix();
+	}
+	void TransformComponent::SetRotation(const glm::vec3& vector, float angle)
+	{
+		Transform =
+			GetTranslationMatrix() *
+			glm::rotate(glm::mat4{1.f}, angle, vector) *
+			GetScaleMatrix();
+	}
+	void TransformComponent::SetRotation(const glm::vec3 & rotation)
+	{
+		SetRotation(glm::quat(rotation));
+	}
+	void TransformComponent::SetScale(const glm::vec3 & scale)
+	{
+		Transform =
+			GetTranslationMatrix() *
+			GetRotationMatrix() *
+			glm::scale(glm::mat4(1.f), scale);
+	}
+	void TransformComponent::Translate(const glm::vec3& translation)
+	{
+		SetTranslation(GetTranslation() + translation);
+	}
+	void TransformComponent::Rotate(const glm::quat & rotation)
+	{
+		SetRotation(rotation * GetRotation());
+	}
+	void TransformComponent::Rotate(const glm::vec3 & rotation)
+	{
+		Rotate(glm::quat(rotation));
+	}
+	void TransformComponent::Rotate(const glm::vec3& vector, float angle)
+	{
+		Rotate(glm::rotate(glm::mat4(1.f), angle, vector));
+	}
+	void TransformComponent::Scale(const glm::vec3 & scale)
+	{
+		SetScale(GetScale() + scale);
 	}
 	void MeshesComponent::Draw(Ref<Shader> shader, const glm::mat4& offset) const
 	{

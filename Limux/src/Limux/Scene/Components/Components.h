@@ -11,7 +11,8 @@
 #include "Limux/Core/UUID.h"
 #include "Limux/Scene/Entity.h"
 
-#include "Camera/CameraComponent.h"
+#include "CameraComponent.h"
+#include "ScriptableEntity.h"
 
 namespace LMX
 {
@@ -23,30 +24,70 @@ namespace LMX
 		IDComponent(const IDComponent&) = default;
 		IDComponent(UUID id) : ID(id) {}
 	};
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* Instance = nullptr;
 
+		std::function<void()> InstantiateFunction;
+		std::function<void()> DestroyInstanceFunction;
+
+		std::function<void(ScriptableEntity*)> OnCreateFunction;
+		std::function<void(ScriptableEntity*)> OnDestroyFunction;
+		std::function<void(ScriptableEntity*, Timestep)> OnUpdateFunction;
+
+		template<typename T>
+		void Bind()
+		{
+			InstantiateFunction = [&]() { Instance = new T(); };
+			DestroyInstanceFunction = [&]() { delete (T*)Instance; Instance = nullptr; };
+
+			OnCreateFunction = [](ScriptableEntity* instance) { ((T*)instance)->OnCreate(); };
+			OnDestroyFunction = [](ScriptableEntity* instance) { ((T*)instance)->OnDestroy(); };
+			OnUpdateFunction = [](ScriptableEntity* instance, Timestep ts) { ((T*)instance)->OnUpdate(ts); };
+		}
+	};
 	struct TransformComponent
 	{
-		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
+		glm::mat4 Transform{1.f};
 
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
 		TransformComponent(const glm::mat4& transform);
 
-		glm::mat4 GetTransform() const
+		struct TransformComposeMatrix
 		{
-
-			return GetTranslationMatrix()
-				* GetRotationMatrix()
-				* GetScaleMatrix();
-		}
+			glm::mat4 Translation;
+			glm::mat4 Rotation;
+			glm::mat4 Scale;
+		};
+		TransformComposeMatrix DecomposeTransformMatrix() const;
 		glm::mat4 GetTranslationMatrix() const;
 		glm::mat4 GetRotationMatrix() const;
 		glm::mat4 GetScaleMatrix() const;
+
+		struct TransformCompose
+		{
+			glm::vec3 Translation;
+			glm::vec3 RotationEuler;
+			glm::quat RotationQuat;
+			glm::vec3 Scale;
+		};
+		TransformCompose DecomposeTransform() const;
+		glm::vec3 GetTranslation() const;
+		glm::quat GetRotation() const;
+		glm::vec3 GetScale() const;
 		
-		void LookAtEuler(const glm::vec3& dest, const glm::vec3& up = { 0.0f, 1.0f, 0.0f });
-		static glm::vec3 LookAtEuler(const glm::vec3& dest, const glm::vec3& origin, const glm::vec3& up = { 0.0f, 1.0f, 0.0f });
+		void SetTranslation(const glm::vec3& translation);
+		void SetRotation(const glm::quat& rotation);
+		void SetRotation(const glm::vec3& vector, float angle);
+		void SetRotation(const glm::vec3& rotation);
+		void SetScale(const glm::vec3& scale);
+		
+		void Translate(const glm::vec3& translation);
+		void Rotate(const glm::quat& rotation);
+		void Rotate(const glm::vec3& rotation);
+		void Rotate(const glm::vec3& vector, float angle);
+		void Scale(const glm::vec3& scale);
 	};
 
 	struct TagComponent

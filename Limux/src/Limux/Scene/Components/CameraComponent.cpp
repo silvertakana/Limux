@@ -20,24 +20,20 @@ namespace LMX
 		float halfHeight = height / 2.f;
 		Projection = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, zNear, zFar);
 	}
-	glm::mat4 CameraComponent::GenCamMatrix(glm::mat4 viewMatrix)
+	glm::mat4 CameraComponent::GenCamMatrix(glm::mat4 viewMatrix) const
 	{
-		return Projection * viewMatrix;
+		return Projection * glm::inverse(viewMatrix);
 	}
-	glm::mat4 CameraComponent::GenCamMatrix(glm::vec3 Position, glm::vec3 Front, glm::vec3 Up)
+	glm::mat4 CameraComponent::GenCamMatrix(glm::vec3 Position, glm::vec3 Front, glm::vec3 Up) const
 	{
 		return GenCamMatrix(GenViewMatrix(Position, Front, Up));
 	}
-	glm::mat4 CameraComponent::GenCamMatrix(const TransformComponent& transform, glm::vec3 Up)
+	glm::mat4 CameraComponent::GenCamMatrix(const TransformComponent& transform) const
 	{
-		return GenCamMatrix(GenViewMatrix(transform, Up));
+		return GenCamMatrix(transform.Transform);
 	}
-	glm::mat4 CameraComponent::GenViewMatrix(glm::vec3 Position, glm::vec3 Front, glm::vec3 Up)
+	glm::mat4 CameraComponent::GenViewMatrix(glm::vec3 Position, glm::vec3 Front, glm::vec3 Up) const
 	{
 		return glm::lookAt(Position, Position + Front, Up);
-	}
-	glm::mat4 CameraComponent::GenViewMatrix(const TransformComponent& transform, glm::vec3 Up)
-	{
-		return GenViewMatrix(transform.Translation, glm::vec4(0, 0, 1, 1) * transform.GetRotationMatrix(),  Up);
 	}
 }
