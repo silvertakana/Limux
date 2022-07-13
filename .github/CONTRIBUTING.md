@@ -1,6 +1,6 @@
 Contributing to Limux
 ======================
-Thanks for your interest in contributing to Limuxtada: We love getting [pull requests](https://www.quora.com/GitHub-What-is-a-pull-request) for bugfixes and contributions of our community to keep Limux growing.
+Thanks for your interest in contributing to Limux: We love getting [pull requests](https://www.quora.com/GitHub-What-is-a-pull-request) for bugfixes and contributions of our community to keep Limux growing.
 We want to keep it as easy as possible to contribute changes. These guidelines are intended to help smooth that process, and allow us to review and approve your changes quickly and easily. Improvements are always welcome Feel free to [open an issue][issue-tracker] or [submit a new pull request][submit-pr]. And finally, these are just guidelines, not rules, so use your best judgement when necessary.
 If you're new to [GitHub][github], you may want to begin with [Getting Started with GitHub](https://help.github.com/en/categories/getting-started-with-github) and Thinkful's [GitHub Pull Request Tutorial](https://www.thinkful.com/learn/github-pull-request-tutorial/).
 ## Language
@@ -38,8 +38,8 @@ If you're not sure what any of that means, check out Thinkful's [GitHub Pull Req
     - Class member variables get the 'm_' prefix: **`m_ClassMemberVariableName`**.
     - Class static variables get the 's_' prefix: **`s_ClassStaticVariableName`**.
   - For macros we use snake case: **`MACRO_NAME`**.
-    - If it is specifically related to Limux, we add the 'HZ_' prefix: **`HZ_MACRO_NAME`**.
-    - If there is a macro for the application and for the engine, we add an additional 'CORE_' prefix to the engine macro:  **`HZ_CORE_MACRO_NAME`**.
+    - If it is specifically related to Limux, we add the 'LMX_' prefix: **`LMX_MACRO_NAME`**.
+    - If there is a macro for the application and for the engine, we add an additional 'CORE_' prefix to the engine macro:  **`LMX_CORE_MACRO_NAME`**.
 - Use tabs for indentation, not spaces.
 - When in doubt, match the code that's already there.
 [github]: https://github.com
