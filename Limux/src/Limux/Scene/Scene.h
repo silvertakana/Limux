@@ -1,12 +1,11 @@
 #pragma once
 #include "Limux/Core/Timestep.h"
 #include "Limux/Renderer/Shader.h"
+#include "entt.hpp"
 
 namespace LMX
 {
 	class Entity;
-	class EditorLayer;
-	
 	class Scene
 	{
 	public:
@@ -28,9 +27,14 @@ namespace LMX
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 		
 		Entity* m_ActiveCamera = nullptr;
+		Ref<Entity> m_RootNode;
 		
 		entt::registry m_Registry;
-		friend EditorLayer;
+		
+		friend Entity;
+		friend class EditorLayer;
+		friend class SceneHierarchyPanel;
+		friend class NodeComponent;
 	};
 }
 

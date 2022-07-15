@@ -9,33 +9,50 @@
 
 namespace LMX
 {
-	void NodeComponent::AddChild(Ref<Entity> child)
+	static std::mutex m_AddChildMutex, m_RemoveChildMutex;
+	void NodeComponent::RemoveDestroyedChildren()
 	{
-		static std::mutex m_AddChildMutex;
+		std::lock_guard<std::mutex> lock(m_RemoveChildMutex);
+		Children.erase(std::remove_if(Children.begin(), Children.end(), [&](const entt::entity& entity)
+			{
+				return !m_Scene->GetReg().valid(entity);
+			}), Children.end());
+	}
+	void NodeComponent::AddChild(entt::entity child)
+	{
 		std::lock_guard<std::mutex> lock(m_AddChildMutex);
 		Children.push_back(child);
+		auto& rootNodeCom = m_Scene->m_RootNode->GetComponent<NodeComponent>();
+		rootNodeCom.RemoveChild(child);
 	}
 	void NodeComponent::RemoveChild(size_t index)
 	{
-		static std::mutex m_RemoveChildMutex;
 		std::lock_guard<std::mutex> lock(m_RemoveChildMutex);
 		Children.erase(Children.begin() + index );
+	}
+
+	void NodeComponent::RemoveChild(entt::entity child)
+	{
+		std::lock_guard<std::mutex> lock(m_RemoveChildMutex);
+		auto& rootNodeCom = m_Scene->m_RootNode->GetComponent<NodeComponent>();
+		auto& children = rootNodeCom.Children;
+		Children.erase(std::remove(children.begin(), children.end(), child), children.end());
 	}
 	
 	
 	static std::string directory;
 	
-	void processNode(aiNode* node, const aiScene* scene, Ref<Entity> entity, entt::registry& registry);
+	void processNode(aiNode* node, const aiScene* scene, entt::entity entity, Scene* m_Scene);
 	Ref<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);
 	
-	void NodeComponent::AddModel(const std::string& path, entt::registry& registry)
+	void NodeComponent::AddModel(const std::string& path)
 	{
 		LMX_PROFILE_FUNCTION();
 		
-		AddChild(CreateRef<LMX::Entity>(registry.create(), registry));
+		AddChild(m_Scene->CreateEntity());
 		
-		auto& entity = Children.back();
-		entity->AddComponent<PathComponent>(path);
+		auto entity = Entity(Children.back(), m_Scene);
+		entity.AddComponent<PathComponent>(path);
 		Assimp::Importer importer;
 		const aiScene* scene;
 		{
@@ -49,52 +66,51 @@ namespace LMX
 		}
 		directory = path.substr(0, path.find_last_of('/'));
 
-		processNode(scene->mRootNode, scene, entity, registry);
+		processNode(scene->mRootNode, scene, entity, m_Scene);
 	}
-	void processNode(aiNode* node, const aiScene* scene, Ref<Entity> entity, entt::registry& registry)
+	void processNode(aiNode* node, const aiScene* scene, entt::entity entity, Scene* m_Scene)
 	{
 		LMX_PROFILE_FUNCTION();
-		entity->AddOrReplaceComponent<TagComponent>(node->mName.C_Str());
+		Entity Entity(entity, m_Scene);
+
+		Entity.AddOrReplaceComponent<TagComponent>(node->mName.C_Str());
 		
 		auto& transformation = node->mTransformation;
 		{
-			auto& transform = entity->AddOrReplaceComponent<TransformComponent>();
+			auto& transform = Entity.AddOrReplaceComponent<TransformComponent>();
 			
 			*(aiMatrix4x4*)(&transform.Transform) = transformation;
 		}
 		
-		entity->AddOrReplaceComponent<MeshesComponent>();
+		Entity.AddOrReplaceComponent<MeshesComponent>();
 		
 		// process all the node's meshes (if any)
-		std::mutex addMeshaiMutex, addChildaiMutex;
-		auto AddMeshai = [&](std::vector<Ref<Mesh>>* meshes, aiMesh* mesh, const aiScene* scene)
+		auto AddMeshai = [&](MeshesComponent* meshescom, aiMesh* mesh, const aiScene* scene)
 		{
 			LMX_PROFILE_FUNCTION();
-			std::lock_guard<std::mutex> lock(addMeshaiMutex);
-			meshes->push_back(processMesh(mesh, scene));
+			meshescom->AddMesh(processMesh(mesh, scene));
 		};
 		std::vector<std::future<void>> futures;
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			futures.push_back(std::async(AddMeshai, &(entity->GetComponent<MeshesComponent>().Meshes), mesh, scene));
+			futures.push_back(std::async(AddMeshai, &Entity.GetComponent<MeshesComponent>(), mesh, scene));
 		}
 		
-		entity->AddOrReplaceComponent<NodeComponent>();
+		Entity.AddOrReplaceComponent<NodeComponent>();
 
 		// then do the same for each of its children
-		auto AddChildai = [&](std::vector<Ref<Entity>>* children, aiNode* aiChild, const aiScene* scene)
+		auto AddChildai = [&](NodeComponent* nodecom, aiNode* aiChild, const aiScene* scene)
 		{
 			LMX_PROFILE_FUNCTION();
-			auto child = CreateRef<Entity>(registry.create(), registry);
-			processNode(aiChild, scene, child, registry);
-			std::lock_guard<std::mutex> lock(addChildaiMutex);
-			children->push_back(child);
+			auto child = m_Scene->CreateEntity();
+			processNode(aiChild, scene, child, m_Scene);
+			nodecom->AddChild(child);
 		};
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
 			auto aiChild = node->mChildren[i];
-			futures.push_back(std::async(AddChildai, &entity->GetComponent<NodeComponent>().Children, aiChild, scene));
+			futures.push_back(std::async(AddChildai, &Entity.GetComponent<NodeComponent>(), aiChild, scene));
 		}
 		for (size_t i = 0; i < futures.size(); i++)
 		{
@@ -184,7 +200,7 @@ namespace LMX
 
 		return CreateRef<Mesh>(vertices, indices, textures);
 	}
-	TransformComponent::TransformComponent(const glm::mat4& transform)
+	TransformComponent::TransformComponent(Scene* scene, const glm::mat4& transform)
 	{
 		Transform = transform;
 		//glm::quat rotationQuat;
@@ -285,6 +301,22 @@ namespace LMX
 	void TransformComponent::Scale(const glm::vec3 & scale)
 	{
 		SetScale(GetScale() + scale);
+	}
+	static std::mutex m_AddMeshMutex, m_RemoveMeshMutex;
+	void MeshesComponent::AddMesh(Ref<Mesh> mesh)
+	{
+		std::lock_guard<std::mutex> lock(m_AddMeshMutex);
+		Meshes.push_back(mesh);
+	}
+	void MeshesComponent::RemoveMesh(size_t index)
+	{
+		std::lock_guard<std::mutex> lock(m_RemoveMeshMutex);
+		Meshes.erase(Meshes.begin() + index);
+	}
+	void MeshesComponent::PopBack()
+	{
+		std::lock_guard<std::mutex> lock(m_RemoveMeshMutex);
+		Meshes.pop_back();
 	}
 	void MeshesComponent::Draw(Ref<Shader> shader, const glm::mat4& offset) const
 	{

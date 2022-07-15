@@ -4,21 +4,17 @@
 #include "Components/Components.h"
 
 
-LMX::Entity::Entity(entt::entity handle, Scene& scene)
-	: m_EntityHandle(handle), m_Registry(&scene.GetReg())
-{}
-
-LMX::Entity::Entity(entt::entity handle, entt::registry & registry)
-	: m_EntityHandle(handle), m_Registry(&registry)
+LMX::Entity::Entity(entt::entity handle, Scene* scene)
+	: m_EntityHandle(handle), m_Scene(scene)
 {}
 
 
-LMX::UUID LMX::Entity::GetUUID()
+LMX::UUID LMX::Entity::GetUUID() const
 {
 	return GetComponent<IDComponent>().ID;
 }
 
-const std::string& LMX::Entity::GetName()
+const std::string& LMX::Entity::GetName() const
 {
 	return GetComponent<TagComponent>().Tag;
 }

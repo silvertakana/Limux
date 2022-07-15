@@ -10,6 +10,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include "Limux/Core/UUID.h"
 #include "Limux/Scene/Entity.h"
+#include "Limux/Scene/Scene.h"
 
 #include "CameraComponent.h"
 #include "ScriptableEntity.h"
@@ -21,11 +22,13 @@ namespace LMX
 		UUID ID;
 
 		IDComponent() = default;
+		IDComponent(Scene*){};
 		IDComponent(const IDComponent&) = default;
-		IDComponent(UUID id) : ID(id) {}
+		IDComponent(Scene*, UUID id) : ID(id) {}
 	};
 	struct NativeScriptComponent
 	{
+		NativeScriptComponent(Scene*) {};
 		ScriptableEntity* Instance = nullptr;
 
 		ScriptableEntity* (*InstantiateScript)();
@@ -42,9 +45,10 @@ namespace LMX
 	{
 		glm::mat4 Transform{1.f};
 
+		TransformComponent(Scene*) {};
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const glm::mat4& transform);
+		TransformComponent(Scene*, const glm::mat4& transform);
 
 		struct TransformComposeMatrix
 		{
@@ -85,9 +89,10 @@ namespace LMX
 	struct TagComponent
 	{
 		std::string Tag;
+		TagComponent(Scene*) {};
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
-		TagComponent(const std::string& tag)
+		TagComponent(Scene*, const std::string& tag)
 			: Tag(tag)
 		{}
 		operator std::string() const
@@ -99,9 +104,10 @@ namespace LMX
 	struct PathComponent
 	{
 		std::string Path;
+		PathComponent(Scene*) {};
 		PathComponent() = default;
 		PathComponent(const PathComponent&) = default;
-		PathComponent(const std::string& path)
+		PathComponent(Scene*, const std::string& path)
 			: Path(path)
 		{}
 		operator std::string() const
@@ -113,6 +119,7 @@ namespace LMX
 	struct TexturesComponent
 	{
 		std::vector<Ref<Texture>> Textures;
+		TexturesComponent(Scene*) {};
 		TexturesComponent() = default;
 		TexturesComponent(const TexturesComponent&) = default;
 		TexturesComponent(const std::vector<Ref<Texture>>& textures)
@@ -133,44 +140,39 @@ namespace LMX
 	struct MeshesComponent
 	{
 		std::vector<Ref<Mesh>> Meshes;
+		MeshesComponent(Scene*) {};
 		MeshesComponent() = default;
 		MeshesComponent(const MeshesComponent&) = default;
 		MeshesComponent(const std::vector<Ref<Mesh>>& meshes)
 			: Meshes(meshes)
 		{}
 
-		void AddMesh(Ref<Mesh> mesh)
-		{
-			Meshes.push_back(mesh);
-		}
+		void AddMesh(Ref<Mesh> mesh);
 
-		void RemoveMesh(size_t index)
-		{
-			Meshes.erase(Meshes.begin() + index);
-		}
+		void RemoveMesh(size_t index);
 
-		void PopBack()
-		{
-			Meshes.pop_back();
-		}
+		void PopBack();
 		void Draw(Ref<Shader> shader, const glm::mat4& offset = glm::mat4(1.0f)) const;
 	};
-}
-
-namespace LMX{
+	
 	struct NodeComponent
 	{
-		std::vector<Ref<Entity>> Children;
+		std::vector<entt::entity> Children;
+		NodeComponent(Scene* scene):m_Scene(scene){};
 		NodeComponent() = default;
-		NodeComponent(const NodeComponent& other):Children(other.Children){};
-		NodeComponent(const std::vector<Ref<Entity>>& children)
-			: Children(children)
+		NodeComponent(const NodeComponent& other):Children(other.Children), m_Scene(other.m_Scene) {};
+		NodeComponent(Scene* scene, const std::vector<entt::entity>& children)
+			: Children(children), m_Scene(scene)
 		{}
-		void AddChild(Ref<Entity> child);
+		void RemoveDestroyedChildren();
+		void AddChild(entt::entity child);
 		void RemoveChild(size_t index);
-		void AddModel(const std::string& path, entt::registry& registry);
+		void RemoveChild(entt::entity child);
+		void AddModel(const std::string& path);
 
 		virtual size_t size() const { return Children.size(); }
+	protected:
+		Scene* m_Scene = nullptr;
 	};
 
 	template<typename... Component>

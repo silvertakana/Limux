@@ -11,13 +11,15 @@ namespace LMX
 	{
 		LMX_PROFILE_FUNCTION();
 		
-		m_Scene = CreateRef<Scene>();
-		m_Camera = m_Scene->CreateEntity();
+		m_ActiveScene = CreateRef<Scene>();
+		m_Camera = m_ActiveScene->CreateEntity();
 		m_Camera.AddComponent<CameraComponent>();
-		m_Scene->m_ActiveCamera = &m_Camera;
+		m_Camera.AddComponent<TagComponent>("Camera");
+		m_ActiveScene->m_ActiveCamera = &m_Camera;
 		
-		m_Model = m_Scene->CreateEntity();
-		m_Model.AddComponent<NodeComponent>().AddModel("../Sandbox/res/models/crow/scene.gltf", m_Scene->GetReg());
+		m_Model = m_ActiveScene->CreateEntity();
+		m_Model.AddComponent<NodeComponent>().AddModel("../Sandbox/res/models/crow/scene.gltf");
+		m_Model.AddComponent<TagComponent>("Birb");
 
 		m_Shader = Shader::Load("res/shaders/flat.shader");
 
@@ -29,13 +31,13 @@ namespace LMX
 		class CameraController : public ScriptableEntity
 		{
 		public:
-			void OnCreate()
+			virtual void OnCreate() override
 			{}
 
-			void OnDestroy()
+			virtual void OnDestroy() override
 			{}
 
-			void OnUpdate(Timestep ts)
+			virtual void OnUpdate(Timestep ts) override
 			{
 				auto& transformCom = GetComponent<TransformComponent>();
 
@@ -71,7 +73,9 @@ namespace LMX
 			}
 		};
 
-		m_Scene->m_ActiveCamera->AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		m_ActiveScene->m_ActiveCamera->AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 	void EditorLayer::OnDetach()
 	{
@@ -88,12 +92,12 @@ namespace LMX
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_Scene->m_ActiveCamera->GetComponent<CameraComponent>().SetupPerspective(glm::radians(80.f), m_ViewportSize.x, m_ViewportSize.y, 0.1f, 1000.0f);
+			m_ActiveScene->m_ActiveCamera->GetComponent<CameraComponent>().SetupPerspective(glm::radians(80.f), m_ViewportSize.x, m_ViewportSize.y, 0.1f, 1000.0f);
 		}
 		
 		{
 			LMX_PROFILE_SCOPE("Scene Update");
-			m_Scene->OnUpdate(ts);
+			m_ActiveScene->OnUpdate(ts);
 		}
 		
 		{
@@ -107,7 +111,7 @@ namespace LMX
 			LMX_PROFILE_SCOPE("Renderer Draw");
 			Renderer::BeginScene();
 			
-			m_Scene->OnRender(m_Shader);
+			m_ActiveScene->OnRender(m_Shader);
 			Renderer::EndScene();
 			m_Framebuffer->Unbind();
 		}
@@ -176,6 +180,8 @@ namespace LMX
 			ImGui::EndMenuBar();
 		}
 
+		m_SceneHierarchyPanel.OnImGuiRender();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2 { 0, 0 });
 		ImGui::Begin("Viewport");
 
@@ -191,23 +197,6 @@ namespace LMX
 		ImGui::End();
 		ImGui::PopStyleVar();
 
-		ImGui::End();
-		
-		ImGui::Begin("Property");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", ts * 1000.f, 1.f/ts);
-		auto [pos, rot, rotquat, scale] = m_Camera.GetComponent<TransformComponent>().DecomposeTransform();
-		ImGui::SliderFloat3("Translation", &(pos  [0]), -10, 10);
-		ImGui::SliderFloat4("Rotation Quaternion"   , &(rotquat[0]), -5, 5);
-		rot = glm::eulerAngles(rotquat);
-		rot = glm::degrees(rot);
-		ImGui::SliderFloat3("Rotation"   , &(rot  [0]), -180, 180);
-		ImGui::SliderFloat3("Scale"      , &(scale[0]), -10, 10);
-		auto& transformCom = m_Camera.GetComponent<TransformComponent>();
-		transformCom.SetTranslation(pos);
-		rot = glm::radians(rot);
-		transformCom.SetRotation(rot);
-		//transformCom.SetRotation(rotquat);
-		transformCom.SetScale(scale);
 		ImGui::End();
 
 	}

@@ -8,12 +8,11 @@ namespace LMX
 	class Entity
 	{
 		entt::entity m_EntityHandle {entt::null};
-		entt::registry* m_Registry;
+		Scene* m_Scene = nullptr;
 	public:
 		
 		Entity() = default;
-		Entity(entt::entity handle, Scene& scene);
-		Entity(entt::entity handle, entt::registry& registry);
+		Entity(entt::entity handle, Scene* scene);
 		Entity(const Entity& other) = default;
 		virtual ~Entity() = default;
 
@@ -21,48 +20,49 @@ namespace LMX
 		T& AddComponent(Args&&... args)
 		{
 			LMX_ASSERT(!HasComponent<T>(), "Entity already has component!");
-			T& component = m_Registry->emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
+			T& component = m_Scene->m_Registry.emplace<T>(m_EntityHandle, m_Scene, std::forward<Args>(args)...);
 			return component;
 		}
 
 		template<typename T, typename... Args>
 		T& AddOrReplaceComponent(Args&&... args)
 		{
-			T& component = m_Registry->emplace_or_replace<T>(m_EntityHandle, std::forward<Args>(args)...);
+			T& component = m_Scene->m_Registry.emplace_or_replace<T>(m_EntityHandle, m_Scene, std::forward<Args>(args)...);
 			return component;
 		}
-
-		template<class T>
-		T& GetComponent()
+		template<typename T>
+		T& GetComponent() const
 		{
 			LMX_ASSERT(HasComponent<T>(), "Entity does not have component!");
-			return m_Registry->get<T>(m_EntityHandle);
+			return m_Scene->m_Registry.get<T>(m_EntityHandle);
 		}
 
 		template<typename ...Components>
-		bool HasComponent()
+		bool HasComponent() const
 		{
-			LMX_ASSERT(m_Registry, "Entity is not yet initilized");
-			return m_Registry->any_of<Components...>(m_EntityHandle);
+			LMX_ASSERT(m_Scene, "Entity is not yet initilized");
+			return m_Scene->m_Registry.any_of<Components...>(m_EntityHandle);
 		}
 
 		template<typename T>
 		void RemoveComponent()
 		{
 			LMX_ASSERT(HasComponent<T>(), "Entity does not have component!");
-			m_Registry->remove<T>(m_EntityHandle);
+			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
 
 		operator bool() const { return m_EntityHandle != entt::null; }
 		operator entt::entity() const { return m_EntityHandle; }
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
 
-		UUID GetUUID();
-		const std::string& GetName();
+		UUID GetUUID() const;
+		const std::string& GetName() const;
+		Scene& GetScene() const { return *m_Scene; }
+		entt::registry& GetReg() const { return m_Scene->GetReg(); }
 
 		bool operator==(const Entity& other) const
 		{
-			return m_EntityHandle == other.m_EntityHandle && m_Registry == other.m_Registry;
+			return m_EntityHandle == other.m_EntityHandle && m_Scene == other.m_Scene;
 		}
 
 		bool operator!=(const Entity& other) const

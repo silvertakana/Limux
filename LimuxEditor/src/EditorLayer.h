@@ -1,5 +1,6 @@
 #pragma once
 #include "Limux.h"
+#include "Panels/SceneHierarchyPanel.h"
 namespace LMX
 {
 	class EditorLayer : public Layer
@@ -15,7 +16,7 @@ namespace LMX
 		virtual void OnImGuiRender(Timestep ts) override;
 		void OnEvent(Event& e, Timestep ts) override;
 	private:
-		Ref<Scene> m_Scene;
+		Ref<Scene> m_ActiveScene;
 		Ref<Shader> m_Shader;
 		Ref<Framebuffer> m_Framebuffer;
 		Entity m_Model;
@@ -24,6 +25,9 @@ namespace LMX
 		
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
+
+		// Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }
 

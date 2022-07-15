@@ -1,5 +1,6 @@
 #pragma once
 #include "glm/glm.hpp"
+#include "Limux/Scene/Scene.h"
 namespace LMX
 {
 	struct TransformComponent;
@@ -9,8 +10,9 @@ namespace LMX
 		glm::vec2 FrameSize{0.f};
 
 		CameraComponent() = default;
+		CameraComponent(Scene*) {};
 		CameraComponent(const CameraComponent&) = default;
-		CameraComponent(const glm::mat4& projection)
+		CameraComponent(Scene*, const glm::mat4& projection)
 			: Projection(projection)
 		{}
 		void SetupPerspective(float fov, float width, float height, float zNear = 0.01f, float zFar = 100.f);
