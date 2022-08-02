@@ -14,10 +14,9 @@ namespace LMX
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 		{
-			std::string version = "#version 460 core\n";
+			std::string version = "#version 460 core";
 			std::string vertex = version + vertexSrc;
 			std::string fragment = version + fragmentSrc;
-
 
 			const GLchar* vertexCode = vertex.c_str();
 			const GLchar* fragmentCode = fragment.c_str();
@@ -54,6 +53,7 @@ namespace LMX
 		};
 		Mode mode = NONE;
 		const char* typeToken = "#shader";
+		
 		while (std::getline(file, line))
 		{
 			if (line.contains(typeToken))
@@ -66,7 +66,9 @@ namespace LMX
 					mode = NONE;
 			}
 			else if (mode != NONE)
-				source[mode] += line + '\n';
+				source[mode] += line;
+			source[VERTEX]   += '\n';
+			source[FRAGMENT] += '\n';
 		}
 		CreateOGLShader(source[VERTEX], source[FRAGMENT], m_RendererID);
 	}

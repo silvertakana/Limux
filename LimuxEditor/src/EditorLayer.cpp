@@ -1,4 +1,4 @@
-#include "EditorLayer.h"
+ #include "EditorLayer.h"
 
 
 namespace LMX
@@ -11,21 +11,62 @@ namespace LMX
 	{
 		LMX_PROFILE_FUNCTION();
 		
+		LMX::Texture2D::SetDefaultTexture("res/textures/missing_texture.png");
+
 		m_ActiveScene = CreateRef<Scene>();
+		
 		m_Camera = m_ActiveScene->CreateEntity();
-		m_Camera.AddComponent<CameraComponent>();
-		m_Camera.AddComponent<TagComponent>("Camera");
-		m_ActiveScene->m_ActiveCamera = &m_Camera;
+		m_Camera.AddOrReplaceComponent<TagComponent>("Camera");
+		m_Camera.AddOrReplaceComponent<CameraComponent>().SetupPerspective(glm::radians(80.f), 1920, 1080, 0.1f, 1000.0f);
+		m_Camera.AddOrReplaceComponent<TransformComponent>(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 5.f, 5.f)));
+		m_ActiveScene->m_ActiveCamera = m_Camera;
+		
+		m_Camera2 = m_ActiveScene->CreateEntity();
+		m_Camera2.AddOrReplaceComponent<TagComponent>("Camera2");
+		m_Camera2.AddOrReplaceComponent<CameraComponent>().SetupPerspective(glm::radians(80.f), 1920, 1080, 0.1f, 1000.0f);
+		m_Camera2.AddOrReplaceComponent<TransformComponent>(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 5.f, 5.f)));
 		
 		m_Model = m_ActiveScene->CreateEntity();
-		m_Model.AddComponent<NodeComponent>().AddModel("../Sandbox/res/models/crow/scene.gltf");
-		m_Model.AddComponent<TagComponent>("Birb");
+		m_Model.AddOrReplaceComponent<TagComponent>("Model");
+		m_Model.AddOrReplaceComponent<NodeComponent>().AddModel("res/models/FireHydrant/FireHydrantMesh.obj");
+		m_Model.GetComponent<TransformComponent>().SetScale(glm::vec3{ 5 });
 
-		m_Shader = Shader::Load("res/shaders/flat.shader");
+		m_Floor = m_ActiveScene->CreateEntity();
+		m_Floor.AddOrReplaceComponent<TagComponent>("Floor");
+		m_Floor.GetComponent<TransformComponent>().SetScale(glm::vec3{ 10 });
+		std::vector<Vertex> vertices {
+			{{-1, 0,  1}, {0, 1, 0}, {0, 1}, {1, 1, 1, 1}},
+			{{ 1, 0,  1}, {0, 1, 0}, {1, 1}, {1, 1, 1, 1}},
+			{{ 1, 0, -1}, {0, 1, 0}, {1, 0}, {1, 1, 1, 1}},
+			{{-1, 0, -1}, {0, 1, 0}, {0, 0}, {1, 1, 1, 1}},
+		};
+		std::vector<unsigned int> indices {
+			0, 1, 2,
+			2, 3, 0
+		};
+		std::vector<Ref<Texture>> textures {
+			Texture2D::Load("res/textures/Checkerboard.png", Texture2D::TextureType::Diffuse),
+			Texture2D::Load(glm::vec4{0.3f}, Texture2D::TextureType::Specular)
+		};
+
+
+
+		m_Floor.AddOrReplaceComponent<MeshesComponent>().AddMesh(vertices, indices);
+		m_Floor.GetComponent<MeshesComponent>().InitAll();
+		m_Floor.AddOrReplaceComponent<TexturesComponent>().AddTextures(textures);
+		m_Floor.GetComponent<TexturesComponent>().InitAll();
+		
+		m_Light = m_ActiveScene->CreateEntity();
+		m_Light.AddOrReplaceComponent<TagComponent>("Light");
+		m_Light.AddOrReplaceComponent<LightComponent>(new LightComponent::PointLight(), glm::vec3 { 0.5, 0.4, 0.0 });
+		m_Light.GetComponent<TransformComponent>().SetTranslation(glm::vec3 { 12, 10, 16 });
+
+
+		m_Shader = Shader::Load("res/shaders/shaded.shader");
 
 		FramebufferSpecification fbSpec;
-		fbSpec.Width = 1280;
-		fbSpec.Height = 720;
+		fbSpec.Width = 1920;
+		fbSpec.Height = 1080;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		class CameraController : public ScriptableEntity
@@ -73,7 +114,7 @@ namespace LMX
 			}
 		};
 
-		m_ActiveScene->m_ActiveCamera->AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		Entity(m_ActiveScene->m_ActiveCamera, m_ActiveScene.get()).AddOrReplaceComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
@@ -92,12 +133,15 @@ namespace LMX
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_ActiveScene->m_ActiveCamera->GetComponent<CameraComponent>().SetupPerspective(glm::radians(80.f), m_ViewportSize.x, m_ViewportSize.y, 0.1f, 1000.0f);
+			Entity(m_ActiveScene->m_ActiveCamera, m_ActiveScene.get()).GetComponent<CameraComponent>().SetupPerspective(glm::radians(80.f), m_ViewportSize.x, m_ViewportSize.y, 0.1f, 1000.0f);
+		
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 		
 		{
 			LMX_PROFILE_SCOPE("Scene Update");
 			m_ActiveScene->OnUpdate(ts);
+			//m_Model.GetComponent<TransformComponent>().Transform = m_Camera.GetComponent<TransformComponent>().Transform;
 		}
 		
 		{
@@ -106,11 +150,13 @@ namespace LMX
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 		}
-		
+
+		{
+			LMX_PROFILE_SCOPE("Update");
+		}
 		{
 			LMX_PROFILE_SCOPE("Renderer Draw");
 			Renderer::BeginScene();
-			
 			m_ActiveScene->OnRender(m_Shader);
 			Renderer::EndScene();
 			m_Framebuffer->Unbind();
@@ -159,12 +205,16 @@ namespace LMX
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinSizeX = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-
+		style.WindowMinSize.x = minWinSizeX;
+		
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -193,12 +243,12 @@ namespace LMX
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		
 		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2 { m_ViewportSize.x, m_ViewportSize.y }, ImVec2 { 0, 1 }, ImVec2 { 1, 0 });
 		ImGui::End();
-		ImGui::PopStyleVar();
+		ImGui::PopStyleVar(); 
 
 		ImGui::End();
-
 	}
 
 	void EditorLayer::OnEvent(Event & e, Timestep ts)

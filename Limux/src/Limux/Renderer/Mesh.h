@@ -13,10 +13,9 @@ namespace LMX
 	public:
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
-		std::vector<Ref<Texture>> textures;
 
 		
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Ref<Texture>> textures);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 		void Draw(Ref<Shader> shader, const glm::mat4& offset = glm::mat4{1.f});
 		void Init();
 	private:

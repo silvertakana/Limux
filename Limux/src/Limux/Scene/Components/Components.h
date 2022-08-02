@@ -13,7 +13,10 @@
 #include "Limux/Scene/Scene.h"
 
 #include "CameraComponent.h"
+#include "NodeComponent.h"
 #include "ScriptableEntity.h"
+#include "LightComponent.h"
+#include "MeshesComponent.h"
 
 namespace LMX
 {
@@ -84,6 +87,7 @@ namespace LMX
 		void Rotate(const glm::vec3& rotation);
 		void Rotate(const glm::vec3& vector, float angle);
 		void Scale(const glm::vec3& scale);
+		TransformComponent& operator=(const TransformComponent& other) { Transform = other.Transform; return *this; }
 	};
 
 	struct TagComponent
@@ -101,21 +105,6 @@ namespace LMX
 		}
 	};
 
-	struct PathComponent
-	{
-		std::string Path;
-		PathComponent(Scene*) {};
-		PathComponent() = default;
-		PathComponent(const PathComponent&) = default;
-		PathComponent(Scene*, const std::string& path)
-			: Path(path)
-		{}
-		operator std::string() const
-		{
-			return Path;
-		}
-	};
-
 	struct TexturesComponent
 	{
 		std::vector<Ref<Texture>> Textures;
@@ -125,54 +114,20 @@ namespace LMX
 		TexturesComponent(const std::vector<Ref<Texture>>& textures)
 			: Textures(textures)
 		{}
-		Ref<Texture2D> AddTexture2D(const std::string& path)
-		{
-			auto texture = Texture2D::Load(path);
-			Textures.push_back(CastRef<Texture>(texture));
-			return texture;
-		}
+		Ref<Texture2D> AddTexture2D(const std::string& path, Texture2D::TextureType type = Texture2D::TextureType::Auto);
+		Ref<Texture2D> AddTexture2D(glm::vec4 color, Texture2D::TextureType type = Texture2D::TextureType::Auto);
+		
+		void AddTextures(std::vector<Ref<Texture>> textures);
+		void AddTextures(std::vector<Ref<Texture2D>> textures);
+
+		void UniformAll(Ref<Shader> shader);
+		void UniformDefault(Ref<Shader> shader);
+		void InitAll();
+		
 		Ref<Texture> operator[](size_t index)
 		{
 			return Textures[index];
 		}
-	};
-
-	struct MeshesComponent
-	{
-		std::vector<Ref<Mesh>> Meshes;
-		MeshesComponent(Scene*) {};
-		MeshesComponent() = default;
-		MeshesComponent(const MeshesComponent&) = default;
-		MeshesComponent(const std::vector<Ref<Mesh>>& meshes)
-			: Meshes(meshes)
-		{}
-
-		void AddMesh(Ref<Mesh> mesh);
-
-		void RemoveMesh(size_t index);
-
-		void PopBack();
-		void Draw(Ref<Shader> shader, const glm::mat4& offset = glm::mat4(1.0f)) const;
-	};
-	
-	struct NodeComponent
-	{
-		std::vector<entt::entity> Children;
-		NodeComponent(Scene* scene):m_Scene(scene){};
-		NodeComponent() = default;
-		NodeComponent(const NodeComponent& other):Children(other.Children), m_Scene(other.m_Scene) {};
-		NodeComponent(Scene* scene, const std::vector<entt::entity>& children)
-			: Children(children), m_Scene(scene)
-		{}
-		void RemoveDestroyedChildren();
-		void AddChild(entt::entity child);
-		void RemoveChild(size_t index);
-		void RemoveChild(entt::entity child);
-		void AddModel(const std::string& path);
-
-		virtual size_t size() const { return Children.size(); }
-	protected:
-		Scene* m_Scene = nullptr;
 	};
 
 	template<typename... Component>
@@ -181,5 +136,6 @@ namespace LMX
 
 	using AllComponents =
 		ComponentGroup<TransformComponent, IDComponent, TagComponent, 
-		PathComponent, TexturesComponent, MeshesComponent, NodeComponent>;
+		TexturesComponent, MeshesComponent, NodeComponent,
+		NativeScriptComponent, CameraComponent, LightComponent>;
 }

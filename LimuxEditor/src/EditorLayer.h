@@ -20,8 +20,10 @@ namespace LMX
 		Ref<Shader> m_Shader;
 		Ref<Framebuffer> m_Framebuffer;
 		Entity m_Model;
+		Entity m_Floor;
 		Entity m_Camera;
-		
+		Entity m_Camera2;
+		Entity m_Light;
 		
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };

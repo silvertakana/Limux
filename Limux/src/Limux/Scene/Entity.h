@@ -19,8 +19,14 @@ namespace LMX
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
-			LMX_ASSERT(!HasComponent<T>(), "Entity already has component!");
+			if (HasComponent<T>())
+			{
+				std::string entityIdentifier = GetName();
+				if(entityIdentifier.empty()) entityIdentifier = "Unnamed";
+				LMX_ASSERT(false, "Entity {0} already has component {1}!", entityIdentifier, typeid(T).name());
+			}
 			T& component = m_Scene->m_Registry.emplace<T>(m_EntityHandle, m_Scene, std::forward<Args>(args)...);
+			m_Scene->OnComponentAdded<T>(*this, component);
 			return component;
 		}
 
@@ -33,7 +39,12 @@ namespace LMX
 		template<typename T>
 		T& GetComponent() const
 		{
-			LMX_ASSERT(HasComponent<T>(), "Entity does not have component!");
+			if (!HasComponent<T>())
+			{
+				std::string entityIdentifier = GetName();
+				if (entityIdentifier.empty()) entityIdentifier = "Unnamed";
+				LMX_ASSERT(false, "Entity {0} does not have component {1}!", entityIdentifier, typeid(T).name());
+			}
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);
 		}
 
@@ -56,9 +67,10 @@ namespace LMX
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
 
 		UUID GetUUID() const;
-		const std::string& GetName() const;
+		std::string GetName() const;
 		Scene& GetScene() const { return *m_Scene; }
 		entt::registry& GetReg() const { return m_Scene->GetReg(); }
+		entt::entity& GetEnttEntity() { return m_EntityHandle; }
 
 		bool operator==(const Entity& other) const
 		{

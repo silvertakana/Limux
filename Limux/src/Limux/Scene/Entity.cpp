@@ -1,20 +1,23 @@
 #include "lmxpch.h"
 
+#include "Scene.h"
 #include "Entity.h"
 #include "Components/Components.h"
 
-
-LMX::Entity::Entity(entt::entity handle, Scene* scene)
-	: m_EntityHandle(handle), m_Scene(scene)
-{}
-
-
-LMX::UUID LMX::Entity::GetUUID() const
+namespace LMX
 {
-	return GetComponent<IDComponent>().ID;
-}
+	Entity::Entity(entt::entity handle, Scene* scene)
+		: m_EntityHandle(handle), m_Scene(scene)
+	{}
 
-const std::string& LMX::Entity::GetName() const
-{
-	return GetComponent<TagComponent>().Tag;
+
+	UUID Entity::GetUUID() const
+	{
+		return (HasComponent<IDComponent>() ? GetComponent<IDComponent>().ID : UUID{(uint64_t)-1});
+	}
+
+	std::string Entity::GetName() const
+	{
+		return (HasComponent<TagComponent>() ? GetComponent<TagComponent>().Tag : "");
+	}
 }

@@ -6,8 +6,8 @@ project "LimuxEditor"
 	cppdialect "C++20"
 	staticruntime "on"
 
-	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir (outputOrigin .."/bin/" .. outputdir .. "/%{prj.name}")
+	objdir (outputOrigin .."/bin-int/" .. outputdir .. "/%{prj.name}")
 
 	
 	files {
@@ -29,7 +29,8 @@ project "LimuxEditor"
 	}
 	filter "system:windows"
 		postbuildcommands {
-			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/",
+			"{COPY} res/ " .. outputOrigin .. "/bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
+			"{COPY} **.ini " .. outputOrigin .. "/bin/" .. outputdir .. "/%{prj.name}", --copy ini files
 		}
 	filter ("files:Sandbox/vendor/**.**")
     	flags {"NoPCH"}

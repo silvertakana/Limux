@@ -12,8 +12,8 @@ project "Limux"
 		"GLFW_INCLUDE_NONE",
 	}
 	
-	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir (outputOrigin .."/bin/" .. outputdir .. "/%{prj.name}")
+	objdir (outputOrigin .."/bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "lmxpch.h"
 	pchsource "src/lmxpch.cpp"
@@ -41,7 +41,8 @@ project "Limux"
 	}
 	filter "system:windows"
 		postbuildcommands {
-			"{COPY} res/ ../bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
+			"{COPY} res/ " .. outputOrigin .. "/bin/" .. outputdir .. "/%{prj.name}/res/", --copy resource files
+			"{COPY} **.ini " .. outputOrigin .. "/bin/" .. outputdir .. "/%{prj.name}", --copy ini files
 			-- ("{COPY} ../bin/" .. outputdir .. "/**.dll ../bin/" .. outputdir .. "/Sandbox"), --copy the dll to sandbox
 		}
 	filter ("files:Limux/vendor/**.**")

@@ -1,4 +1,5 @@
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputOrigin = "C:/Windows/Temp/Limux"
 workspace "Limux"
 	platforms { "x86", "x64" }
 	startproject "LimuxEditor"

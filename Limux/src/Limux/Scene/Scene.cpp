@@ -9,8 +9,8 @@ namespace LMX
 	{
 		m_Registry = {};
 		m_RootNode = CreateRef<Entity>(m_Registry.create(), this);
-		m_RootNode->AddComponent<IDComponent>(UUID());
 		m_RootNode->AddComponent<TagComponent>("SceneRootNode");
+		m_RootNode->AddComponent<IDComponent>(UUID());
 		m_RootNode->AddComponent<NodeComponent>();
 	}
 	Scene::~Scene()
@@ -81,15 +81,16 @@ namespace LMX
 		return newScene;
 	}
 
-	Entity Scene::CreateEntity()
+	Entity Scene::CreateEntity(const std::string& tag)
 	{
-		return CreateEntityWithUUID(UUID());
+		return CreateEntityWithUUID(UUID(), tag);
 	}
 
-	Entity Scene::CreateEntityWithUUID(UUID uuid)
+	Entity Scene::CreateEntityWithUUID(UUID uuid, const std::string& tag)
 	{
 		Entity entity = Entity(m_Registry.create(), this);
 		entity.AddComponent<IDComponent>(uuid);
+		entity.AddComponent<TagComponent>(tag);
 		entity.AddComponent<TransformComponent>();
 		m_RootNode->GetComponent<NodeComponent>().Children.push_back(entity);
 		return entity;
@@ -118,8 +119,10 @@ namespace LMX
 				});
 		}
 	}
+	static int lightIndex = 0;
 	void RenderEntity(const Entity& entity, Ref<Shader> shader, glm::mat4 offset)
 	{
+		LMX_PROFILE_FUNCTION();
 		if (entity.HasComponent<TransformComponent>())
 		{
 			auto& transform = entity.GetComponent<TransformComponent>();
@@ -127,8 +130,37 @@ namespace LMX
 			
 			if(entity.HasComponent<MeshesComponent>())
 			{
+				auto& a = entity.GetComponent<TagComponent>();
 				auto& meshes = entity.GetComponent<MeshesComponent>();
+				bool hasTexturesComponent = entity.HasComponent<TexturesComponent>();
+				TexturesComponent* texturesCom = nullptr;
+				if (hasTexturesComponent)
+				{
+					texturesCom = &entity.GetComponent<TexturesComponent>();
+					texturesCom->UniformAll(shader);
+				}
+				
 				meshes.Draw(shader, offset);
+				
+				if (hasTexturesComponent)
+				{
+					texturesCom->UniformDefault(shader);
+				}
+			}
+
+			if (entity.HasComponent<LightComponent>())
+			{
+				
+				auto& light = entity.GetComponent<LightComponent>();
+				LMX_ASSERT(light.Instance, "LightComponent is not initialized");
+
+				std::string name = "u_Lights[" + std::to_string(lightIndex++) + "].";
+				shader->Bind();
+				shader->SetUniform(name + "Front"		, transform.GetRotation() * glm::vec3(0, 0, -1)	, false);
+				shader->SetUniform(name + "Position"	, glm::vec3(offset[3])							, false);
+				shader->SetUniform(name + "Color"		, light.Color									, false);
+				shader->SetUniform(name + "Intensity"	, light.Intensity								, false);
+				shader->SetUniform(name + "Enabled"		, light.Enabled									, false);
 			}
 		}
 		if (entity.HasComponent<NodeComponent>())
@@ -139,15 +171,20 @@ namespace LMX
 				RenderEntity({ child, &entity.GetScene() }, shader, offset);
 			}
 		}
+		
 	}
 	void Scene::OnRender(Ref<Shader> shader)
 	{
 		shader->Bind();
-		CameraComponent& cameraCom = m_ActiveCamera->GetComponent<CameraComponent>();
-		TransformComponent& cameraTrans = m_ActiveCamera->GetComponent<TransformComponent>();
+		CameraComponent& cameraCom = Entity(m_ActiveCamera, this).GetComponent<CameraComponent>();
+		TransformComponent& cameraTrans = Entity(m_ActiveCamera, this).GetComponent<TransformComponent>();
 
 		shader->SetUniform("u_CamMatrix", cameraCom.GenCamMatrix(cameraTrans));
 		
+		shader->SetUniform				("u_Camera.Position", cameraTrans.GetTranslation()								, false);
+		shader->SetUniform<glm::vec3>	("u_Camera.Front"	, cameraTrans.GetRotationMatrix() * glm::vec4(0, 0, -1, 1)	, false);
+		shader->SetUniform<glm::vec3>	("u_Camera.Up"		, cameraTrans.GetRotationMatrix() * glm::vec4(0, 1, 0, 1)	, false);
+		lightIndex = 0;
 		RenderEntity(*m_RootNode, shader, glm::mat4{1.f});
 	}
 
@@ -155,5 +192,50 @@ namespace LMX
 	{
 		m_ViewportWidth = width;
 		m_ViewportHeight = height;
+	}
+	template<typename T>
+	void Scene::OnComponentAdded(Entity entity, T& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+	{
+	}
+	
+	template<>
+	void Scene::OnComponentAdded<TexturesComponent>(Entity entity, TexturesComponent& component)
+	{
+	}
+	
+	template<>
+	void Scene::OnComponentAdded<MeshesComponent>(Entity entity, MeshesComponent& component)
+	{
+	}
+	
+	template<>
+	void Scene::OnComponentAdded<NodeComponent>(Entity entity, NodeComponent& component)
+	{
+	}
+	
+	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		//component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<LightComponent>(Entity entity, LightComponent& component)
+	{
 	}
 }

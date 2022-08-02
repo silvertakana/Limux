@@ -1,0 +1,6 @@
+newmtl fire_hydrant
+	map_ka					fire_hydrant_Mixed_AO.png
+	map_kd					fire_hydrant_Base_Color.png
+	map_ks					fire_hydrant_Metallic.png
+	map_roughness			fire_hydrant_Roughness.png
+	map_kn					fire_hydrant_Normal.png

@@ -26,6 +26,7 @@
 #include <mutex>
 #include <atomic>
 #include <Windows.h>
+#include <tuple>
 
 #include "Limux/Core/DefConfig.h"
 #include "Limux/Core/Log.h"

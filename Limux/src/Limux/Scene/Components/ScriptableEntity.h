@@ -13,6 +13,8 @@ namespace LMX
 		{
 			return m_Entity.GetComponent<T>();
 		}
+		Entity& GetThis() { return m_Entity; }
+		Scene& GetScene() {return m_Entity.GetScene(); }
 	protected:
 		virtual void OnCreate() {}
 		virtual void OnDestroy() {}

@@ -15,10 +15,32 @@ namespace LMX
 		Load(path, setting);
 	}
 
+	OpenGLTexture2D::OpenGLTexture2D(glm::vec4 color, Settings setting)
+	{
+		LMX_PROFILE_FUNCTION();
+		m_SingleColor = color;
+		m_IsSingleColor = true;
+		Load("", setting);
+	}
+
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		LMX_PROFILE_FUNCTION();
 		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenGLTexture2D::Reload(const std::string& path, TextureType type, int setting)
+	{
+		LMX_PROFILE_FUNCTION();
+		Load(path, (Settings)setting);
+	}
+
+	void OpenGLTexture2D::Reload(glm::vec4 color, TextureType type, int setting)
+	{
+		LMX_PROFILE_FUNCTION();
+		m_SingleColor = color;
+		m_IsSingleColor = true;
+		Load(m_Path, (Settings)setting);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
@@ -30,10 +52,21 @@ namespace LMX
 	{
 		if (!m_IsInit)
 		{
-			//stbi_set_flip_vertically_on_load(1);
 			int channels;
-			stbi_uc* data = stbi_load(m_Path.c_str(), &m_Width, &m_Height, &channels, 0);
-			LMX_ASSERT(data, "Unable to load image with path: {0}", m_Path);
+			unsigned char* data;
+			if (m_IsSingleColor)
+			{
+				m_Width = m_Height = 1;
+				channels = 4;
+				glm::u8vec4 u8SingleColor = glm::u8vec4(m_SingleColor * 255.f);
+				data = &u8SingleColor[0];
+			}
+			else
+			{
+				//stbi_set_flip_vertically_on_load(1);
+				data = stbi_load(m_Path.c_str(), &m_Width, &m_Height, &channels, 0);
+				LMX_ASSERT(data, "Unable to load image with path: {0}", m_Path);
+			}
 
 			switch (channels)
 			{
@@ -48,6 +81,8 @@ namespace LMX
 				m_InternalFormat = GL_RGB;
 				break;
 			}
+			if (m_RendererID)
+				glDeleteTextures(1, &m_RendererID);
 			glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 
 			if (m_Setting & Red)
@@ -89,7 +124,7 @@ namespace LMX
 			if (m_Setting & Mipmap)
 				glGenerateTextureMipmap(m_RendererID);
 
-			stbi_image_free(data);
+			if (!m_IsSingleColor) stbi_image_free(data);
 			m_IsInit = true;
 		}
 	}

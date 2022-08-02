@@ -27,8 +27,6 @@
 #include "Limux/Renderer/Shader.h"
 #include "Limux/Renderer/Texture.h"
 #include "Limux/Renderer/VertexArray.h"
-#include "Limux/Renderer/Mesh.h"
-#include "Limux/Renderer/SceneNode.h"
 
 #include "Limux/Scene/Entity.h"
 #include "Limux/Scene/Scene.h"
