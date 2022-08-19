@@ -152,7 +152,7 @@ namespace LMX
 			{
 				
 				auto& light = entity.GetComponent<LightComponent>();
-				LMX_ASSERT(light.Instance, "LightComponent is not initialized");
+				LMX_ASSERT(light.Type != LightComponent::LightType::None, "LightComponent is not initialized");
 
 				std::string name = "u_Lights[" + std::to_string(lightIndex++) + "].";
 				shader->Bind();

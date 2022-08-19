@@ -41,7 +41,7 @@ namespace LMX
 		size_t vertexCount = vertexArray->GetVBO()->GetSize() / sizeof(Vertex);
 		s_Statistics->VertexCount += vertexCount;
 		
-		s_Statistics->triangleCount += indexCount/3.f;
+		s_Statistics->triangleCount += indexCount/3;
 		
 		
 		vertexArray->Bind();

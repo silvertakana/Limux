@@ -66,6 +66,7 @@ namespace LMX
 				}
 			}
 		}
+		return Texture2D::TextureType::Any;
 	}
 	std::map<std::string, Ref<Texture>> Texture::loadedTextures = {};
 	Ref<Texture2D> Texture2D::Load(const std::string& path, TextureType type, int setting)

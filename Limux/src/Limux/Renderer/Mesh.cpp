@@ -32,9 +32,9 @@ namespace LMX
 		if (!m_IsInit)
 		{
 			LMX::Ref<LMX::VertexBuffer> VBO;
-			VBO = LMX::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(LMX::Vertex));
+			VBO = LMX::VertexBuffer::Create(vertices.data(), (uint32_t)vertices.size() * sizeof(LMX::Vertex));
 			LMX::Ref<LMX::IndexBuffer> EBO;
-			EBO = LMX::IndexBuffer::Create(indices.data(), indices.size() * sizeof(uint32_t));
+			EBO = LMX::IndexBuffer::Create(indices.data(), (uint32_t)indices.size() * sizeof(uint32_t));
 
 			m_vertexArray = LMX::VertexArray::Create(VBO, EBO, 0, sizeof(LMX::Vertex));
 			m_vertexArray->AddAttrib(LMX::DataType::Float3, true, offsetof(LMX::Vertex, Position));

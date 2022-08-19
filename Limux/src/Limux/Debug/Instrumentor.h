@@ -65,23 +65,23 @@ namespace LMX
 
 		void WriteProfile(const ProfileResult& result)
 		{
-			std::stringstream json;
+			std::stringstream jsonSS;
 
-			json << std::setprecision(3) << std::fixed;
-			json << ",{";
-			json << "\"cat\":\"function\",";
-			json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
-			json << "\"name\":\"" << result.Name << "\",";
-			json << "\"ph\":\"X\",";
-			json << "\"pid\":0,";
-			json << "\"tid\":" << result.ThreadID << ",";
-			json << "\"ts\":" << result.Start.count();
-			json << "}";
+			jsonSS << std::setprecision(3) << std::fixed;
+			jsonSS << ",{";
+			jsonSS << "\"cat\":\"function\",";
+			jsonSS << "\"dur\":" << (result.ElapsedTime.count()) << ',';
+			jsonSS << "\"name\":\"" << result.Name << "\",";
+			jsonSS << "\"ph\":\"X\",";
+			jsonSS << "\"pid\":0,";
+			jsonSS << "\"tid\":" << result.ThreadID << ",";
+			jsonSS << "\"ts\":" << result.Start.count();
+			jsonSS << "}";
 
 			std::lock_guard lock(m_Mutex);
 			if (m_CurrentSession)
 			{
-				m_OutputStream << json.str();
+				m_OutputStream << jsonSS.str();
 				m_OutputStream.flush();
 			}
 		}

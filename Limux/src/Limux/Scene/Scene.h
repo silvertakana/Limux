@@ -37,7 +37,7 @@ namespace LMX
 		friend Entity;
 		friend class EditorLayer;
 		friend class SceneHierarchyPanel;
-		friend class NodeComponent;
+		friend struct NodeComponent;
 	};
 }
 

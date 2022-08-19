@@ -58,7 +58,7 @@ namespace LMX
 		
 		m_Light = m_ActiveScene->CreateEntity();
 		m_Light.AddOrReplaceComponent<TagComponent>("Light");
-		m_Light.AddOrReplaceComponent<LightComponent>(new LightComponent::PointLight(), glm::vec3 { 0.5, 0.4, 0.0 });
+		m_Light.AddOrReplaceComponent<LightComponent>(LightComponent::LightType::Point, glm::vec3 { 0.5, 0.4, 0.0 });
 		m_Light.GetComponent<TransformComponent>().SetTranslation(glm::vec3 { 12, 10, 16 });
 
 

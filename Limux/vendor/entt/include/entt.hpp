@@ -1,4 +1,5 @@
 // #include "config/config.h"
+
 #ifndef ENTT_CONFIG_CONFIG_H
 #define ENTT_CONFIG_CONFIG_H
 
@@ -24651,7 +24652,7 @@ public:
      * @param other The instance to move from.
      * @return This registry.
      */
-    basic_registry &operator=(basic_registry &&other) {
+    basic_registry &operator=(basic_registry &&other) noexcept {
         pools = std::move(other.pools);
         groups = std::move(other.groups);
         entities = std::move(other.entities);
@@ -66127,4 +66128,3 @@ sink(sigh<Ret(Args...), Allocator> &) -> sink<sigh<Ret(Args...), Allocator>>;
 } // namespace entt
 
 #endif
-

@@ -61,6 +61,18 @@ namespace LMX
 					ImGui::CloseCurrentPopup();
 				}
 
+				if (ImGui::MenuItem("Light"))
+				{
+					m_SelectionContext.AddComponent<LightComponent>(LightComponent::LightType::Point, glm::vec3{ 0.5 });
+					ImGui::CloseCurrentPopup();
+				}
+				
+				if (ImGui::MenuItem("Node"))
+				{
+					m_SelectionContext.AddComponent<NodeComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+
 				ImGui::EndPopup();
 			}
 		}
@@ -74,12 +86,13 @@ namespace LMX
 
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
+		
 		if (ImGui::IsItemClicked())
 		{
 			m_SelectionContext = entity;
 		}
 
-		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		if (opened)
 		{
 			if (entity.HasComponent<NodeComponent>())
@@ -219,14 +232,26 @@ namespace LMX
 			{
 				auto& meshesCom = entity.GetComponent<MeshesComponent>();
 				auto& meshes = meshesCom.Meshes;
-				uint32_t verticesCount;
-				uint32_t indicesCount;
+				size_t verticesCount;
+				size_t indicesCount;
 				for (auto& mesh : meshes)
 				{
 					verticesCount = mesh->vertices.size();
-					indicesCount = mesh->indices.size();
+					indicesCount  = mesh->indices.size();
 					ImGui::Text("Mesh: %d vertices, %d indices, %d triangles", verticesCount, indicesCount, indicesCount/3);
 				}
+				ImGui::TreePop();
+			}
+		}
+		if (entity.HasComponent<NodeComponent>()) {
+			if (ImGui::TreeNodeEx((void*)typeid(NodeComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Node"))
+			{
+				auto& nodeCom = entity.GetComponent<NodeComponent>();
+				auto& children = nodeCom.Children;
+				ImGui::Text("Children Count %d", children.size());
+				if (ImGui::Button("Add Child"))
+					nodeCom.AddChild(m_Context->CreateEntity("Empty Entity"));
+				
 				ImGui::TreePop();
 			}
 		}
@@ -261,7 +286,7 @@ namespace LMX
 				auto& lightCom = entity.GetComponent<LightComponent>();
 				ImGui::Checkbox		("Enabled"	, &lightCom.Enabled	 );
 				ImGui::ColorPicker3	("Color"	, &lightCom.Color[0] );
-				ImGui::DragFloat	("Intesity"	, &lightCom.Intensity, 0.01f);
+				ImGui::DragFloat	("Intensity", &lightCom.Intensity, 0.01f);
 
 				ImGui::TreePop();
 			}

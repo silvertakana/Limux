@@ -48,8 +48,8 @@ struct Light
 	bool Enabled;
 	int  Type;
 };
-
-uniform Light u_Lights[20];
+#define LIGHT_COUNT 20
+uniform Light u_Lights[LIGHT_COUNT];
 
 vec3 AmbientLightColor = vec3(0.3, 0.3, 0.6);
 void main()
@@ -65,15 +65,17 @@ void main()
 	vec4 baseColor = texture(u_Texture_Diffuse[0], v_TexCoord);
 	vec3 diffuse = vec3(0.f);
 	vec3 specular = vec3(0.f);
-	if (u_Lights[0].Enabled)
-	{
-		vec3 lightDir = normalize(u_Lights[0].Position - v_FragPos);
-		float diff = max(dot(Normal, lightDir), 0.0);
-		diffuse = diff * u_Lights[0].Color * u_Lights[0].Intensity;
+	for (int i = 0; i < LIGHT_COUNT; i++) {
+		if (u_Lights[i].Enabled)
+		{
+			vec3 lightDir = normalize(u_Lights[i].Position - v_FragPos);
+			float diff = max(dot(Normal, lightDir), 0.0);
+			diffuse += diff * u_Lights[i].Color * u_Lights[i].Intensity;
 
-		vec3 reflectDir = reflect(-lightDir, Normal);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0), (1.f-texture(u_Texture_Specular[0], v_TexCoord).r) * 32.f);
-		specular = spec * u_Lights[0].Color * u_Lights[0].Intensity;
+			vec3 reflectDir = reflect(-lightDir, Normal);
+			float spec = pow(max(dot(viewDir, reflectDir), 0.0), (1.f - texture(u_Texture_Specular[0], v_TexCoord).r) * 32.f);
+			specular += spec * u_Lights[i].Color * u_Lights[i].Intensity;
+		}
 	}
 	
 	PixelColor = vec4(ambient + diffuse + specular , 1.f) * baseColor;

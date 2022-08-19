@@ -9,6 +9,7 @@ project "LimuxEditor"
 	targetdir (outputOrigin .."/bin/" .. outputdir .. "/%{prj.name}")
 	objdir (outputOrigin .."/bin-int/" .. outputdir .. "/%{prj.name}")
 
+	disablewarnings { "4996" }
 	
 	files {
 		"src/**.hpp", 

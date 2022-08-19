@@ -5,10 +5,10 @@ project "Limux"
 	language "C++"
 	cppdialect "C++20"
 	staticruntime "off"
-
+	disablewarnings { "4996" }
 	defines { 
 		"LMX_BUILD_DLL", 
-		"_CRT_SECURE_NO_WARNINGS",
+		--"_CRT_SECURE_NO_WARNINGS",
 		"GLFW_INCLUDE_NONE",
 	}
 	

@@ -31,11 +31,12 @@ namespace LMX
 	};
 	struct NativeScriptComponent
 	{
+		NativeScriptComponent() = default;
 		NativeScriptComponent(Scene*) {};
 		ScriptableEntity* Instance = nullptr;
 
-		ScriptableEntity* (*InstantiateScript)();
-		void (*DestroyScript)(NativeScriptComponent*);
+		std::function<ScriptableEntity*			 ()> InstantiateScript	= nullptr;
+		std::function<void (NativeScriptComponent*)> DestroyScript		= nullptr;
 
 		template<typename T>
 		void Bind()
