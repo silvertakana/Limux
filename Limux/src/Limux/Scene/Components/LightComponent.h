@@ -43,7 +43,7 @@ namespace LMX
 		union LightUnion
 		{
 			PointLight Point;
-			SpotLight Spot;
+			SpotLight Spot{};
 			DirecLight Direc;
 			LightUnion() {}
 			~LightUnion() {}
