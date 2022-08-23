@@ -1,27 +1,27 @@
 project "Glad"
-    kind "StaticLib"
-    language "C"
-    staticruntime "On"
-    
+	kind "StaticLib"
+	language "C"
+	staticruntime "On"
+	
 	targetdir (outputOrigin .."/bin/" .. outputdir .. "/%{prj.name}")
 	objdir (outputOrigin .."/bin-int/" .. outputdir .. "/%{prj.name}")
 
-    files
-    {
-        "**.**"
-    }
+	files
+	{
+		"**.**"
+	}
 
 	includedirs
 	{
 		"include"
 	}
-    
-    filter "system:windows"
-        systemversion "latest"
-        
-    filter "configurations:Debug"
+	
+	filter "system:windows"
+		systemversion "latest"
+		
+	filter "configurations:Debug"
 		runtime "Debug"
-		buildoptions "/MDd"
+		buildoptions "/MTd"
 		symbols "On"
 		
 	filter "configurations:Release"

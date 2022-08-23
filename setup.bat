@@ -1,5 +1,5 @@
 @echo off
-set editor=%1
+set editor="vs2022"
 if "%editor%" == "" set /p editor= your ProjectEditor: 
 
 premake\premake5.exe %editor%

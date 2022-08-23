@@ -37,6 +37,7 @@ IncludeDir["ImGui"]  = "%{wks.location}/Limux/vendor/imgui"
 IncludeDir["glm"]    = "%{wks.location}/Limux/vendor/glm"
 IncludeDir["stb"]    = "%{wks.location}/Limux/vendor/stb"
 IncludeDir["assimp"] = "%{wks.location}/Limux/vendor/assimp/include"
+IncludeDir["assimpconfig"] = "%{wks.location}/Limux/vendor/assimp/_config_headers/"
 IncludeDir["entt"] = "%{wks.location}/Limux/vendor/entt/include"
 
 

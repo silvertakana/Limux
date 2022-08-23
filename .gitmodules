@@ -17,7 +17,8 @@
 
 [submodule "Limux/vendor/assimp"]
 	path = Limux/vendor/assimp
-	url = https://github.com/AminAliari/assimp
+	url = https://github.com/silvertakana/assimp-premake.git
+	
 [submodule "Limux/vendor/yaml-cpp"]
 	path = Limux/vendor/yaml-cpp
 	url = https://github.com/silvertakana/yaml-cpp
