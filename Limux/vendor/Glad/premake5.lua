@@ -1,7 +1,6 @@
 project "Glad"
 	kind "StaticLib"
 	language "C"
-	staticruntime "On"
 	
 	targetdir (outputOrigin .."/bin/" .. outputdir .. "/%{prj.name}")
 	objdir (outputOrigin .."/bin-int/" .. outputdir .. "/%{prj.name}")
@@ -21,7 +20,7 @@ project "Glad"
 		
 	filter "configurations:Debug"
 		runtime "Debug"
-		buildoptions "/MTd"
+		buildoptions "/MDd"
 		symbols "On"
 		
 	filter "configurations:Release"

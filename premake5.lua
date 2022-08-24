@@ -6,6 +6,8 @@ workspace "Limux"
 	configurations { "Debug", "Release" ,"Dist"}
 
 	systemversion "latest"
+	
+    staticruntime "off"
 
 	flags
 	{
@@ -33,7 +35,7 @@ workspace "Limux"
 IncludeDir = {}
 IncludeDir["GLFW"]   = "%{wks.location}/Limux/vendor/GLFW/include"
 IncludeDir["Glad"]   = "%{wks.location}/Limux/vendor/Glad/include"
-IncludeDir["ImGui"]  = "%{wks.location}/Limux/vendor/imgui"
+IncludeDir["ImGui"]  = "%{wks.location}/Limux/vendor/ImGui"
 IncludeDir["glm"]    = "%{wks.location}/Limux/vendor/glm"
 IncludeDir["stb"]    = "%{wks.location}/Limux/vendor/stb"
 IncludeDir["assimp"] = "%{wks.location}/Limux/vendor/assimp/include"
@@ -45,7 +47,7 @@ IncludeDir["entt"] = "%{wks.location}/Limux/vendor/entt/include"
 group "Dependencies"
 	include "Limux/vendor/GLFW"
 	include "Limux/vendor/Glad"
-	include "Limux/vendor/imgui"
+	include "Limux/vendor/ImGui"
 	include "Limux/vendor/stb"
 	include "Limux/vendor/assimp"
 	

@@ -1,6 +1,6 @@
-[submodule "Limux/vendor/imgui"]
-	path = Limux/vendor/imgui
-	url = https://github.com/silvertakana/imgui.git
+[submodule "Limux/vendor/ImGui"]
+	path = Limux/vendor/ImGui
+	url = https://github.com/silvertakana/imgui
 	branch = docking
 
 [submodule "Limux/vendor/GLFW"]
